@@ -39,3 +39,35 @@ const CONFIG = {
     caminhoReservas:
     "reservas",
 
+    // Admin
+    senhaAdmin: "123456",
+
+    // Cartelas
+    quantidadeCartelas: 10,
+
+    // Imagens
+    imagens: [
+        "img/premio1.jpg",
+        "img/premio2.jpg",
+        "img/premio3.jpg"
+    ]
+
+};
+
+/* ==========================================
+   FUNÇÕES AUXILIARES
+========================================== */
+
+function formatarNumero(numero) {
+    return numero.toString().padStart(3, "0");
+}
+
+function totalDisponiveis(reservados) {
+    return CONFIG.quantidadeNumeros - reservados;
+}
+
+function percentualReservado(reservados) {
+    return (
+        (reservados / CONFIG.quantidadeNumeros) * 100
+    ).toFixed(1);
+}
