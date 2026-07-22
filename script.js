@@ -31,13 +31,13 @@ function carregarConfiguracoes() {
     document.getElementById("premio").textContent =
         CONFIG.premio;
 
-    document.getElementById("valor").textContent =
+    document.getElementById("valorNumero").textContent =
         `R$ ${CONFIG.valorNumero.toFixed(2)}`;
 
-    document.getElementById("data").textContent =
+    document.getElementById("dataSorteio").textContent =
         CONFIG.dataSorteio;
 
-    document.getElementById("resultado").textContent =
+    document.getElementById("resultadoSorteio").textContent =
         CONFIG.resultado;
 
     document.getElementById("pix").textContent =
