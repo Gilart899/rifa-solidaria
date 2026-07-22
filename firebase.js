@@ -3,7 +3,6 @@
 ========================================== */
 
 // Mantenha aqui o SEU firebaseConfig
-
 firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
