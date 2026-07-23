@@ -1,0 +1,830 @@
+/* =====================================================
+   RIFA ENTRE AMIGOS
+   Em prol da saúde de Dona Bené
+   Desenvolvido por GilArt
+===================================================== */
+
+:root{
+
+--azul:#2563eb;
+--azul-escuro:#1e3a8a;
+--rosa:#ec4899;
+--rosa-claro:#f9a8d4;
+--verde:#16a34a;
+--vermelho:#dc2626;
+--amarelo:#facc15;
+--cinza:#f3f4f6;
+--branco:#ffffff;
+--preto:#222222;
+
+--sombra:0 10px 25px rgba(0,0,0,.10);
+
+--borda:18px;
+
+}
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+
+font-family:'Poppins',sans-serif;
+
+background:
+
+linear-gradient(
+180deg,
+#eef5ff 0%,
+#ffffff 40%,
+#ffeef8 100%
+);
+
+color:var(--preto);
+
+overflow-x:hidden;
+
+min-height:100vh;
+
+}
+
+/* fundo decorativo */
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+inset:0;
+
+pointer-events:none;
+
+opacity:.05;
+
+background-image:url("img/1784635553196.png");
+
+background-size:130px;
+
+background-repeat:repeat;
+
+z-index:-1;
+
+}
+
+/* --------------------------- */
+
+.container{
+
+width:min(1200px,94%);
+
+margin:auto;
+
+}
+
+/* --------------------------- */
+
+header{
+
+padding:20px 0;
+
+background:#fff;
+
+box-shadow:var(--sombra);
+
+position:sticky;
+
+top:0;
+
+z-index:999;
+
+}
+
+.topo{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+gap:20px;
+
+}
+
+.logo{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+.logo img{
+
+width:75px;
+
+height:75px;
+
+object-fit:contain;
+
+}
+
+.logo h1{
+
+font-size:30px;
+
+font-weight:700;
+
+color:var(--azul-escuro);
+
+}
+
+.subtitulo{
+
+margin-top:8px;
+
+font-size:18px;
+
+font-weight:500;
+
+color:var(--rosa);
+
+}
+
+.frase{
+
+margin-top:8px;
+
+font-size:15px;
+
+color:#666;
+
+}
+
+/* --------------------------- */
+
+.hero{
+
+padding:50px 0;
+
+}
+
+.hero-grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:40px;
+
+align-items:center;
+
+}
+
+@media(max-width:900px){
+
+.hero-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+/* =====================================================
+   HERO / FOTO DA DONA BENÉ
+===================================================== */
+
+.hero-text h2{
+
+font-size:42px;
+font-weight:800;
+line-height:1.2;
+color:var(--azul-escuro);
+
+}
+
+.hero-text span{
+
+color:var(--rosa);
+
+}
+
+.hero-text p{
+
+margin-top:20px;
+font-size:18px;
+line-height:1.8;
+color:#555;
+
+}
+
+.botoes{
+
+display:flex;
+gap:15px;
+margin-top:30px;
+flex-wrap:wrap;
+
+}
+
+.btn{
+
+padding:16px 28px;
+
+border:none;
+
+border-radius:50px;
+
+cursor:pointer;
+
+font-size:17px;
+
+font-weight:600;
+
+transition:.3s;
+
+text-decoration:none;
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+box-shadow:var(--sombra);
+
+}
+
+.btn-azul{
+
+background:var(--azul);
+
+color:#fff;
+
+}
+
+.btn-azul:hover{
+
+transform:translateY(-4px);
+
+background:var(--azul-escuro);
+
+}
+
+.btn-verde{
+
+background:var(--verde);
+
+color:#fff;
+
+}
+
+.btn-verde:hover{
+
+transform:translateY(-4px);
+
+}
+
+/* FOTO DA DONA BENÉ */
+
+.foto-bene{
+
+display:flex;
+
+justify-content:center;
+
+}
+
+.foto-bene img{
+
+width:100%;
+
+max-width:420px;
+
+border-radius:25px;
+
+box-shadow:var(--sombra);
+
+border:6px solid #fff;
+
+}
+
+/* =====================================================
+   CARROSSEL
+===================================================== */
+
+.slider{
+
+margin-top:60px;
+
+background:#fff;
+
+padding:20px;
+
+border-radius:25px;
+
+box-shadow:var(--sombra);
+
+overflow:hidden;
+
+}
+
+.slider img{
+
+width:100%;
+
+height:420px;
+
+object-fit:contain;
+
+border-radius:18px;
+
+}
+
+/* =====================================================
+   CARD DO PRÊMIO
+===================================================== */
+
+.premio{
+
+margin-top:50px;
+
+background:linear-gradient(
+135deg,
+var(--azul),
+var(--rosa)
+);
+
+padding:35px;
+
+border-radius:25px;
+
+text-align:center;
+
+color:#fff;
+
+box-shadow:var(--sombra);
+
+}
+
+.premio h2{
+
+font-size:34px;
+
+margin-bottom:15px;
+
+}
+
+.valor{
+
+font-size:55px;
+
+font-weight:800;
+
+margin:20px 0;
+
+}
+
+.premio p{
+
+font-size:19px;
+
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.cards{
+
+margin-top:50px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:20px;
+
+}
+
+.card{
+
+background:#fff;
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:var(--sombra);
+
+text-align:center;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.card h3{
+
+font-size:22px;
+
+margin-bottom:12px;
+
+color:var(--rosa);
+
+}
+
+.card p{
+
+font-size:18px;
+
+color:#555;
+
+}
+/* =====================================================
+   CONTADOR REGRESSIVO
+===================================================== */
+
+.contador{
+
+margin:60px 0;
+
+}
+
+.contador h2{
+
+text-align:center;
+
+font-size:34px;
+
+color:var(--azul-escuro);
+
+margin-bottom:25px;
+
+}
+
+.tempo{
+
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+}
+
+.caixa-tempo{
+
+background:#fff;
+
+width:120px;
+
+padding:20px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:var(--sombra);
+
+transition:.3s;
+
+}
+
+.caixa-tempo:hover{
+
+transform:translateY(-8px);
+
+}
+
+.caixa-tempo span{
+
+display:block;
+
+font-size:40px;
+
+font-weight:800;
+
+color:var(--rosa);
+
+}
+
+.caixa-tempo small{
+
+font-size:15px;
+
+color:#666;
+
+}
+
+/* =====================================================
+   BARRA DE PROGRESSO
+===================================================== */
+
+.progresso{
+
+margin:60px auto;
+
+background:#fff;
+
+padding:30px;
+
+border-radius:25px;
+
+box-shadow:var(--sombra);
+
+}
+
+.progresso h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+color:var(--azul-escuro);
+
+}
+
+.barra{
+
+height:25px;
+
+background:#ddd;
+
+border-radius:50px;
+
+overflow:hidden;
+
+}
+
+.barra div{
+
+height:100%;
+
+width:0%;
+
+background:linear-gradient(
+90deg,
+var(--rosa),
+var(--azul)
+);
+
+border-radius:50px;
+
+transition:1s;
+
+}
+
+.status{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-top:15px;
+
+font-weight:600;
+
+flex-wrap:wrap;
+
+gap:10px;
+
+}
+
+/* =====================================================
+   PIX
+===================================================== */
+
+.pix{
+
+margin:60px auto;
+
+background:#fff;
+
+padding:35px;
+
+border-radius:25px;
+
+box-shadow:var(--sombra);
+
+text-align:center;
+
+}
+
+.pix h2{
+
+color:var(--azul-escuro);
+
+margin-bottom:15px;
+
+}
+
+.pix img{
+
+width:220px;
+
+max-width:100%;
+
+margin:20px auto;
+
+display:block;
+
+}
+
+.chave{
+
+background:#f5f5f5;
+
+padding:15px;
+
+border-radius:15px;
+
+font-weight:700;
+
+word-break:break-word;
+
+margin:20px 0;
+
+}
+
+.copiar{
+
+background:var(--verde);
+
+color:#fff;
+
+padding:15px 28px;
+
+border:none;
+
+border-radius:50px;
+
+cursor:pointer;
+
+font-size:17px;
+
+transition:.3s;
+
+}
+
+.copiar:hover{
+
+transform:translateY(-3px);
+
+}
+
+/* =====================================================
+   RODAPÉ
+===================================================== */
+
+footer{
+
+margin-top:70px;
+
+padding:40px 20px;
+
+background:var(--azul-escuro);
+
+color:#fff;
+
+text-align:center;
+
+position:relative;
+
+}
+
+footer h3{
+
+margin-bottom:10px;
+
+}
+
+footer p{
+
+opacity:.9;
+
+line-height:1.7;
+
+}
+
+.logo-gilart{
+
+position:absolute;
+
+right:20px;
+
+bottom:20px;
+
+width:70px;
+
+opacity:.9;
+
+}
+
+/* =====================================================
+   ANIMAÇÕES
+===================================================== */
+
+@keyframes subir{
+
+0%{
+
+transform:translateY(15px);
+
+opacity:0;
+
+}
+
+100%{
+
+transform:translateY(0);
+
+opacity:1;
+
+}
+
+}
+
+.hero,
+.slider,
+.cards,
+.contador,
+.progresso,
+.pix,
+footer{
+
+animation:subir .8s ease;
+
+}
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+@media(max-width:768px){
+
+.hero-text h2{
+
+font-size:30px;
+
+}
+
+.valor{
+
+font-size:42px;
+
+}
+
+.slider img{
+
+height:260px;
+
+}
+
+.caixa-tempo{
+
+width:90px;
+
+}
+
+.caixa-tempo span{
+
+font-size:30px;
+
+}
+
+.logo img{
+
+width:60px;
+
+height:60px;
+
+}
+
+.logo h1{
+
+font-size:22px;
+
+}
+
+  }
