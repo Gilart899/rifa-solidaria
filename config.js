@@ -1,56 +1,133 @@
 /* ==========================================
-   CONFIGURAÇÕES DA RIFA
+   CONFIGURAÇÕES GERAIS
+   RIFA SOLIDÁRIA - GILFEST
 ========================================== */
 
 const CONFIG = {
 
-    // Informações principais
-    titulo: "Rifa Beneficente",
+    /* Dados da campanha */
 
-    beneficiada: "Benedita Laranjeiras dos Santos",
+    titulo: "🎟️ RIFA ENTRE AMIGOS",
+
+    subtitulo: "💙 Em prol da saúde de Dona Bené",
+
+    beneficiada: "Dona Bené",
 
     premio: "Geladeira Midea Frost Free",
 
-    valorNumero: 10,
+    descricaoPremio:
+        "Geladeira Midea Frost Free - Excelente estado.",
 
-    dataSorteio: "30/12/2026",
+    valorNumero: 10.00,
 
-    resultado:
-    "1ª Premiação da Loteria Federal",
+    moeda: "R$",
 
+    /* Sorteio */
 
-    // Números da rifa
-    quantidadeNumeros: 1000,
+    dataSorteio: "2026-12-30T20:00:00",
 
-    numerosPorCartela: 100,
+    localSorteio: "Instagram / WhatsApp",
 
+    /* Quantidade de números */
 
-    // Pagamento
-    pixChave:
-    "588.472.355-53",
+    totalNumeros: 1000,
 
+    inicioNumero: 0,
 
-    // Contato
-    whatsapp:
-    "5579999145044",
+    fimNumero: 999,
 
+    digitosNumero: 3,
 
-    // Firebase
-    caminhoReservas:
-    "reservas",
+    /* WhatsApp */
 
-    // Admin
-    senhaAdmin: "123456",
+    telefone: "5579999145044",
 
-    // Cartelas
-    quantidadeCartelas: 10,
+    telefoneVisual: "(79) 9 9914-5044",
 
-    // Imagens
-    imagens: [
-        "img/premio1.jpg",
-        "img/premio2.jpg",
-        "img/premio3.jpg"
-    ]
+    mensagemWhatsApp:
+`Olá!
+Tenho interesse em participar da Rifa Solidária da Dona Bené.`,
+
+    /* PIX */
+
+    chavePix: "045.761.515-09",
+
+    nomePix: "GilFest",
+
+    copiarPixMensagem:
+        "Chave Pix copiada com sucesso!",
+
+    /* Firebase */
+
+    caminhoReservas: "reservas",
+
+    caminhoPagamentos: "pagamentos",
+
+    caminhoCompradores: "compradores",
+
+    caminhoConfiguracoes: "configuracoes",
+
+    caminhoRaspadinha: "raspadinha",
+
+    caminhoHistorico: "historico",
+
+    /* Raspadinha */
+
+    raspadinha: {
+
+        ativa: true,
+
+        premio: "Liquidificador",
+
+        mensagemPerdeu: [
+
+            "Obrigado por ajudar a Dona Bené ❤️",
+
+            "Sua ajuda faz toda diferença 💙",
+
+            "Boa sorte na rifa principal 🍀",
+
+            "Continue acompanhando o sorteio 🎉"
+
+        ]
+
+    },
+
+    /* Cores */
+
+    tema: {
+
+        primaria: "#1E88E5",
+
+        secundaria: "#EC407A",
+
+        sucesso: "#43A047",
+
+        alerta: "#FB8C00",
+
+        erro: "#E53935",
+
+        fundo: "#F5F8FF",
+
+        texto: "#2C3E50"
+
+    },
+
+    /* Imagens */
+
+    imagens: {
+
+        logo: "img/logo-gilfest.png",
+
+        donaBene: "img/1783887880857.png",
+
+        geladeira1: "img/IMG-20260722-WA0037.jpg",
+
+        geladeira2: "img/IMG-20260722-WA0038.jpg",
+
+        trevo: "img/1784635553196.png"
+
+    }
 
 };
 
@@ -58,16 +135,18 @@ const CONFIG = {
    FUNÇÕES AUXILIARES
 ========================================== */
 
-function formatarNumero(numero) {
-    return numero.toString().padStart(3, "0");
+function numeroFormatado(numero){
+
+    return numero
+        .toString()
+        .padStart(CONFIG.digitosNumero,"0");
+
 }
 
-function totalDisponiveis(reservados) {
-    return CONFIG.quantidadeNumeros - reservados;
+function valorFormatado(valor){
+
+    return `${CONFIG.moeda} ${valor.toFixed(2).replace(".",",")}`;
+
 }
 
-function percentualReservado(reservados) {
-    return (
-        (reservados / CONFIG.quantidadeNumeros) * 100
-    ).toFixed(1);
-}
+console.log("Configurações carregadas.");
