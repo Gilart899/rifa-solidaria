@@ -26,7 +26,11 @@ import {
 const firebaseConfig = {
 
     apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
+// ===================================
+// Referência raiz do banco
+// ===================================
 
+const dbRoot = ref(db);
     authDomain: "rifa-solidaria-56274.firebaseapp.com",
 
     databaseURL: "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
@@ -54,6 +58,8 @@ export {
     db,
 
     auth,
+
+    firebaseConfig,
 
     ref,
 
