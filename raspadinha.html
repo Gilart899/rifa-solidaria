@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta http-equiv="X-UA-Compatible"
+      content="IE=edge">
+
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+
+
+<title>Raspadinha | Rifa Solidária</title>
+
+
+
+<meta name="description"
+      content="Descubra seu prêmio na raspadinha da Rifa Solidária.">
+
+
+
+<link rel="icon"
+      href="icons/icon-192.png">
+
+
+
+<link rel="stylesheet"
+      href="style.css">
+
+
+
+<link rel="stylesheet"
+      href="raspadinha.css">
+
+
+
+</head>
+
+
+<body>
+
+
+<div class="background-clovers"></div>
+
+
+
+<!-- ==========================================
+     CABEÇALHO
+========================================== -->
+
+
+<header class="top-header">
+
+
+<div class="logo-box">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="Logo GilFest"
+
+class="logo">
+
+
+</div>
+
+
+
+<div class="title-box">
+
+
+<h1>
+
+🎉 Raspadinha Solidária
+
+</h1>
+
+
+<p>
+
+Boa sorte! Descubra seu prêmio.
+
+</p>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+<main class="raspadinha-container">
+
+
+
+<section class="glass premio-box">
+
+
+<h2>
+
+Seu prêmio
+
+</h2>
+
+
+
+<div id="premioResultado">
+
+
+🎁 Boa sorte!
+
+
+</div>
+
+
+
+<p>
+
+Passe o dedo ou mouse sobre a área abaixo.
+
+</p>
+
+
+</section>
+
+
+
+
+
+<section class="glass raspadinha-area">
+
+
+
+<canvas
+
+id="canvasRaspadinha"
+
+aria-label="Área para raspar o prêmio">
+
+
+</canvas>
+
+
+
+<div
+
+id="mensagemPremio"
+
+class="mensagem-premio">
+
+
+</div>
+
+
+
+</section
+  
+<!-- ==========================================
+     CONTROLES
+========================================== -->
+
+
+<section class="glass controles-raspadinha">
+
+
+<button
+
+id="iniciarRaspagem"
+
+class="btn btn-primary">
+
+
+🎁 Iniciar Raspadinha
+
+
+</button>
+
+
+
+<button
+
+id="voltarInicio"
+
+class="btn">
+
+
+⬅ Voltar
+
+
+</button>
+
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+     CONFETES
+========================================== -->
+
+
+<div
+
+id="confetes"
+
+aria-hidden="true">
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================
+     RODAPÉ
+========================================== -->
+
+
+<footer class="footer">
+
+
+<div class="glass footer-content">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="Logo GilFest"
+
+class="footer-logo">
+
+
+
+<p>
+
+© 2026 GilFest
+
+</p>
+
+
+
+<small>
+
+Rifa Solidária • Boa sorte!
+
+</small>
+
+
+</div>
+
+
+</footer>
+
+<!-- ==========================================
+     SCRIPTS
+========================================== -->
+
+
+<script src="config.js"></script>
+
+
+
+<!-- Firebase SDK -->
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+
+
+<!-- Configuração Firebase -->
+
+<script src="firebase-config.js"></script>
+
+
+
+<!-- Firebase -->
+
+<script src="firebase.js"></script>
+
+
+
+<!-- Raspadinha -->
+
+<script src="raspadinha.js"></script>
+
+
+
+
+
+<!-- PWA -->
+
+<script>
+
+if(
+    "serviceWorker" in navigator
+){
+
+
+    window.addEventListener(
+        "load",
+        ()=>{
+
+
+            navigator.serviceWorker
+            .register(
+                "sw.js"
+            )
+            .then(
+                ()=>{
+
+                    console.log(
+                        "✅ PWA ativa."
+                    );
+
+                }
+            )
+            .catch(
+                erro=>{
+
+                    console.error(
+                        "Erro PWA:",
+                        erro
+                    );
+
+                }
+            );
+
+
+        }
+    );
+
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
