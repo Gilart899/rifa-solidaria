@@ -3,227 +3,494 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<!DOCTYPE html>
-<html lang="pt-BR">
+    <title>🎟️ Rifa Solidária | Em prol da saúde de Dona Bené</title>
 
-<head>
+    <meta name="description"
+        content="Participe da Rifa Solidária em prol da saúde de Dona Bené. Escolha seu número e concorra a uma Geladeira Midea Frost Free.">
 
-<meta charset="UTF-8">
+    <meta name="keywords"
+        content="rifa, rifa solidária, gilfest, doação, geladeira, pix, sorteio">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author"
+        content="GilFest">
 
-<title>Rifa entre Amigos | Em prol da saúde de Dona Bené</title>
+    <meta name="theme-color"
+        content="#2563eb">
 
-<meta name="description"
-content="Rifa entre Amigos para ajudar no tratamento de saúde de Dona Bené.">
+    <meta name="robots"
+        content="index,follow">
 
-<link rel="stylesheet" href="style.css">
+    <!-- Open Graph -->
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta property="og:type"
+        content="website">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+    <meta property="og:title"
+        content="🎟️ Rifa Solidária">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+    <meta property="og:description"
+        content="Ajude Dona Bené e participe da rifa solidária.">
+
+    <meta property="og:image"
+        content="img/IMG-20260722-WA0037.jpg">
+
+    <meta property="og:locale"
+        content="pt_BR">
+
+    <!-- Twitter -->
+
+    <meta name="twitter:card"
+        content="summary_large_image">
+
+    <meta name="twitter:title"
+        content="Rifa Solidária">
+
+    <meta name="twitter:description"
+        content="Concorra a uma Geladeira Midea Frost Free.">
+
+    <meta name="twitter:image"
+        content="img/IMG-20260722-WA0037.jpg">
+
+    <!-- PWA -->
+
+    <link rel="manifest"
+        href="manifest.json">
+
+    <link rel="icon"
+        href="icons/icon-192.png">
+
+    <link rel="apple-touch-icon"
+        href="icons/icon-192.png">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet"
+        href="style.css">
 
 </head>
 
 <body>
 
-<header>
+    <!-- Fundo Decorativo -->
 
-<div class="container topo">
+    <div class="background-clovers"
+        aria-hidden="true"></div>
 
-<div class="logo">
+    <!-- Cabeçalho -->
 
-<img
-src="img/IMG-20260722-WA0040.jpg"
-alt="GilFest">
+    <header class="top-header">
 
-</div>
+        <div class="logo-box">
 
-<div>
+            <img
+                src="img/1784636629590.png"
+                alt="Logo GilFest"
+                class="logo">
 
-<h1>🎟️ Rifa entre Amigos</h1>
+        </div>
 
-<p class="subtitulo">
+        <div class="title-box">
 
-💙 Em prol da saúde de Dona Bené
+            <h1 id="titulo">
 
-</p>
+                🎟️ RIFA ENTRE AMIGOS
 
-<p class="frase">
+            </h1>
 
-Sua ajuda pode transformar uma vida.
+            <p id="subtitulo">
 
-</p>
+                💙 Em prol da saúde de Dona Bené
 
-</div>
+            </p>
 
-</div>
+        </div>
 
-</header>
+    </header>
 
-<main class="container">
+    <main>
 
-<section class="hero">
+        <!-- Beneficiada -->
 
-<div class="hero-grid">
+        <section class="beneficiada">
 
-<div class="hero-text">
+            <div class="glass">
 
-<h2>
+                <img
 
-Ajude a Dona <span>Bené</span>
+                    src="img/1783887880857.png"
 
-</h2>
+                    alt="Foto de Dona Bené"
 
-<p>
+                    class="foto-beneficiada"
 
-Esta campanha foi criada para arrecadar recursos para o tratamento de saúde da Dona Bené.
+                    loading="lazy">
 
-Cada número adquirido representa um gesto de solidariedade.
+                <h2 id="beneficiada">
 
-Muito obrigado pelo seu apoio!
+                    Dona Bené
 
-</p>
+                </h2>
 
-<div class="botoes">
+                <p>
 
-<a
-href="cartela.html"
-class="btn btn-azul">
+                    Sua ajuda faz toda diferença.
+                    Obrigado por participar.
 
-🎟️ Escolher Cartela
+                </p>
 
-</a>
+            </div>
 
-<a
+        </section>
 
-href="https://wa.me/557999145444"
+        <!-- Carrossel -->
 
-class="btn btn-verde">
+        <section
+            class="carousel-section">
 
-💬 WhatsApp
+            <div class="carousel">
 
-</a>
+                <button
+                    class="carousel-btn prev"
+                    id="prevSlide"
+                    aria-label="Imagem anterior">
 
-</div>
+                    ❮
 
-</div>
+                </button>
 
-<div class="foto-bene">
+                <div
+                    class="carousel-track">
 
-<img
+                    <img
 
-src="img/1783887880857.png"
+                        src="img/IMG-20260722-WA0037.jpg"
 
-alt="Dona Bené">
+                        alt="Geladeira Midea Frente"
 
-</div>
+                        class="slide active"
 
-</div>
+                        loading="lazy">
 
-</section>
-</h2>
+                    <img
 
-<p class="frase">
+                        src="img/IMG-20260722-WA0038.jpg"
 
-Sua ajuda pode transformar uma vida.
+                        alt="Geladeira Midea Perfil"
 
-</p>
+                        class="slide"
 
-</header>
+                        loading="lazy">
 
-<section class="banner">
+                </div>
 
-<div class="slider">
+                <button
+                    class="carousel-btn next"
+                    id="nextSlide"
+                    aria-label="Próxima imagem">
 
-<img src="img/geladeira1.jpg">
+                    ❯
 
-<img src="img/geladeira2.jpg">
+                </button>
 
-<img src="img/geladeira3.jpg">
+            </div>
 
-</div>
+        </section>
 
-</section>
+        <!-- Informações -->
 
-<section class="premio">
+        <section class="premio">
 
-<h2>
+            <div class="glass">
 
-Geladeira Midea Frost Free
+                <h2>
 
-</h2>
+                    🎁 Prêmio
 
-<div class="valor">
+                </h2>
 
-R$ 10,00
+                <h3 id="premio">
 
-</div>
+                    Geladeira Midea Frost Free
 
-<p>
+                </h3>
 
-Cada número comprado contribui para o tratamento de Dona Bené.
+                <div class="valor-box">
 
-</p>
+                    <span>
 
-</section>
+                        Valor por número
 
-<section class="informacoes">
+                    </span>
 
-<div class="card">
+                    <strong id="valor">
 
-<h3>
+                        R$ 10,00
 
-📅 Sorteio
+                    </strong>
 
-</h3>
+                </div>
 
-<p>
+                <div class="data-box">
 
-30 de Dezembro
+                    <span>
 
-</p>
+                        Sorteio
 
-</div>
+                    </span>
 
-<div class="card">
+                    <strong>
 
-<h3>
+                        30 de Dezembro
 
-🎲 Resultado
+                    </strong>
 
-</h3>
+                </div>
 
-<p>
+            </div>
 
-Loteria Federal
+        </section>
 
-</p>
+        <!-- Contador -->
 
-</div>
+        <section class="contador">
 
-<div class="card">
+            <div class="glass">
 
-<h3>
+                <h2>
 
-🔢 Números
+                    ⏳ Contagem Regressiva
 
-</h3>
+                </h2>
 
-<p>
+                <div class="countdown">
 
-000 até 999
+                    <div class="tempo">
 
-</p>
+                        <span id="dias">
 
-</div>
+                            00
 
-</section>
+                        </span>
+
+                        <small>Dias</small>
+
+                    </div>
+
+                    <div class="tempo">
+
+                        <span id="horas">
+
+                            00
+
+                        </span>
+
+                        <small>Horas</small>
+
+                    </div>
+
+                    <div class="tempo">
+
+                        <span id="minutos">
+
+                            00
+
+                        </span>
+
+                        <small>Minutos</small>
+
+                    </div>
+
+                    <div class="tempo">
+
+                        <span id="segundos">
+
+                            00
+
+                        </span>
+
+                        <small>Segundos</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+                <!-- Botões Principais -->
+
+        <section class="acoes">
+
+            <a
+                href="cartela.html"
+                class="btn btn-primary"
+                aria-label="Escolher Cartela">
+
+                🎟️ ESCOLHER CARTELA
+
+            </a>
+
+            <a
+                id="btnWhatsapp"
+                href="https://wa.me/5579999145044"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-success"
+                aria-label="Conversar pelo WhatsApp">
+
+                💬 WHATSAPP
+
+            </a>
+
+        </section>
+
+        <!-- PIX -->
+
+        <section class="pix-section">
+
+            <div class="glass">
+
+                <h2>
+
+                    💙 Ajude através do PIX
+
+                </h2>
+
+                <p>
+
+                    Chave PIX
+
+                </p>
+
+                <div class="pix-box">
+
+                    <input
+                        id="pixKey"
+                        type="text"
+                        readonly
+                        value="045.761.515-09"
+                        aria-label="Chave PIX">
+
+                    <button
+                        id="copiarPix"
+                        class="btn btn-pix">
+
+                        📋 Copiar chave PIX
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Mensagem -->
+
+        <div
+            id="toast"
+            class="toast"
+            role="status"
+            aria-live="polite">
+
+            ✅ Chave copiada!
+
+        </div>
+
+    </main>
+
+    <!-- Rodapé -->
+
+    <footer class="footer">
+
+        <div class="glass footer-content">
+
+            <img
+                src="img/1784636629590.png"
+                alt="Logo GilFest"
+                class="footer-logo">
+
+            <p>
+
+                © 2026 GilFest • Todos os direitos reservados.
+
+            </p>
+
+            <small>
+
+                Desenvolvido com ❤️ para ajudar Dona Bené.
+
+            </small>
+
+        </div>
+
+    </footer>
+        <!-- Schema.org -->
+
+    <script type="application/ld+json">
+    {
+        "@context":"https://schema.org",
+        "@type":"Event",
+        "name":"Rifa Solidária",
+        "description":"Rifa beneficente em prol da saúde de Dona Bené.",
+        "eventStatus":"https://schema.org/EventScheduled",
+        "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+        "startDate":"2026-12-30T20:00:00",
+        "organizer":{
+            "@type":"Organization",
+            "name":"GilFest"
+        },
+        "offers":{
+            "@type":"Offer",
+            "price":"10.00",
+            "priceCurrency":"BRL"
+        }
+    }
+    </script>
+
+    <!-- Configurações -->
+
+    <script src="config.js"></script>
+
+    <!-- Firebase -->
+
+    <script src="firebase.js"></script>
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+
+    <!-- Registro do Service Worker -->
+
+    <script>
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener("load", () => {
+
+            navigator.serviceWorker
+                .register("sw.js")
+                .then(() => {
+
+                    console.log("Service Worker registrado.");
+
+                })
+                .catch((erro) => {
+
+                    console.error("Erro ao registrar SW:", erro);
+
+                });
+
+        });
+
+    }
+    </script>
+
+</body>
+
+</html>
