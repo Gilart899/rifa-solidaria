@@ -1,46 +1,31 @@
 {
-  "name": "Rifa Solidária GilFest",
+  "name": "Rifa Solidária - Dona Bené",
   "short_name": "Rifa Solidária",
-  "description": "Sistema profissional de Rifa Solidária em prol da saúde de Dona Bené.",
-  
-  "start_url": "index.html",
-
+  "description": "Participe da Rifa Solidária em prol da saúde de Dona Benedita e concorra a uma Geladeira Midea Frost Free.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-
-  "background_color": "#ffffff",
-
-  "theme_color": "#2563eb",
-
   "orientation": "portrait",
-
-
+  "background_color": "#2563eb",
+  "theme_color": "#2563eb",
+  "categories": [
+    "charity",
+    "shopping",
+    "lifestyle"
+  ],
   "icons": [
-
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
-
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-
-  ],
-
-
-  "categories": [
-
-    "fundraising",
-
-    "events",
-
-    "social"
-
-  ],
-
-
-  "lang": "pt-BR"
+  ]
 }
