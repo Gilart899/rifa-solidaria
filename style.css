@@ -702,7 +702,51 @@ main{
 ========================================================== */
 
 .pix-section{
+/* ==========================
+   COMPROVANTE
+========================== */
 
+.comprovante-section{
+
+    margin:35px 0;
+
+}
+
+.comprovante-section .glass{
+
+    padding:30px;
+
+    text-align:center;
+
+}
+
+.comprovante-texto{
+
+    color:#fff;
+
+    margin:15px auto;
+
+    line-height:1.6;
+
+    max-width:650px;
+
+}
+
+.dados-pix{
+
+    margin:20px 0;
+
+}
+
+.dados-pix p{
+
+    color:#fff;
+
+    margin:10px 0;
+
+    font-size:1.05rem;
+
+}
     margin:35px 0;
 
 }
