@@ -1,156 +1,80 @@
-/* ==========================================
-   FIREBASE
-========================================== */
+// ===============================
+// Firebase v10+
+// ===============================
 
-if (!firebase.apps.length) {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    firebase.initializeApp(firebaseConfig);
+import {
+    getDatabase,
+    ref,
+    set,
+    get,
+    update,
+    remove,
+    push,
+    child,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-}
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+const firebaseConfig = {
 
-const database =
-    firebase.database();
+    apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
 
+    authDomain: "rifa-solidaria-56274.firebaseapp.com",
 
-const reservasRef =
-    database.ref(
-        CONFIG.caminhoReservas
-    );
-/* ===========================
-   Firebase
-=========================== */
+    databaseURL: "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
 
-caminhoReservas: "reservas",
+    projectId: "rifa-solidaria-56274",
 
-/* ==========================================
-   VARIÁVEIS
-========================================== */
+    storageBucket: "rifa-solidaria-56274.firebasestorage.app",
 
-let numerosReservados = [];
+    messagingSenderId: "279310238107",
 
-/* ==========================================
-   CARREGAR RESERVAS
-========================================== */
+    appId: "1:279310238107:web:fd82a20c11e28a4673a13e"
 
-function carregarReservas(callback) {
+};
 
-    reservasRef.on("value", (snapshot) => {
+const app = initializeApp(firebaseConfig);
 
-        numerosReservados = [];
+const db = getDatabase(app);
 
-        snapshot.forEach((item) => {
+const auth = getAuth(app);
 
-            const dados = item.val();
+export {
 
-            if (dados && dados.numero) {
-                numerosReservados.push(dados.numero);
-            }
+    app,
 
-        });
+    db,
 
-        if (typeof callback === "function") {
-            callback();
-        }
+    auth,
 
-    });
+    ref,
 
-}
-/* ==========================================
-   SALVAR RESERVA
-========================================== */
+    set,
 
-function salvarReserva(dados) {
+    get,
 
-    return reservasRef.push({
-        numero: dados.numero,
-        nome: dados.nome,
-        telefone: dados.telefone,
-        cidade: dados.cidade || "",
-        observacao: dados.observacao || "",
-        status: "reservado",
-        data: Date.now()
-    });
+    update,
 
-}
+    remove,
 
-/* ==========================================
-   CONFIRMAR PAGAMENTO
-========================================== */
+    push,
 
-function confirmarPagamento(id) {
+    child,
 
-    return reservasRef.child(id).update({
-        status: "pago"
-    });
+    onValue,
 
-}
+    signInWithEmailAndPassword,
 
-/* ==========================================
-   EXCLUIR RESERVA
-========================================== */
+    signOut,
 
-function excluirReserva(id) {
+    onAuthStateChanged
 
-    if (!confirm("Deseja realmente excluir esta reserva?")) {
-        return;
-    }
-
-    return reservasRef.child(id).remove();
-
-}
-
-/* ==========================================
-   BUSCAR NÚMERO
-========================================== */
-
-function numeroReservado(numero) {
-
-    return numerosReservados.includes(numero);
-
-}
-/* ==========================================
-   MONITORAR CONEXÃO
-========================================== */
-
-const conectadoRef = firebase.database().ref(".info/connected");
-
-conectadoRef.on("value", (snapshot) => {
-
-    if (snapshot.val() === true) {
-
-        console.log("✅ Firebase conectado.");
-
-    } else {
-
-        console.warn("⚠️ Firebase desconectado.");
-
-    }
-
-});
-
-/* ==========================================
-   TRATAMENTO DE ERROS
-========================================== */
-
-reservasRef.on("error", (erro) => {
-
-    console.error("Erro no Firebase:", erro);
-
-});
-
-/* ==========================================
-   INICIALIZAÇÃO
-========================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    carregarReservas(() => {
-
-        console.log(
-            `Reservas carregadas: ${numerosReservados.length}`
-        );
-
-    });
-
-});
+};
