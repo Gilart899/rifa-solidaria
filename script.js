@@ -1,464 +1,397 @@
-"use strict";
-
-/* ==========================================
+/* ==========================================================
    RIFA SOLIDÁRIA
    script.js
-   Página Inicial
-========================================== */
+   Parte 1
+========================================================== */
 
-import {
-    db,
-    ref,
-    set,
-    get,
-    update,
-    remove,
-    push,
-    child,
-    onValue
-} from "./firebase.js";
+"use strict";
 
-/* ==========================================
-   ELEMENTOS
-========================================== */
+/* ==========================================================
+   INICIALIZAÇÃO
+========================================================== */
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => document.querySelectorAll(selector);
+document.addEventListener("DOMContentLoaded", () => {
 
-const slides = $$(".slide");
+    iniciarCarrossel();
 
-const prevBtn = $("#prevSlide");
-const nextBtn = $("#nextSlide");
+    iniciarContagem();
 
-const toast = $("#toast");
+    configurarPix();
 
-const pixButton = $("#copiarPix");
-const pixInput = $("#pixKey");
+});
 
-const titulo = $("#titulo");
-const subtitulo = $("#subtitulo");
+/* ==========================================================
+   CARROSSEL
+========================================================== */
 
-const premio = $("#premio");
-const beneficiada = $("#beneficiada");
+function iniciarCarrossel() {
 
-const valor = $("#valor");
+    const slides = document.querySelectorAll(".slide");
 
-const dias = $("#dias");
-const horas = $("#horas");
-const minutos = $("#minutos");
-const segundos = $("#segundos");
+    const btnPrev = document.getElementById("prevSlide");
 
-/* ==========================================
-   VARIÁVEIS
-========================================== */
+    const btnNext = document.getElementById("nextSlide");
 
-let slideAtual = 0;
+    if (!slides.length) return;
 
-let autoSlide = null;
+    let indice = 0;
 
-let touchStartX = 0;
-let touchEndX = 0;
+    function mostrarSlide(posicao) {
 
-/* ==========================================
-   CARREGAR CONFIGURAÇÕES
-========================================== */
+        slides.forEach(slide => {
+
+            slide.classList.remove("active");
+
+        });
+
+        slides[posicao].classList.add("active");
+
+    }
+
+    function proximo() {
+
+        indice++;
+
+        if (indice >= slides.length) {
+
+            indice = 0;
+
+        }
+
+        mostrarSlide(indice);
+
+    }
+
+    function anterior() {
+
+        indice--;
+
+        if (indice < 0) {
+
+            indice = slides.length - 1;
+
+        }
+
+        mostrarSlide(indice);
+
+    }
+
+    btnNext?.addEventListener("click", proximo);
+
+    btnPrev?.addEventListener("click", anterior);
+
+    setInterval(proximo, 5000);
+
+}
+
+/* ==========================================================
+   CONTAGEM REGRESSIVA
+========================================================== */
+
+function iniciarContagem() {
+
+    if (typeof CONFIG === "undefined") return;
+
+    const destino = new Date(CONFIG.dataSorteio);
+
+    atualizar();
+
+    setInterval(atualizar, 1000);
+
+    function atualizar() {
+
+        const agora = new Date();
+
+        const diferenca = destino - agora;
+
+        if (diferenca <= 0) {
+
+            document.getElementById("dias").textContent = "00";
+
+            document.getElementById("horas").textContent = "00";
+
+            document.getElementById("minutos").textContent = "00";
+
+            document.getElementById("segundos").textContent = "00";
+
+            return;
+
+        }
+
+        const dias = Math.floor(diferenca / 86400000);
+
+        const horas = Math.floor((diferenca % 86400000) / 3600000);
+
+        const minutos = Math.floor((diferenca % 3600000) / 60000);
+
+        const segundos = Math.floor((diferenca % 60000) / 1000);
+
+        document.getElementById("dias").textContent =
+            String(dias).padStart(2, "0");
+
+        document.getElementById("horas").textContent =
+            String(horas).padStart(2, "0");
+
+        document.getElementById("minutos").textContent =
+            String(minutos).padStart(2, "0");
+
+        document.getElementById("segundos").textContent =
+            String(segundos).padStart(2, "0");
+
+    }
+
+}
+
+/* ==========================================================
+   PIX
+========================================================== */
+
+function configurarPix() {
+
+    const campo = document.getElementById("pixKey");
+
+    const botao = document.getElementById("copiarPix");
+
+    const toast = document.getElementById("toast");
+
+    if (!campo || !botao) return;
+
+    if (typeof CONFIG !== "undefined") {
+
+        campo.value = CONFIG.pix;
+
+    }
+
+    botao.addEventListener("click", async () => {
+
+        try {
+
+            await navigator.clipboard.writeText(campo.value);
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 2500);
+
+        } catch {
+
+            campo.select();
+
+            document.execCommand("copy");
+
+        }
+
+    });
+
+}
+/* ==========================================================
+   CONFIGURAÇÃO DA PÁGINA
+========================================================== */
 
 function carregarConfiguracoes() {
 
     if (typeof CONFIG === "undefined") return;
 
-    document.title =
-        `${CONFIG.titulo} | ${CONFIG.subtitulo}`;
+    const premio = document.getElementById("premio");
+    const valor = document.getElementById("valor");
+    const data = document.getElementById("dataSorteio");
+    const whatsapp = document.getElementById("btnWhatsapp");
 
-    titulo.textContent =
-        CONFIG.titulo;
+    if (premio) {
+        premio.textContent = CONFIG.premio;
+    }
 
-   const subtitulo = document.getElementById("subtitulo");
+    if (valor) {
+        valor.textContent = CONFIG.valor;
+    }
 
-if (subtitulo && CONFIG.subtitulo) {
+    if (data) {
+        data.textContent = CONFIG.dataTexto;
+    }
 
-    subtitulo.textContent = CONFIG.subtitulo;
+    if (whatsapp) {
 
-}
+        const mensagem = encodeURIComponent(
+            "Olá! Gostaria de participar da Rifa Solidária."
+        );
 
-    beneficiada.textContent =
-        CONFIG.beneficiada;
-const whatsapp = document.getElementById("btnWhatsapp");
-
-if (whatsapp && CONFIG.whatsapp) {
-
-    whatsapp.href =
-        `https://wa.me/${CONFIG.whatsapp.numero}?text=${encodeURIComponent(CONFIG.whatsapp.texto)}`;
-
-}
         whatsapp.href =
-            `https://wa.me/${CONFIG.whatsapp}`;
-
-    }
-    const whatsapp =
-        document.getElementById("btnWhatsapp");
-
-    whatsapp.href =
-        `https://wa.me/${CONFIG.whatsapp.numero}?text=${encodeURIComponent(CONFIG.whatsapp.texto)}`;
-
-}
-
-/* ==========================================
-   CARROSSEL
-========================================== */
-
-function mostrarSlide(indice){
-
-    slides.forEach((slide)=>{
-
-        slide.classList.remove("active");
-
-    });
-
-    slideAtual = indice;
-
-    if(slideAtual < 0){
-
-        slideAtual = slides.length - 1;
-
+            `https://wa.me/${CONFIG.whatsapp}?text=${mensagem}`;
     }
 
-    if(slideAtual >= slides.length){
-
-        slideAtual = 0;
-
-    }
-
-    slides[slideAtual].classList.add("active");
-
 }
 
-function proximoSlide(){
+/* ==========================================================
+   ANIMAÇÃO DOS TREVOS
+========================================================== */
 
-    mostrarSlide(slideAtual + 1);
+function iniciarTrevos() {
 
-}
+    const trevos = document.querySelectorAll(".trevo");
 
-function slideAnterior(){
+    trevos.forEach((trevo) => {
 
-    mostrarSlide(slideAtual - 1);
-
-}
-
-function iniciarCarrossel(){
-
-    autoSlide = setInterval(
-
-        proximoSlide,
-
-        5000
-
-    );
-
-}
-
-function reiniciarCarrossel(){
-
-    clearInterval(autoSlide);
-
-    iniciarCarrossel();
-
-}
-/* ==========================================
-   EVENTOS DO CARROSSEL
-========================================== */
-
-if (prevBtn) {
-
-    prevBtn.addEventListener("click", () => {
-
-        slideAnterior();
-
-        reiniciarCarrossel();
+        trevo.style.animationPlayState = "running";
 
     });
 
 }
 
-if (nextBtn) {
+/* ==========================================================
+   ANIMAÇÕES DE ENTRADA
+========================================================== */
 
-    nextBtn.addEventListener("click", () => {
+function iniciarAnimacoes() {
 
-        proximoSlide();
+    const elementos = document.querySelectorAll(".glass");
 
-        reiniciarCarrossel();
+    const observer = new IntersectionObserver((entradas) => {
+
+        entradas.forEach((entrada) => {
+
+            if (entrada.isIntersecting) {
+
+                entrada.target.classList.add("visible");
+
+            }
+
+        });
+
+    }, {
+        threshold: 0.15
+    });
+
+    elementos.forEach((elemento) => {
+
+        observer.observe(elemento);
 
     });
 
 }
 
-/* ==========================================
-   SUPORTE A TOUCH (SWIPE)
-========================================== */
-
-const carousel = document.querySelector(".carousel");
-
-if (carousel) {
-
-    carousel.addEventListener("touchstart", (event) => {
-
-        touchStartX = event.changedTouches[0].clientX;
-
-    }, { passive: true });
-
-    carousel.addEventListener("touchend", (event) => {
-
-        touchEndX = event.changedTouches[0].clientX;
-
-        const distancia = touchStartX - touchEndX;
-
-        if (Math.abs(distancia) < 50) return;
-
-        if (distancia > 0) {
-
-            proximoSlide();
-
-        } else {
-
-            slideAnterior();
-
-        }
-
-        reiniciarCarrossel();
-
-    }, { passive: true });
-
-}
-
-/* ==========================================
-   CONTAGEM REGRESSIVA
-========================================== */
-
-function atualizarContador() {
-
-    if (typeof CONFIG === "undefined") return;
-
-    const destino = new Date(CONFIG.dataSorteio).getTime();
-
-    const agora = Date.now();
-
-    const diferenca = destino - agora;
-
-    if (diferenca <= 0) {
-
-        dias.textContent = "00";
-        horas.textContent = "00";
-        minutos.textContent = "00";
-        segundos.textContent = "00";
-
-        return;
-
-    }
-
-    const totalSegundos = Math.floor(diferenca / 1000);
-
-    const diasRestantes = Math.floor(totalSegundos / 86400);
-
-    const horasRestantes = Math.floor((totalSegundos % 86400) / 3600);
-
-    const minutosRestantes = Math.floor((totalSegundos % 3600) / 60);
-
-    const segundosRestantes = totalSegundos % 60;
-
-    dias.textContent =
-        String(diasRestantes).padStart(2, "0");
-
-    horas.textContent =
-        String(horasRestantes).padStart(2, "0");
-
-    minutos.textContent =
-        String(minutosRestantes).padStart(2, "0");
-
-    segundos.textContent =
-        String(segundosRestantes).padStart(2, "0");
-
-}
-
-function iniciarContador() {
-
-    atualizarContador();
-
-    setInterval(atualizarContador, 1000);
-
-}
-/* ==========================================
-   PIX
-========================================== */
-
-async function copiarPix() {
-
-    if (!pixInput) return;
-
-    const chave = pixInput.value.trim();
-
-    if (!chave) return;
-
-    try {
-
-        if (navigator.clipboard && window.isSecureContext) {
-
-            await navigator.clipboard.writeText(chave);
-
-        } else {
-
-            pixInput.removeAttribute("readonly");
-
-            pixInput.select();
-
-            pixInput.setSelectionRange(0, chave.length);
-
-            document.execCommand("copy");
-
-            pixInput.setAttribute("readonly", true);
-
-            window.getSelection().removeAllRanges();
-
-        }
-
-        mostrarToast("✅ Chave copiada!");
-
-    } catch (erro) {
-
-        console.error("Erro ao copiar a chave PIX:", erro);
-
-        mostrarToast("❌ Não foi possível copiar.");
-
-    }
-
-}
-
-if (pixButton) {
-
-    pixButton.addEventListener("click", copiarPix);
-
-}
-
-/* ==========================================
-   TOAST
-========================================== */
-
-let toastTimeout = null;
-
-function mostrarToast(mensagem) {
-
-    if (!toast) return;
-
-    toast.textContent = mensagem;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimeout);
-
-    toastTimeout = setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 2500);
-
-}
-
-/* ==========================================
-   UTILITÁRIOS
-========================================== */
-
-function reproduzirClique() {
-
-    if (
-        typeof CONFIG === "undefined" ||
-        !CONFIG.sons ||
-        !CONFIG.sons.clique
-    ) {
-        return;
-    }
-
-    const audio = new Audio(CONFIG.sons.clique);
-
-    audio.volume = 0.3;
-
-    audio.play().catch(() => {
-        /* Ignora bloqueio automático do navegador */
-    });
-
-}
-
-document.querySelectorAll(".btn").forEach((botao) => {
-
-    botao.addEventListener("click", reproduzirClique);
-
-});
-/* ==========================================
-   INICIALIZAÇÃO
-========================================== */
-
-function inicializarAplicacao() {
-
-    carregarConfiguracoes();
-
-    if (slides.length > 0) {
-
-        mostrarSlide(0);
-
-        iniciarCarrossel();
-
-    }
-
-    iniciarContador();
-
-    console.log("✅ Rifa Solidária iniciada com sucesso.");
-
-}
-
-/* ==========================================
-   VISIBILIDADE DA ABA
-========================================== */
-
-document.addEventListener("visibilitychange", () => {
-
-    if (slides.length === 0) return;
-
-    if (document.hidden) {
-
-        clearInterval(autoSlide);
-
-    } else {
-
-        reiniciarCarrossel();
-
-    }
-
-});
-
-/* ==========================================
-   CARREGAMENTO DA PÁGINA
-========================================== */
+/* ==========================================================
+   OTIMIZAÇÕES
+========================================================== */
 
 window.addEventListener("load", () => {
 
-    inicializarAplicacao();
+    carregarConfiguracoes();
+
+    iniciarTrevos();
+
+    iniciarAnimacoes();
 
 });
 
-/* ==========================================
+/* ==========================================================
+   REDIMENSIONAMENTO
+========================================================== */
+
+window.addEventListener("resize", () => {
+
+    document.documentElement.style.setProperty(
+        "--vh",
+        `${window.innerHeight * 0.01}px`
+    );
+
+});
+/* ==========================================================
+   RIFA SOLIDÁRIA
+   script.js
+   Parte 3 (Final)
+========================================================== */
+
+/* ==========================================================
+   FIREBASE
+========================================================== */
+
+async function atualizarCartelas() {
+
+    try {
+
+        if (typeof carregarCartelas !== "function") {
+
+            console.warn("carregarCartelas() não encontrada.");
+
+            return;
+
+        }
+
+        await carregarCartelas();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao atualizar cartelas:",
+            erro
+        );
+
+    }
+
+}
+
+/* ==========================================================
+   ATUALIZAÇÃO AUTOMÁTICA
+========================================================== */
+
+function iniciarAtualizacaoAutomatica() {
+
+    atualizarCartelas();
+
+    setInterval(() => {
+
+        atualizarCartelas();
+
+    }, 30000);
+
+}
+
+/* ==========================================================
+   VISIBILIDADE DA ABA
+========================================================== */
+
+document.addEventListener("visibilitychange", () => {
+
+    if (!document.hidden) {
+
+        atualizarCartelas();
+
+    }
+
+});
+
+/* ==========================================================
+   CONEXÃO
+========================================================== */
+
+window.addEventListener("online", () => {
+
+    console.log("Conexão restaurada.");
+
+    atualizarCartelas();
+
+});
+
+window.addEventListener("offline", () => {
+
+    console.warn("Sem conexão com a internet.");
+
+});
+
+/* ==========================================================
    TRATAMENTO DE ERROS
-========================================== */
+========================================================== */
 
-window.addEventListener("error", (event) => {
+window.addEventListener("error", (evento) => {
 
-    console.error("Erro capturado:", event.error || event.message);
-
-});
-
-window.addEventListener("unhandledrejection", (event) => {
-
-    console.error("Promise rejeitada:", event.reason);
+    console.error(
+        "Erro detectado:",
+        evento.message
+    );
 
 });
 
-/* ==========================================
-   FIM DO ARQUIVO
-========================================== */
+window.addEventListener("unhandledrejection", (
