@@ -1417,3 +1417,73 @@ svg{
 /* ==========================================================
    FIM DO ARQUIVO
 ========================================================== */
+
+/* ==========================================================
+   CONTADOR EM UMA LINHA
+========================================================== */
+
+.countdown-line{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+    margin-top:12px;
+
+}
+
+.countdown-line span{
+
+    color:#2563eb;
+
+    font-size:1.45rem;
+
+    min-width:28px;
+
+    text-align:center;
+
+}
+
+.countdown-line small{
+
+    color:#555;
+
+    font-size:.90rem;
+
+}
+
+.separador{
+
+    color:#ff4fa3;
+
+    font-size:1rem;
+
+}
+
+@media(max-width:600px){
+
+    .countdown-line{
+
+        font-size:.95rem;
+
+        gap:6px;
+
+    }
+
+    .countdown-line span{
+
+        font-size:1.2rem;
+
+    }
+
+}
