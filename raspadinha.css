@@ -1,0 +1,500 @@
+/* ==========================================================
+   RIFA SOLIDÁRIA
+   raspadinha.css
+   Página da Raspadinha
+========================================================== */
+
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.raspadinha-container{
+
+    width:min(900px,94%);
+
+    margin:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+    padding-bottom:60px;
+
+}
+
+
+
+/* ==========================================================
+   PRÊMIO
+========================================================== */
+
+
+.premio-box{
+
+    padding:30px;
+
+    text-align:center;
+
+}
+
+
+.premio-box h2{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+
+#premioResultado{
+
+    font-size:2rem;
+
+    font-weight:900;
+
+    color:var(--secondary);
+
+    margin:20px 0;
+
+}
+
+
+
+/* ==========================================================
+   ÁREA RASPAGEM
+========================================================== */
+
+
+.raspadinha-area{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:25px;
+
+    overflow:hidden;
+
+}
+
+
+
+#canvasRaspadinha{
+
+    width:100%;
+
+    max-width:500px;
+
+    height:300px;
+
+    border-radius:25px;
+
+    cursor:
+
+        crosshair;
+
+    touch-action:none;
+
+    box-shadow:
+
+        0 15px 35px rgba(0,0,0,.18);
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #fce7f3
+        );
+
+}
+
+
+
+/* ==========================================================
+   MENSAGEM
+========================================================== */
+
+
+.mensagem-premio{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:30px;
+
+    font-size:1.8rem;
+
+    font-weight:900;
+
+    color:var(--primary);
+
+    pointer-events:none;
+
+}
+/* ==========================================================
+   CONTROLES
+========================================================== */
+
+
+.controles-raspadinha{
+
+    padding:25px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+/* ==========================================================
+   CONFETES
+========================================================== */
+
+
+#confetes{
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    overflow:hidden;
+
+    z-index:999;
+
+}
+
+
+
+.confete{
+
+    position:absolute;
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:3px;
+
+    animation:
+
+        cairConfete 3s linear forwards;
+
+}
+
+
+
+@keyframes cairConfete{
+
+
+    from{
+
+        transform:
+
+            translateY(-20px)
+            rotate(0deg);
+
+        opacity:1;
+
+    }
+
+
+    to{
+
+        transform:
+
+            translateY(100vh)
+            rotate(720deg);
+
+        opacity:0;
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   BOTÃO VOLTAR
+========================================================== */
+
+
+#voltarInicio{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #64748b,
+            #94a3b8
+        );
+
+}
+
+
+
+/* ==========================================================
+   EFEITO DE VITÓRIA
+========================================================== */
+
+
+.premio-vencedor{
+
+
+    animation:
+
+        brilhoPremio 1s infinite alternate;
+
+
+}
+
+
+
+@keyframes brilhoPremio{
+
+
+    from{
+
+        transform:
+
+            scale(1);
+
+    }
+
+
+    to{
+
+        transform:
+
+            scale(1.08);
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+
+@media(max-width:600px){
+
+
+    .raspadinha-container{
+
+        width:92%;
+
+    }
+
+
+
+    #canvasRaspadinha{
+
+
+        height:240px;
+
+
+        border-radius:18px;
+
+
+    }
+
+
+
+    #premioResultado{
+
+
+        font-size:1.5rem;
+
+
+    }
+
+
+
+    .controles-raspadinha{
+
+
+        flex-direction:column;
+
+
+    }
+
+
+
+    .controles-raspadinha button{
+
+
+        width:100%;
+
+
+    }
+
+
+}
+/* ==========================================================
+   ACESSIBILIDADE
+========================================================== */
+
+
+#canvasRaspadinha:focus-visible,
+button:focus-visible{
+
+    outline:
+
+        3px solid var(--primary);
+
+    outline-offset:
+
+        4px;
+
+}
+
+
+
+/* ==========================================================
+   ANIMAÇÃO DE ENTRADA
+========================================================== */
+
+
+.raspadinha-area,
+.premio-box,
+.controles-raspadinha{
+
+    animation:
+
+        aparecerRaspadinha .45s ease both;
+
+}
+
+
+
+@keyframes aparecerRaspadinha{
+
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0);
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   SOMBRA SUAVE
+========================================================== */
+
+
+#canvasRaspadinha:hover{
+
+
+    box-shadow:
+
+        0 20px 45px rgba(0,0,0,.22);
+
+
+}
+
+
+
+/* ==========================================================
+   MENSAGEM FINAL
+========================================================== */
+
+
+.mensagem-premio.sucesso{
+
+
+    color:#16a34a;
+
+    animation:
+
+        aparecerPremio .5s ease;
+
+
+}
+
+
+
+@keyframes aparecerPremio{
+
+
+    from{
+
+
+        opacity:0;
+
+        transform:
+
+            scale(.7);
+
+
+    }
+
+
+    to{
+
+
+        opacity:1;
+
+        transform:
+
+            scale(1);
+
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   FIM raspadinha.css
+========================================================== */
