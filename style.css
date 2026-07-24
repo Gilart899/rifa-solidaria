@@ -808,3 +808,381 @@ main{
     opacity:1;
 
    
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+.acoes{
+
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+
+    margin:40px 0;
+
+}
+
+.btn{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:220px;
+
+    padding:16px 28px;
+
+    border:none;
+    border-radius:16px;
+
+    font-size:1rem;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:all .30s ease;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.18);
+
+}
+
+.btn:hover{
+
+    transform:translateY(-3px) scale(1.02);
+
+}
+
+.btn:active{
+
+    transform:scale(.98);
+
+}
+
+.btn-primary{
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+    color:#fff;
+
+}
+
+.btn-success{
+
+    background:linear-gradient(135deg,#10b981,#22c55e);
+
+    color:#fff;
+
+}
+
+.btn-pix{
+
+    background:linear-gradient(135deg,#ec4899,#db2777);
+
+    color:#fff;
+
+}
+
+/* ==========================================================
+   PIX
+========================================================== */
+
+.pix-section{
+
+    margin:35px 0;
+
+}
+
+.pix-section .glass{
+
+    padding:30px;
+
+    text-align:center;
+
+}
+
+.pix-section h2{
+
+    color:#fff;
+
+    margin-bottom:10px;
+
+}
+
+.pix-section p{
+
+    color:#fff;
+
+    opacity:.9;
+
+    margin-bottom:18px;
+
+}
+
+.pix-box{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+}
+
+.pix-box input{
+
+    flex:1;
+
+    min-width:260px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:14px;
+
+    font-size:1rem;
+
+    text-align:center;
+
+    background:#fff;
+
+}
+
+.pix-box button{
+
+    white-space:nowrap;
+
+}
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+.toast{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:25px;
+
+    transform:translateX(-50%) translateY(100px);
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:14px 24px;
+
+    border-radius:14px;
+
+    opacity:0;
+
+    transition:.35s;
+
+    z-index:9999;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+}
+
+.toast.show{
+
+    opacity:1;
+
+    transform:translateX(-50%) translateY(0);
+
+}
+
+/* ==========================================================
+   RODAPÉ
+========================================================== */
+
+.footer{
+
+    padding:45px 20px;
+
+}
+
+.footer-content{
+
+    text-align:center;
+
+    padding:30px;
+
+}
+
+.footer-logo{
+
+    width:85px;
+
+    margin:0 auto 18px;
+
+}
+
+.footer p{
+
+    color:#fff;
+
+    margin-bottom:8px;
+
+}
+
+.footer small{
+
+    color:rgba(255,255,255,.85);
+
+}
+
+/* ==========================================================
+   ACESSIBILIDADE
+========================================================== */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible{
+
+    outline:3px solid #fff;
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width:768px){
+
+    .top-header{
+
+        padding:25px 15px;
+
+    }
+
+    .logo{
+
+        width:85px;
+
+    }
+
+    #titulo{
+
+        font-size:2rem;
+
+    }
+
+    #subtitulo{
+
+        font-size:1rem;
+
+    }
+
+    .foto-beneficiada{
+
+        width:170px;
+
+    }
+
+    #beneficiada{
+
+        font-size:1.6rem;
+
+    }
+
+    .carousel-btn{
+
+        width:42px;
+        height:42px;
+
+        font-size:22px;
+
+    }
+
+    .countdown-line{
+
+        font-size:1rem;
+
+        gap:6px;
+
+    }
+
+    .countdown-line span{
+
+        font-size:1.4rem;
+
+    }
+
+    .btn{
+
+        width:100%;
+
+    }
+
+    .pix-box{
+
+        flex-direction:column;
+
+    }
+
+    .pix-box input{
+
+        min-width:100%;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    main{
+
+        width:95%;
+
+    }
+
+    .glass{
+
+        border-radius:18px;
+
+    }
+
+    .foto-beneficiada{
+
+        width:145px;
+
+    }
+
+    .countdown-line{
+
+        font-size:.92rem;
+
+    }
+
+    .countdown-line span{
+
+        font-size:1.2rem;
+
+        min-width:auto;
+
+    }
+
+    .valor-box,
+    .data-box{
+
+        flex-direction:column;
+
+        gap:8px;
+
+        text-align:center;
+
+    }
+
+}
+
+/* ==========================================================
+   FIM DO ARQUIVO
+========================================================== */
