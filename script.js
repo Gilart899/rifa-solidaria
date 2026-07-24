@@ -1,177 +1,445 @@
 /* ==========================================
    RIFA SOLIDÁRIA
-   CONFIGURAÇÕES GERAIS
-   GilFest
+   script.js
+   Página Inicial
 ========================================== */
 
-const CONFIG = {
+"use strict";
 
-    /* ===========================
-       Informações da Rifa
-    =========================== */
+/* ==========================================
+   ELEMENTOS
+========================================== */
 
-    titulo: "🎟️ RIFA ENTRE AMIGOS",
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
 
-    subtitulo: "💙 Em prol da saúde de Dona Bené",
+const slides = $$(".slide");
 
-    beneficiada: "Dona Bené",
+const prevBtn = $("#prevSlide");
+const nextBtn = $("#nextSlide");
 
-    premio: "Geladeira Midea Frost Free",
+const toast = $("#toast");
 
-    valorNumero: 10.00,
+const pixButton = $("#copiarPix");
+const pixInput = $("#pixKey");
 
-    dataSorteio: "2026-12-30T20:00:00",
+const titulo = $("#titulo");
+const subtitulo = $("#subtitulo");
 
+const premio = $("#premio");
+const beneficiada = $("#beneficiada");
 
-    /* ===========================
-       Contatos
-    =========================== */
+const valor = $("#valor");
 
-    whatsapp: {
+const dias = $("#dias");
+const horas = $("#horas");
+const minutos = $("#minutos");
+const segundos = $("#segundos");
 
-        numero: "5579999145044",
+/* ==========================================
+   VARIÁVEIS
+========================================== */
 
-        texto:
-            "Olá! Gostaria de adquirir números da Rifa Solidária."
+let slideAtual = 0;
 
-    },
+let autoSlide = null;
 
-    pix: {
+let touchStartX = 0;
+let touchEndX = 0;
 
-        chave: "045.761.515-09",
+/* ==========================================
+   CARREGAR CONFIGURAÇÕES
+========================================== */
 
-        nome: "Dona Bené"
+function carregarConfiguracoes() {
 
-    },
+    if (typeof CONFIG === "undefined") return;
 
+    document.title =
+        `${CONFIG.titulo} | ${CONFIG.subtitulo}`;
 
-    /* ===========================
-       Numeração
-    =========================== */
+    titulo.textContent =
+        CONFIG.titulo;
 
-    numeros: {
+    subtitulo.textContent =
+        CONFIG.subtitulo;
 
-        inicio: 0,
+    beneficiada.textContent =
+        CONFIG.beneficiada;
 
-        fim: 999
+    premio.textContent =
+        CONFIG.premio;
 
-    },
+    valor.textContent =
+        `R$ ${Number(CONFIG.valorNumero).toFixed(2).replace(".", ",")}`;
 
+    pixInput.value =
+        CONFIG.pix.chave;
 
-    /* ===========================
-       Dashboard
-    =========================== */
+    const whatsapp =
+        document.getElementById("btnWhatsapp");
 
-    admin: {
+    whatsapp.href =
+        `https://wa.me/${CONFIG.whatsapp.numero}?text=${encodeURIComponent(CONFIG.whatsapp.texto)}`;
 
-        senha: "GilFest2026"
+}
 
-    },
+/* ==========================================
+   CARROSSEL
+========================================== */
 
+function mostrarSlide(indice){
 
-    /* ===========================
-       Tema
-    =========================== */
+    slides.forEach((slide)=>{
 
-    tema: {
+        slide.classList.remove("active");
 
-        primaria: "#2563eb",
+    });
 
-        secundaria: "#ec4899",
+    slideAtual = indice;
 
-        sucesso: "#16a34a",
+    if(slideAtual < 0){
 
-        alerta: "#f59e0b",
-
-        erro: "#dc2626",
-
-        branco: "#ffffff",
-
-        fundo: "#f4f8ff"
-
-    },
-
-
-    /* ===========================
-       Status
-    =========================== */
-
-    status: {
-
-        disponivel: "Disponível",
-
-        reservado: "Reservado",
-
-        pago: "Pago"
-
-    },
-
-
-    /* ===========================
-       Imagens
-    =========================== */
-
-    imagens: {
-
-        logo: "img/1784636629590.png",
-
-        beneficiada: "img/1783887880857.png",
-
-        premio1: "img/IMG-20260722-WA0037.jpg",
-
-        premio2: "img/IMG-20260722-WA0038.jpg",
-
-        trevo: "img/1784635553196.png",
-
-        maoTrevo: "img/1784642967961.png",
-
-        gato: "img/1784572338315.png"
-
-    },
-
-
-    /* ===========================
-       Raspadinha
-    =========================== */
-
-    raspadinha: {
-
-        premioPrincipal: "Liquidificador",
-
-        quantidadePremios: 10,
-
-        mensagem:
-
-            "🎉 Parabéns! Você encontrou um prêmio!"
-
-    },
-
-
-    /* ===========================
-       Sons
-    =========================== */
-
-    sons: {
-
-        raspando: "sounds/scratch.mp3",
-
-        vencedor: "sounds/winner.mp3",
-
-        clique: "sounds/click.mp3"
-
-    },
-
-
-    /* ===========================
-       PWA
-    =========================== */
-
-    app: {
-
-        nome: "Rifa Solidária",
-
-        versao: "1.0.0"
+        slideAtual = slides.length - 1;
 
     }
 
-};
+    if(slideAtual >= slides.length){
+
+        slideAtual = 0;
+
+    }
+
+    slides[slideAtual].classList.add("active");
+
+}
+
+function proximoSlide(){
+
+    mostrarSlide(slideAtual + 1);
+
+}
+
+function slideAnterior(){
+
+    mostrarSlide(slideAtual - 1);
+
+}
+
+function iniciarCarrossel(){
+
+    autoSlide = setInterval(
+
+        proximoSlide,
+
+        5000
+
+    );
+
+}
+
+function reiniciarCarrossel(){
+
+    clearInterval(autoSlide);
+
+    iniciarCarrossel();
+
+}
+/* ==========================================
+   EVENTOS DO CARROSSEL
+========================================== */
+
+if (prevBtn) {
+
+    prevBtn.addEventListener("click", () => {
+
+        slideAnterior();
+
+        reiniciarCarrossel();
+
+    });
+
+}
+
+if (nextBtn) {
+
+    nextBtn.addEventListener("click", () => {
+
+        proximoSlide();
+
+        reiniciarCarrossel();
+
+    });
+
+}
+
+/* ==========================================
+   SUPORTE A TOUCH (SWIPE)
+========================================== */
+
+const carousel = document.querySelector(".carousel");
+
+if (carousel) {
+
+    carousel.addEventListener("touchstart", (event) => {
+
+        touchStartX = event.changedTouches[0].clientX;
+
+    }, { passive: true });
+
+    carousel.addEventListener("touchend", (event) => {
+
+        touchEndX = event.changedTouches[0].clientX;
+
+        const distancia = touchStartX - touchEndX;
+
+        if (Math.abs(distancia) < 50) return;
+
+        if (distancia > 0) {
+
+            proximoSlide();
+
+        } else {
+
+            slideAnterior();
+
+        }
+
+        reiniciarCarrossel();
+
+    }, { passive: true });
+
+}
+
+/* ==========================================
+   CONTAGEM REGRESSIVA
+========================================== */
+
+function atualizarContador() {
+
+    if (typeof CONFIG === "undefined") return;
+
+    const destino = new Date(CONFIG.dataSorteio).getTime();
+
+    const agora = Date.now();
+
+    const diferenca = destino - agora;
+
+    if (diferenca <= 0) {
+
+        dias.textContent = "00";
+        horas.textContent = "00";
+        minutos.textContent = "00";
+        segundos.textContent = "00";
+
+        return;
+
+    }
+
+    const totalSegundos = Math.floor(diferenca / 1000);
+
+    const diasRestantes = Math.floor(totalSegundos / 86400);
+
+    const horasRestantes = Math.floor((totalSegundos % 86400) / 3600);
+
+    const minutosRestantes = Math.floor((totalSegundos % 3600) / 60);
+
+    const segundosRestantes = totalSegundos % 60;
+
+    dias.textContent =
+        String(diasRestantes).padStart(2, "0");
+
+    horas.textContent =
+        String(horasRestantes).padStart(2, "0");
+
+    minutos.textContent =
+        String(minutosRestantes).padStart(2, "0");
+
+    segundos.textContent =
+        String(segundosRestantes).padStart(2, "0");
+
+}
+
+function iniciarContador() {
+
+    atualizarContador();
+
+    setInterval(atualizarContador, 1000);
+
+}
+/* ==========================================
+   PIX
+========================================== */
+
+async function copiarPix() {
+
+    if (!pixInput) return;
+
+    const chave = pixInput.value.trim();
+
+    if (!chave) return;
+
+    try {
+
+        if (navigator.clipboard && window.isSecureContext) {
+
+            await navigator.clipboard.writeText(chave);
+
+        } else {
+
+            pixInput.removeAttribute("readonly");
+
+            pixInput.select();
+
+            pixInput.setSelectionRange(0, chave.length);
+
+            document.execCommand("copy");
+
+            pixInput.setAttribute("readonly", true);
+
+            window.getSelection().removeAllRanges();
+
+        }
+
+        mostrarToast("✅ Chave copiada!");
+
+    } catch (erro) {
+
+        console.error("Erro ao copiar a chave PIX:", erro);
+
+        mostrarToast("❌ Não foi possível copiar.");
+
+    }
+
+}
+
+if (pixButton) {
+
+    pixButton.addEventListener("click", copiarPix);
+
+}
+
+/* ==========================================
+   TOAST
+========================================== */
+
+let toastTimeout = null;
+
+function mostrarToast(mensagem) {
+
+    if (!toast) return;
+
+    toast.textContent = mensagem;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2500);
+
+}
+
+/* ==========================================
+   UTILITÁRIOS
+========================================== */
+
+function reproduzirClique() {
+
+    if (
+        typeof CONFIG === "undefined" ||
+        !CONFIG.sons ||
+        !CONFIG.sons.clique
+    ) {
+        return;
+    }
+
+    const audio = new Audio(CONFIG.sons.clique);
+
+    audio.volume = 0.3;
+
+    audio.play().catch(() => {
+        /* Ignora bloqueio automático do navegador */
+    });
+
+}
+
+document.querySelectorAll(".btn").forEach((botao) => {
+
+    botao.addEventListener("click", reproduzirClique);
+
+});
+/* ==========================================
+   INICIALIZAÇÃO
+========================================== */
+
+function inicializarAplicacao() {
+
+    carregarConfiguracoes();
+
+    if (slides.length > 0) {
+
+        mostrarSlide(0);
+
+        iniciarCarrossel();
+
+    }
+
+    iniciarContador();
+
+    console.log("✅ Rifa Solidária iniciada com sucesso.");
+
+}
+
+/* ==========================================
+   VISIBILIDADE DA ABA
+========================================== */
+
+document.addEventListener("visibilitychange", () => {
+
+    if (slides.length === 0) return;
+
+    if (document.hidden) {
+
+        clearInterval(autoSlide);
+
+    } else {
+
+        reiniciarCarrossel();
+
+    }
+
+});
+
+/* ==========================================
+   CARREGAMENTO DA PÁGINA
+========================================== */
+
+window.addEventListener("load", () => {
+
+    inicializarAplicacao();
+
+});
+
+/* ==========================================
+   TRATAMENTO DE ERROS
+========================================== */
+
+window.addEventListener("error", (event) => {
+
+    console.error("Erro capturado:", event.error || event.message);
+
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+
+    console.error("Promise rejeitada:", event.reason);
+
+});
+
+/* ==========================================
+   FIM DO ARQUIVO
+========================================== */
