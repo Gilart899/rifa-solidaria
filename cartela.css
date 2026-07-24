@@ -1,0 +1,271 @@
+/* ==========================================================
+   RIFA SOLIDÁRIA
+   cartela.css
+   Página de escolha dos números
+========================================================== */
+
+
+/* ==========================================================
+   CONTAINER PRINCIPAL
+========================================================== */
+
+.cartela-container{
+
+    width:min(1180px,94%);
+
+    margin:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+    padding-bottom:60px;
+
+}
+
+
+/* ==========================================================
+   PESQUISA
+========================================================== */
+
+.pesquisa-box{
+
+    padding:28px;
+
+    text-align:center;
+
+}
+
+
+.pesquisa-box h2{
+
+    color:var(--primary);
+
+    margin-bottom:18px;
+
+}
+
+
+.pesquisa-box input{
+
+    width:100%;
+
+    max-width:420px;
+
+    height:55px;
+
+    border-radius:16px;
+
+    border:2px solid rgba(37,99,235,.18);
+
+    padding:0 18px;
+
+    font-size:1.1rem;
+
+    text-align:center;
+
+}
+
+
+.pesquisa-box input:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:
+
+        0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+
+/* ==========================================================
+   LEGENDA
+========================================================== */
+
+.legenda{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:30px;
+
+    padding:22px;
+
+}
+
+
+.legenda div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-weight:600;
+
+}
+
+
+.status{
+
+    width:20px;
+
+    height:20px;
+
+    border-radius:50%;
+
+    display:inline-block;
+
+}
+
+
+/* Cores dos status */
+
+.status.disponivel{
+
+    background:#22c55e;
+
+}
+
+
+.status.reservado{
+
+    background:#f59e0b;
+
+}
+
+
+.status.pago{
+
+    background:#ef4444;
+
+}
+
+
+/* ==========================================================
+   GRADE DOS NÚMEROS
+========================================================== */
+
+.grade-cartela{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(65px,1fr));
+
+    gap:12px;
+
+    padding:28px;
+
+    background:rgba(255,255,255,.25);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:var(--radius);
+
+}
+
+
+/* ==========================================================
+   BOTÕES DOS NÚMEROS
+========================================================== */
+
+.numero{
+
+    height:65px;
+
+    border:none;
+
+    border-radius:16px;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    color:white;
+
+    box-shadow:
+
+        0 8px 18px rgba(0,0,0,.12);
+
+    transition:
+
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.numero:hover{
+
+    transform:
+
+        translateY(-4px);
+
+    box-shadow:
+
+        0 14px 25px rgba(0,0,0,.18);
+
+}
+
+
+/* Disponível */
+
+.numero.disponivel{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #16a34a,
+            #22c55e
+        );
+
+}
+
+
+/* Reservado */
+
+.numero.reservado{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #d97706,
+            #f59e0b
+        );
+
+    cursor:not-allowed;
+
+}
+
+
+/* Pago */
+
+.numero.pago{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
+
+    cursor:not-allowed;
+
+}
