@@ -14,8 +14,7 @@ const CONFIG = {
     /* Dados da campanha */
 
     titulo: "🎟️ RIFA ENTRE AMIGOS",
-
-    subtitulo: "💙 Em prol da saúde de Dona Bené",
+subtitulo: "💙 Em prol da realização dos exames de Dona Benedita",
 
     beneficiada: "Dona Bené",
 
