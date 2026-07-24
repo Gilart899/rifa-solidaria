@@ -46,13 +46,14 @@ const dbRoot = ref(db);
 };
 
 const app = initializeApp(firebaseConfig);
-
+const dbRoot = ref(db);
 const db = getDatabase(app);
 
 const auth = getAuth(app);
 
 export {
-
+    dbRoot,
+    firebaseConfig,
     app,
 
     db,
