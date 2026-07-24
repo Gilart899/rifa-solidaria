@@ -1486,4 +1486,160 @@ svg{
 
     }
 
+   /* ==========================================================
+   TREVOS ANIMADOS
+========================================================== */
+
+.beneficiada .glass{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.clovers-animation{
+
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:0;
+
+}
+
+.foto-beneficiada,
+.beneficiada h2,
+.beneficiada p{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.trevo{
+
+    position:absolute;
+
+    width:18px;
+
+    opacity:.15;
+
+    animation:subirTrevo linear infinite;
+
+}
+
+.t1{
+
+    left:5%;
+    animation-duration:12s;
+    animation-delay:0s;
+
+}
+
+.t2{
+
+    left:18%;
+    width:22px;
+    animation-duration:15s;
+    animation-delay:2s;
+
+}
+
+.t3{
+
+    left:30%;
+    width:14px;
+    animation-duration:10s;
+    animation-delay:4s;
+
+}
+
+.t4{
+
+    left:45%;
+    width:26px;
+    animation-duration:17s;
+    animation-delay:1s;
+
+}
+
+.t5{
+
+    left:60%;
+    width:16px;
+    animation-duration:11s;
+    animation-delay:5s;
+
+}
+
+.t6{
+
+    left:72%;
+    width:24px;
+    animation-duration:16s;
+    animation-delay:3s;
+
+}
+
+.t7{
+
+    left:84%;
+    width:20px;
+    animation-duration:13s;
+    animation-delay:6s;
+
+}
+
+.t8{
+
+    left:94%;
+    width:15px;
+    animation-duration:18s;
+    animation-delay:2s;
+
+}
+
+@keyframes subirTrevo{
+
+    0%{
+
+        transform:
+            translateY(120%)
+            rotate(0deg);
+
+        opacity:0;
+
+    }
+
+    15%{
+
+        opacity:.15;
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-40%)
+            translateX(-10px)
+            rotate(180deg);
+
+    }
+
+    100%{
+
+        transform:
+            translateY(-170%)
+            translateX(10px)
+            rotate(360deg);
+
+        opacity:0;
+
+    }
+
+}
 }
