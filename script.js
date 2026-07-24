@@ -159,7 +159,31 @@ function configurarPix() {
     if (typeof CONFIG !== "undefined") {
 
         campo.value = CONFIG.pix;
+/* ==========================================
+   BOTÃO ENVIAR COMPROVANTE
+========================================== */
 
+const btnComprovante =
+document.getElementById("btnComprovante");
+
+if(btnComprovante){
+
+    const mensagem = encodeURIComponent(
+
+`Olá!
+
+Acabei de realizar o pagamento da Rifa Solidária.
+
+Segue meu comprovante para confirmação.
+
+Obrigado(a)!`
+
+    );
+
+    btnComprovante.href =
+    `https://wa.me/557988730207?text=${mensagem}`;
+
+}
     }
 
     botao.addEventListener("click", async () => {
