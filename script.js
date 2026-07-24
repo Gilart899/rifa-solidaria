@@ -73,8 +73,13 @@ function carregarConfiguracoes() {
     titulo.textContent =
         CONFIG.titulo;
 
-    subtitulo.textContent =
-        CONFIG.subtitulo;
+   const subtitulo = document.getElementById("subtitulo");
+
+if (subtitulo && CONFIG.subtitulo) {
+
+    subtitulo.textContent = CONFIG.subtitulo;
+
+}
 
     beneficiada.textContent =
         CONFIG.beneficiada;
