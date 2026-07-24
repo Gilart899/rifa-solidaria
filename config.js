@@ -19,7 +19,15 @@ const CONFIG = {
     pix: "79988730207",
     pixNome: "Maria Josivania Claudino França",
     pixBanco: "Banco Neon",
+📲 Envie seu comprovante
 
+Após realizar o PIX, envie o comprovante pelo WhatsApp.
+
+👤 Maria Josivania Claudino França
+🏦 Banco Neon
+📱 +55 (79) 8873-0207
+
+[💬 Enviar comprovante]
     // WhatsApp
     whatsapp: "557988730207",
 
