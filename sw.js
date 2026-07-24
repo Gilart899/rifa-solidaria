@@ -1,256 +1,130 @@
-/* ==========================================
+/* ==========================================================
    RIFA SOLIDÁRIA
-   sw.js
+   Service Worker
+========================================================== */
 
-   Service Worker PWA
-========================================== */
+const CACHE_NAME = "rifa-solidaria-v1.0.0";
 
-
-"use strict";
-
-
-
-const CACHE_NAME =
-
-    "rifa-solidaria-v1";
-
-
-
-const ARQUIVOS_CACHE = [
-
+const ASSETS = [
 
     "./",
-
-
     "./index.html",
-
-    "./style.css",
-
-    "./script.js",
-
-    "./config.js",
-
-    "./firebase.js",
-
-
     "./cartela.html",
-
-    "./cartela.css",
-
-    "./cartela.js",
-
-
-    "./admin.html",
-
-    "./admin.css",
-
-    "./admin.js",
-
-
-    "./raspadinha.html",
-
-    "./raspadinha.css",
-
-    "./raspadinha.js",
-
-
-    "./comprovante.html",
-
-    "./pdf.js",
-
-
+    "./style.css",
+    "./script.js",
+    "./config.js",
+    "./firebase.js",
     "./manifest.json",
 
-
-
     "./img/1783887880857.png",
-
-    "./img/1784635553196.png",
-
     "./img/1784636629590.png",
-
     "./img/IMG-20260722-WA0037.jpg",
+    "./img/IMG-20260722-WA0038.jpg",
+    "./img/trevo.png",
 
-    "./img/IMG-20260722-WA0038.jpg"
-
-
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 
 ];
 
-
-
-
-
-/* ==========================================
+/* ===========================
    INSTALAÇÃO
-========================================== */
+=========================== */
 
+self.addEventListener("install", event => {
 
-self.addEventListener(
+    event.waitUntil(
 
-    "install",
+        caches.open(CACHE_NAME)
 
-    evento=>{
+            .then(cache => cache.addAll(ASSETS))
 
+            .then(() => self.skipWaiting())
 
-        evento.waitUntil(
+    );
 
+});
 
-            caches.open(
-
-                CACHE_NAME
-
-            )
-
-            .then(
-
-                cache=>{
-
-
-                    return cache.addAll(
-
-                        ARQUIVOS_CACHE
-
-                    );
-
-
-                }
-
-            )
-
-
-        );
-
-
-        self.skipWaiting();
-
-
-    }
-
-);
-
-
-
-
-
-
-/* ==========================================
+/* ===========================
    ATIVAÇÃO
-========================================== */
+=========================== */
 
+self.addEventListener("activate", event => {
 
-self.addEventListener(
+    event.waitUntil(
 
-    "activate",
+        caches.keys().then(keys =>
 
-    evento=>{
+            Promise.all(
 
+                keys.map(key => {
 
-        evento.waitUntil(
+                    if (key !== CACHE_NAME) {
 
+                        return caches.delete(key);
 
-            caches.keys()
+                    }
 
-            .then(
+                })
 
-                cachesAtuais=>{
+            )
 
+        ).then(() => self.clients.claim())
 
-                    return Promise.all(
+    );
 
-                        cachesAtuais.map(
+});
 
-                            cache=>{
+/* ===========================
+   FETCH
+=========================== */
 
+self.addEventListener("fetch", event => {
 
-                                if(
+    if (event.request.method !== "GET") return;
 
-                                    cache !== CACHE_NAME
+    event.respondWith(
 
-                                ){
+        caches.match(event.request)
 
-                                    return caches.delete(
+            .then(cacheResponse => {
 
-                                        cache
+                if (cacheResponse) {
 
-                                    );
-
-                                }
-
-
-                            }
-
-                        )
-
-                    );
-
+                    return cacheResponse;
 
                 }
 
-            )
+                return fetch(event.request)
 
+                    .then(networkResponse => {
 
-        );
+                        const clone = networkResponse.clone();
 
+                        caches.open(CACHE_NAME)
 
+                            .then(cache => {
 
-        self.clients.claim();
+                                cache.put(event.request, clone);
 
+                            });
 
-    }
+                        return networkResponse;
 
-);
+                    });
 
+            })
 
+            .catch(() => {
 
+                if (event.request.mode === "navigate") {
 
-
-
-/* ==========================================
-   BUSCA
-========================================== */
-
-
-self.addEventListener(
-
-    "fetch",
-
-    evento=>{
-
-
-        evento.respondWith(
-
-
-            caches.match(
-
-                evento.request
-
-            )
-
-            .then(
-
-                resposta=>{
-
-
-                    return resposta
-
-                    ||
-
-                    fetch(
-
-                        evento.request
-
-                    );
-
+                    return caches.match("./index.html");
 
                 }
 
-            )
+            })
 
+    );
 
-        );
-
-
-    }
-
-);
+});
