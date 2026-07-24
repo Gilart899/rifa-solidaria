@@ -1,0 +1,670 @@
+/* ==========================================================
+   RIFA SOLIDÁRIA
+   admin.css
+   Painel Administrativo
+========================================================== */
+
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.admin-container{
+
+    width:min(1200px,94%);
+
+    margin:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+    padding-bottom:60px;
+
+}
+
+
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+.login-box{
+
+    width:min(450px,100%);
+
+    margin:auto;
+
+    padding:35px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    text-align:center;
+
+}
+
+
+.login-box h2{
+
+    color:var(--primary);
+
+    margin-bottom:15px;
+
+}
+
+
+.login-box label{
+
+    text-align:left;
+
+    font-weight:700;
+
+}
+
+
+.login-box input{
+
+    height:55px;
+
+    border-radius:15px;
+
+    border:2px solid rgba(37,99,235,.15);
+
+    padding:0 18px;
+
+    font-size:1rem;
+
+}
+
+
+
+.login-box input:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+}
+
+
+/* ==========================================================
+   DASHBOARD
+========================================================== */
+
+
+.cards-dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+
+
+.card{
+
+    padding:25px;
+
+    text-align:center;
+
+}
+
+
+
+.card h3{
+
+    font-size:1.1rem;
+
+    margin-bottom:15px;
+
+    color:#374151;
+
+}
+
+
+
+.card strong{
+
+    display:block;
+
+    font-size:2rem;
+
+    color:var(--primary);
+
+}
+
+
+
+/* ==========================================================
+   FILTROS
+========================================================== */
+
+
+.filtros{
+
+    padding:28px;
+
+}
+
+
+
+.filtros h2{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+
+
+.filtros-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.filtros-grid input{
+
+    height:55px;
+
+    border-radius:15px;
+
+    border:2px solid rgba(37,99,235,.15);
+
+    padding:0 18px;
+
+    font-size:1rem;
+
+}
+
+
+.filtros-grid input:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+}
+/* ==========================================================
+   TABELA
+========================================================== */
+
+.tabela-area{
+
+    padding:28px;
+
+}
+
+
+.tabela-area h2{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+
+.tabela-scroll{
+
+    width:100%;
+
+    overflow-x:auto;
+
+}
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:900px;
+
+}
+
+
+thead{
+
+    background:
+
+        rgba(37,99,235,.12);
+
+}
+
+
+th{
+
+    padding:15px;
+
+    text-align:left;
+
+    font-size:.95rem;
+
+    color:#374151;
+
+}
+
+
+td{
+
+    padding:14px 15px;
+
+    border-bottom:
+
+        1px solid rgba(0,0,0,.08);
+
+}
+
+
+tbody tr{
+
+    transition:.25s ease;
+
+}
+
+
+tbody tr:hover{
+
+    background:
+
+        rgba(37,99,235,.06);
+
+}
+
+
+
+/* ==========================================================
+   STATUS DA TABELA
+========================================================== */
+
+.status-admin{
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    font-size:.85rem;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+
+.status-reservado{
+
+    background:#f59e0b;
+
+}
+
+
+.status-pago{
+
+    background:#16a34a;
+
+}
+
+
+
+/* ==========================================================
+   AÇÕES DA TABELA
+========================================================== */
+
+.acao-btn{
+
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-weight:700;
+
+    margin:3px;
+
+}
+
+
+.btn-editar{
+
+    background:#2563eb;
+
+}
+
+
+.btn-pagar{
+
+    background:#16a34a;
+
+}
+
+
+.btn-excluir{
+
+    background:#dc2626;
+
+}
+
+
+
+/* ==========================================================
+   FERRAMENTAS
+========================================================== */
+
+.ferramentas{
+
+    padding:28px;
+
+}
+
+
+.ferramentas h2{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+
+.acoes-admin{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(220px,1fr));
+
+    gap:18px;
+
+}
+
+
+
+/* ==========================================================
+   INFORMAÇÕES
+========================================================== */
+
+.informacoes{
+
+    padding:28px;
+
+}
+
+
+.informacoes h2{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(250px,1fr));
+
+    gap:15px;
+
+}
+
+
+.info-grid p{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:15px;
+
+}
+
+
+.info-grid strong{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:var(--secondary);
+
+}
+/* ==========================================================
+   MODAL EDIÇÃO
+========================================================== */
+
+#modalEditar .modal-content{
+
+    width:min(500px,100%);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+
+#modalEditar label{
+
+    font-weight:700;
+
+}
+
+
+#modalEditar input,
+#modalEditar select{
+
+    height:52px;
+
+    border-radius:14px;
+
+    border:
+
+        2px solid rgba(37,99,235,.15);
+
+    padding:0 15px;
+
+    font-size:1rem;
+
+}
+
+
+#modalEditar input:focus,
+#modalEditar select:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+}
+
+
+
+/* ==========================================================
+   ERRO LOGIN
+========================================================== */
+
+.erro{
+
+    color:#dc2626;
+
+    font-weight:700;
+
+}
+
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+
+@media(max-width:800px){
+
+
+    .filtros-grid{
+
+        grid-template-columns:
+
+            1fr;
+
+    }
+
+
+    .cards-dashboard{
+
+        grid-template-columns:
+
+            repeat(2,1fr);
+
+    }
+
+
+    .card strong{
+
+        font-size:1.6rem;
+
+    }
+
+
+}
+
+
+
+@media(max-width:500px){
+
+
+    .cards-dashboard{
+
+        grid-template-columns:
+
+            1fr;
+
+    }
+
+
+    .admin-container{
+
+        width:92%;
+
+    }
+
+
+    .acoes-admin{
+
+        grid-template-columns:
+
+            1fr;
+
+    }
+
+
+    .login-box{
+
+        padding:25px;
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   ANIMAÇÕES
+========================================================== */
+
+
+.card{
+
+    animation:
+
+        aparecer .35s ease both;
+
+}
+
+
+@keyframes aparecer{
+
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+            translateY(15px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+            translateY(0);
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   ACESSIBILIDADE
+========================================================== */
+
+
+.acao-btn:focus-visible,
+.filtros input:focus-visible{
+
+    outline:
+
+        3px solid var(--primary);
+
+    outline-offset:3px;
+
+}
+
+
+
+/* ==========================================================
+   FIM admin.css
+========================================================== */
