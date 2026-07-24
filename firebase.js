@@ -2,12 +2,21 @@
    FIREBASE
 ========================================== */
 
-// Mantenha aqui o SEU firebaseConfig
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
 
-const database = firebase.database();
+    firebase.initializeApp(firebaseConfig);
 
-const reservasRef = database.ref(CONFIG.caminhoReservas);
+}
+
+
+const database =
+    firebase.database();
+
+
+const reservasRef =
+    database.ref(
+        CONFIG.caminhoReservas
+    );
 /* ===========================
    Firebase
 =========================== */
