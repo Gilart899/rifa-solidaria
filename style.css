@@ -1599,3 +1599,110 @@ svg{
 
 }
 }
+/* ==========================================================
+   CORREÇÃO DA CONTAGEM REGRESSIVA
+========================================================== */
+
+.contador{
+
+    margin:35px auto;
+
+}
+
+.contador .glass{
+
+    text-align:center;
+
+}
+
+.countdown-line{
+
+    display:flex !important;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    width:100%;
+
+    margin-top:10px;
+
+    font-weight:700;
+
+    line-height:1.4;
+
+}
+
+.countdown-line strong{
+
+    color:#2563eb;
+
+    font-size:1rem;
+
+    margin-right:6px;
+
+}
+
+.countdown-line span{
+
+    color:#2563eb;
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+    min-width:30px;
+
+    text-align:center;
+
+}
+
+.countdown-line small{
+
+    color:#666;
+
+    font-size:.9rem;
+
+}
+
+.countdown-line .separador{
+
+    color:#ff4f9d;
+
+    font-size:1rem;
+
+    margin:0 2px;
+
+}
+
+@media (max-width:768px){
+
+    .countdown-line{
+
+        gap:5px;
+
+        font-size:.95rem;
+
+    }
+
+    .countdown-line span{
+
+        font-size:1.25rem;
+
+    }
+
+    .countdown-line strong{
+
+        width:100%;
+
+        margin-bottom:6px;
+
+        margin-right:0;
+
+    }
+
+}
