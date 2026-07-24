@@ -3,7 +3,17 @@
    script.js
    Página Inicial
 ========================================== */
-
+import {
+    db,
+    ref,
+    set,
+    get,
+    update,
+    remove,
+    push,
+    child,
+    onValue
+} from "./firebase.js";
 "use strict";
 
 /* ==========================================
