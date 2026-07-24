@@ -8,6 +8,11 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 const reservasRef = database.ref(CONFIG.caminhoReservas);
+/* ===========================
+   Firebase
+=========================== */
+
+caminhoReservas: "reservas",
 
 /* ==========================================
    VARIÁVEIS
