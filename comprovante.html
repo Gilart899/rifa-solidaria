@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta http-equiv="X-UA-Compatible"
+      content="IE=edge">
+
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+
+
+<title>Comprovante | Rifa Solidária</title>
+
+
+
+<meta name="description"
+      content="Comprovante da Rifa Solidária GilFest.">
+
+
+<link rel="icon"
+      href="icons/icon-192.png">
+
+
+
+<link rel="stylesheet"
+      href="style.css">
+
+
+
+<style>
+
+
+.comprovante-container{
+
+    width:min(600px,92%);
+
+    margin:40px auto;
+
+}
+
+
+.comprovante{
+
+    padding:35px;
+
+    text-align:center;
+
+}
+
+
+.comprovante-logo{
+
+    width:120px;
+
+    margin-bottom:20px;
+
+}
+
+
+.dados{
+
+    margin-top:25px;
+
+    text-align:left;
+
+}
+
+
+.dados p{
+
+    padding:10px;
+
+    border-bottom:
+
+        1px solid rgba(0,0,0,.1);
+
+}
+
+
+
+.qrcode{
+
+    margin:25px auto;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+<div class="background-clovers"></div>
+
+
+
+<header class="top-header">
+
+
+<div class="logo-box">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="Logo GilFest"
+
+class="logo">
+
+
+</div>
+
+
+<div class="title-box">
+
+
+<h1>
+
+🧾 Comprovante da Rifa
+
+</h1>
+
+
+<p>
+
+Rifa Solidária Dona Bené
+
+</p>
+
+
+</div>
+
+
+</header>
+
+
+
+
+<main class="comprovante-container">
+
+
+<section class="glass comprovante">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="GilFest"
+
+class="comprovante-logo">
+
+
+<h2>
+
+Comprovante de Participação
+
+</h2>
+
+
+<div class="dados">
+
+
+<p>
+
+<strong>Nome:</strong>
+
+<span id="nomeCliente">
+
+---</span>
+
+</p>
+
+
+<p>
+
+<strong>Telefone:</strong>
+
+<span id="telefoneCliente">
+
+---</span>
+
+</p>
+
+
+<p>
+
+<strong>Número:</strong>
+
+<span id="numeroCliente">
+
+---</span>
+
+</p>
+
+<p>
+
+<strong>Valor:</strong>
+
+<span id="valorCliente">
+
+R$ 10,00
+
+</span>
+
+</p>
+
+
+
+<p>
+
+<strong>Data:</strong>
+
+<span id="dataCliente">
+
+---
+
+</span>
+
+</p>
+
+
+
+</div>
+
+
+
+
+<!-- ==========================================
+     PIX
+========================================== -->
+
+
+<div class="qrcode">
+
+
+<img
+
+id="qrPix"
+
+src=""
+
+alt="QR Code Pix"
+
+width="180">
+
+
+</div>
+
+
+
+<p>
+
+Pagamento via PIX
+
+</p>
+
+
+
+
+<!-- ==========================================
+     AÇÕES
+========================================== -->
+
+
+<div class="acoes-comprovante">
+
+
+<button
+
+id="gerarPDF"
+
+class="btn btn-primary">
+
+
+📄 Gerar PDF
+
+
+</button>
+
+
+
+
+<button
+
+id="voltar"
+
+class="btn">
+
+
+⬅ Voltar
+
+
+</button>
+
+
+</div>
+
+
+
+</section>
+
+
+</main>
+
+
+
+
+
+<footer class="footer">
+
+
+<div class="glass footer-content">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="Logo GilFest"
+
+class="footer-logo">
+
+
+
+<p>
+
+© 2026 GilFest
+
+</p>
+
+
+
+<small>
+
+Rifa Solidária
+
+</small>
+
+
+</div>
+
+
+</footer>
+
+<!-- ==========================================
+     BIBLIOTECAS PDF E QR CODE
+========================================== -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+
+
+<!-- ==========================================
+     CONFIGURAÇÃO
+========================================== -->
+
+
+<script src="config.js"></script>
+
+
+
+<!-- GERADOR PDF -->
+
+<script src="pdf.js"></script>
+
+
+
+
+
+<!-- ==========================================
+     PWA
+========================================== -->
+
+
+<script>
+
+if(
+    "serviceWorker"
+    in navigator
+){
+
+
+    window.addEventListener(
+        "load",
+        ()=>{
+
+
+            navigator.serviceWorker
+            .register(
+                "sw.js"
+            )
+            .then(
+                ()=>{
+
+
+                    console.log(
+                        "✅ PWA ativa."
+                    );
+
+
+                }
+            );
+
+
+        }
+    );
+
+
+}
+
+
+</script>
+
+
+
+</body>
+
+
+</html>
