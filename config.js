@@ -5,8 +5,6 @@
 
 const CONFIG = {
 
-    /* Dados da Rifa */
-
     premio: "Geladeira Midea Frost Free",
 
     valor: "R$ 10,00",
@@ -15,27 +13,24 @@ const CONFIG = {
 
     dataSorteio: "2026-12-30T20:00:00",
 
-    /* Beneficiada */
-
     beneficiada: "Dona Benedita",
 
-    /* PIX */
-
+    // PIX
     pix: "79988730207",
+    pixNome: "Maria Josivania Claudino França",
+    pixBanco: "Banco Neon",
 
-    /* WhatsApp */
-
-    whatsapp: "5579998730207",
+    // WhatsApp
+    whatsapp: "557988730207",
 
     mensagemWhatsapp:
-        "Olá! Quero participar da Rifa Solidária.",
+        "Olá! Gostaria de participar da Rifa Solidária.",
 
-    /* GitHub Pages */
-
-    site:
-        "https://SEU-USUARIO.github.io/rifa-solidaria/"
+    site: "https://SEU-USUARIO.github.io/rifa-solidaria/"
 
 };
+
+Object.freeze(CONFIG);
 
 /* ==========================================================
    CONGELA O OBJETO
