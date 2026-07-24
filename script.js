@@ -78,18 +78,14 @@ function carregarConfiguracoes() {
 
     beneficiada.textContent =
         CONFIG.beneficiada;
+const whatsapp = document.getElementById("btnWhatsapp");
 
-    premio.textContent =
-        CONFIG.premio;
+if (whatsapp && CONFIG.whatsapp) {
 
-    valor.textContent =
-        `R$ ${Number(CONFIG.valorNumero).toFixed(2).replace(".", ",")}`;
+    whatsapp.href =
+        `https://wa.me/${CONFIG.whatsapp.numero}?text=${encodeURIComponent(CONFIG.whatsapp.texto)}`;
 
-    pixInput.value =
-        CONFIG.pix.chave;
-
-       if (whatsapp && CONFIG.whatsapp) {
-
+}
         whatsapp.href =
             `https://wa.me/${CONFIG.whatsapp}`;
 
