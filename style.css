@@ -1421,26 +1421,35 @@ svg{
 /* ==========================================================
    CONTADOR EM UMA LINHA
 ========================================================== */
+<!-- Contagem Regressiva -->
 
-.countdown-line{
+<section class="contador">
 
-    display:flex;
+    <div class="glass">
 
-    justify-content:center;
+        <div class="countdown-line" role="timer" aria-live="polite">
 
-    align-items:center;
+            <strong>⏳ Sorteio em:</strong>
 
-    flex-wrap:wrap;
+            <span id="dias">00</span><small> dias</small>
 
-    gap:8px;
+            <span class="separador">•</span>
 
-    font-size:1.05rem;
+            <span id="horas">00</span><small> h</small>
 
-    font-weight:700;
+            <span class="separador">•</span>
 
-    margin-top:12px;
+            <span id="minutos">00</span><small> min</small>
 
-}
+            <span class="separador">•</span>
+
+            <span id="segundos">00</span><small> s</small>
+
+        </div>
+
+    </div>
+
+</section>
 
 .countdown-line span{
 
@@ -1464,9 +1473,11 @@ svg{
 
 .separador{
 
-    color:#ff4fa3;
+    color:#2563eb;
 
-    font-size:1rem;
+    font-weight:bold;
+
+    margin:0 4px;
 
 }
 
