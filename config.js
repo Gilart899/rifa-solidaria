@@ -1,157 +1,44 @@
-/* ==========================================
-   CONFIGURAÇÕES GERAIS
-   RIFA SOLIDÁRIA - GILFEST
-========================================== */
+/* ==========================================================
+   CONFIGURAÇÕES DA RIFA
+   config.js
+========================================================== */
 
 const CONFIG = {
 
- admin: {
-
-    senha: "123456"
-
-},  
-
-    /* Dados da campanha */
-
-    titulo: "🎟️ RIFA ENTRE AMIGOS",
-subtitulo: "💙 Em prol da realização dos exames de Dona Benedita",
-
-    beneficiada: "Dona Bené",
+    /* Dados da Rifa */
 
     premio: "Geladeira Midea Frost Free",
 
-    descricaoPremio:
-        "Geladeira Midea Frost Free - Excelente estado.",
+    valor: "R$ 10,00",
 
-    valorNumero: 10.00,
-
-    moeda: "R$",
-
-    /* Sorteio */
+    dataTexto: "30/12/2026 às 20:00",
 
     dataSorteio: "2026-12-30T20:00:00",
 
-    localSorteio: "Instagram / WhatsApp",
+    /* Beneficiada */
 
-    /* Quantidade de números */
-
-    totalNumeros: 1000,
-
-    inicioNumero: 0,
-
-    fimNumero: 999,
-
-    digitosNumero: 3,
-
-    /* WhatsApp */
-
-    telefone: "5579999145044",
-
-    telefoneVisual: "(79) 9 9914-5044",
-
-    mensagemWhatsApp:
-`Olá!
-Tenho interesse em participar da Rifa Solidária da Dona Bené.`,
+    beneficiada: "Dona Benedita",
 
     /* PIX */
 
-    chavePix: "045.761.515-09",
+    pix: "79988730207",
 
-    nomePix: "GilFest",
+    /* WhatsApp */
 
-    copiarPixMensagem:
-        "Chave Pix copiada com sucesso!",
+    whatsapp: "5579998730207",
 
-    /* Firebase */
+    mensagemWhatsapp:
+        "Olá! Quero participar da Rifa Solidária.",
 
-    caminhoReservas: "reservas",
+    /* GitHub Pages */
 
-    caminhoPagamentos: "pagamentos",
-
-    caminhoCompradores: "compradores",
-
-    caminhoConfiguracoes: "configuracoes",
-
-    caminhoRaspadinha: "raspadinha",
-
-    caminhoHistorico: "historico",
-
-    /* Raspadinha */
-
-    raspadinha: {
-
-        ativa: true,
-
-        premio: "Liquidificador",
-
-        mensagemPerdeu: [
-
-            "Obrigado por ajudar a Dona Bené ❤️",
-
-            "Sua ajuda faz toda diferença 💙",
-
-            "Boa sorte na rifa principal 🍀",
-
-            "Continue acompanhando o sorteio 🎉"
-
-        ]
-
-    },
-
-    /* Cores */
-
-    tema: {
-
-        primaria: "#1E88E5",
-
-        secundaria: "#EC407A",
-
-        sucesso: "#43A047",
-
-        alerta: "#FB8C00",
-
-        erro: "#E53935",
-
-        fundo: "#F5F8FF",
-
-        texto: "#2C3E50"
-
-    },
-
-    /* Imagens */
-
-    imagens: {
-
-        logo: "img/logo-gilfest.png",
-
-        donaBene: "img/1783887880857.png",
-
-        geladeira1: "img/IMG-20260722-WA0037.jpg",
-
-        geladeira2: "img/IMG-20260722-WA0038.jpg",
-
-        trevo: "img/1784635553196.png"
-
-    }
+    site:
+        "https://SEU-USUARIO.github.io/rifa-solidaria/"
 
 };
 
-/* ==========================================
-   FUNÇÕES AUXILIARES
-========================================== */
+/* ==========================================================
+   CONGELA O OBJETO
+========================================================== */
 
-function numeroFormatado(numero){
-
-    return numero
-        .toString()
-        .padStart(CONFIG.digitosNumero,"0");
-
-}
-
-function valorFormatado(valor){
-
-    return `${CONFIG.moeda} ${valor.toFixed(2).replace(".",",")}`;
-
-}
-
-console.log("Configurações carregadas.");
+Object.freeze(CONFIG);
