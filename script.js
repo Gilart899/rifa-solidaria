@@ -1,8 +1,11 @@
+"use strict";
+
 /* ==========================================
    RIFA SOLIDÁRIA
    script.js
    Página Inicial
 ========================================== */
+
 import {
     db,
     ref,
@@ -14,7 +17,6 @@ import {
     child,
     onValue
 } from "./firebase.js";
-"use strict";
 
 /* ==========================================
    ELEMENTOS
@@ -86,6 +88,12 @@ function carregarConfiguracoes() {
     pixInput.value =
         CONFIG.pix.chave;
 
+       if (whatsapp && CONFIG.whatsapp) {
+
+        whatsapp.href =
+            `https://wa.me/${CONFIG.whatsapp}`;
+
+    }
     const whatsapp =
         document.getElementById("btnWhatsapp");
 
