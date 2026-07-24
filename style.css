@@ -1418,49 +1418,6 @@ svg{
    FIM DO ARQUIVO
 ========================================================== */
 
-/* ==========================================================
-   CONTADOR EM UMA LINHA
-========================================================== */
-<!-- Contagem Regressiva -->
-
-<section class="contador">
-
-    <div class="glass">
-
-        <div class="countdown-line" role="timer" aria-live="polite">
-
-            <strong>⏳ Sorteio em:</strong>
-
-            <span id="dias">00</span><small> dias</small>
-
-            <span class="separador">•</span>
-
-            <span id="horas">00</span><small> h</small>
-
-            <span class="separador">•</span>
-
-            <span id="minutos">00</span><small> min</small>
-
-            <span class="separador">•</span>
-
-            <span id="segundos">00</span><small> s</small>
-
-        </div>
-
-    </div>
-
-</section>
-
-.countdown-line span{
-
-    color:#2563eb;
-
-    font-size:1.45rem;
-
-    min-width:28px;
-
-    text-align:center;
-
 }
 
 .countdown-line small{
