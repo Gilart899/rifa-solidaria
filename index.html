@@ -9,22 +9,30 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>🎟️ Rifa Solidária | Em prol da saúde de Dona Bené</title>
+    <meta name="theme-color"
+        content="#2563eb">
+
+    <meta name="color-scheme"
+        content="light">
+
+    <meta name="format-detection"
+        content="telephone=no">
+
+    <meta name="robots"
+        content="index,follow">
+
+    <meta name="author"
+        content="GilFest">
 
     <meta name="description"
         content="Participe da Rifa Solidária em prol da saúde de Dona Bené. Escolha seu número e concorra a uma Geladeira Midea Frost Free.">
 
     <meta name="keywords"
-        content="rifa, rifa solidária, gilfest, doação, geladeira, pix, sorteio">
+        content="rifa solidária, rifa entre amigos, GilFest, geladeira, pix, doação, sorteio">
 
-    <meta name="author"
-        content="GilFest">
-
-    <meta name="theme-color"
-        content="#2563eb">
-
-    <meta name="robots"
-        content="index,follow">
+    <title>
+        🎟️ Rifa Solidária | Em prol da saúde de Dona Bené
+    </title>
 
     <!-- Open Graph -->
 
@@ -35,7 +43,7 @@
         content="🎟️ Rifa Solidária">
 
     <meta property="og:description"
-        content="Ajude Dona Bené e participe da rifa solidária.">
+        content="Ajude Dona Bené participando da nossa Rifa Solidária.">
 
     <meta property="og:image"
         content="img/IMG-20260722-WA0037.jpg">
@@ -52,10 +60,16 @@
         content="Rifa Solidária">
 
     <meta name="twitter:description"
-        content="Concorra a uma Geladeira Midea Frost Free.">
+        content="Concorra a uma Geladeira Midea Frost Free ajudando Dona Bené.">
 
     <meta name="twitter:image"
         content="img/IMG-20260722-WA0037.jpg">
+
+    <!-- Canonical -->
+    <!-- Troque pela URL do seu GitHub Pages -->
+
+    <link rel="canonical"
+        href="https://SEU-USUARIO.github.io/rifa-solidaria/">
 
     <!-- PWA -->
 
@@ -63,6 +77,9 @@
         href="manifest.json">
 
     <link rel="icon"
+        href="icons/icon-192.png">
+
+    <link rel="shortcut icon"
         href="icons/icon-192.png">
 
     <link rel="apple-touch-icon"
@@ -77,7 +94,7 @@
 
 <body>
 
-    <!-- Fundo Decorativo -->
+    <!-- Fundo -->
 
     <div class="background-clovers"
         aria-hidden="true"></div>
@@ -89,9 +106,16 @@
         <div class="logo-box">
 
             <img
+
                 src="img/1784636629590.png"
+
                 alt="Logo GilFest"
-                class="logo">
+
+                class="logo"
+
+                loading="eager"
+
+                fetchpriority="high">
 
         </div>
 
@@ -113,7 +137,7 @@
 
     </header>
 
-    <main>
+    <main id="conteudoPrincipal">
 
         <!-- Beneficiada -->
 
@@ -129,7 +153,9 @@
 
                     class="foto-beneficiada"
 
-                    loading="lazy">
+                    loading="eager"
+
+                    fetchpriority="high">
 
                 <h2 id="beneficiada">
 
@@ -139,23 +165,24 @@
 
                 <p>
 
-                    Sua ajuda faz toda diferença.
-                    Obrigado por participar.
+                    Sua ajuda faz toda a diferença.
+
+                    Muito obrigado por participar desta corrente de solidariedade.
 
                 </p>
 
             </div>
 
         </section>
+                <!-- Carrossel -->
 
-        <!-- Carrossel -->
-
-        <section
-            class="carousel-section">
+        <section class="carousel-section"
+            aria-labelledby="tituloPremio">
 
             <div class="carousel">
 
                 <button
+                    type="button"
                     class="carousel-btn prev"
                     id="prevSlide"
                     aria-label="Imagem anterior">
@@ -171,17 +198,19 @@
 
                         src="img/IMG-20260722-WA0037.jpg"
 
-                        alt="Geladeira Midea Frente"
+                        alt="Geladeira Midea Frost Free vista frontal"
 
                         class="slide active"
 
-                        loading="lazy">
+                        loading="eager"
+
+                        fetchpriority="high">
 
                     <img
 
                         src="img/IMG-20260722-WA0038.jpg"
 
-                        alt="Geladeira Midea Perfil"
+                        alt="Geladeira Midea Frost Free vista lateral"
 
                         class="slide"
 
@@ -190,6 +219,7 @@
                 </div>
 
                 <button
+                    type="button"
                     class="carousel-btn next"
                     id="nextSlide"
                     aria-label="Próxima imagem">
@@ -202,13 +232,14 @@
 
         </section>
 
-        <!-- Informações -->
+        <!-- Informações do Prêmio -->
 
-        <section class="premio">
+        <section
+            class="premio">
 
             <div class="glass">
 
-                <h2>
+                <h2 id="tituloPremio">
 
                     🎁 Prêmio
 
@@ -216,7 +247,7 @@
 
                 <h3 id="premio">
 
-                    Geladeira Midea Frost Free
+                    <!-- Preenchido pelo config.js -->
 
                 </h3>
 
@@ -230,7 +261,7 @@
 
                     <strong id="valor">
 
-                        R$ 10,00
+                        <!-- Preenchido pelo config.js -->
 
                     </strong>
 
@@ -244,9 +275,9 @@
 
                     </span>
 
-                    <strong>
+                    <strong id="dataSorteio">
 
-                        30 de Dezembro
+                        <!-- Preenchido pelo config.js -->
 
                     </strong>
 
@@ -256,9 +287,10 @@
 
         </section>
 
-        <!-- Contador -->
+        <!-- Contagem Regressiva -->
 
-        <section class="contador">
+        <section
+            class="contador">
 
             <div class="glass">
 
@@ -268,7 +300,10 @@
 
                 </h2>
 
-                <div class="countdown">
+                <div
+                    class="countdown"
+                    role="timer"
+                    aria-live="polite">
 
                     <div class="tempo">
 
@@ -278,7 +313,11 @@
 
                         </span>
 
-                        <small>Dias</small>
+                        <small>
+
+                            Dias
+
+                        </small>
 
                     </div>
 
@@ -290,7 +329,11 @@
 
                         </span>
 
-                        <small>Horas</small>
+                        <small>
+
+                            Horas
+
+                        </small>
 
                     </div>
 
@@ -302,7 +345,11 @@
 
                         </span>
 
-                        <small>Minutos</small>
+                        <small>
+
+                            Minutos
+
+                        </small>
 
                     </div>
 
@@ -314,7 +361,11 @@
 
                         </span>
 
-                        <small>Segundos</small>
+                        <small>
+
+                            Segundos
+
+                        </small>
 
                     </div>
 
@@ -323,14 +374,14 @@
             </div>
 
         </section>
-                <!-- Botões Principais -->
+                <!-- Ações -->
 
         <section class="acoes">
 
             <a
                 href="cartela.html"
                 class="btn btn-primary"
-                aria-label="Escolher Cartela">
+                aria-label="Escolher uma cartela da rifa">
 
                 🎟️ ESCOLHER CARTELA
 
@@ -338,11 +389,12 @@
 
             <a
                 id="btnWhatsapp"
-                href="https://wa.me/5579999145044"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="btn btn-success"
-                aria-label="Conversar pelo WhatsApp">
+                aria-label="Conversar pelo WhatsApp"
+                title="Conversar pelo WhatsApp">
 
                 💬 WHATSAPP
 
@@ -374,12 +426,14 @@
                         id="pixKey"
                         type="text"
                         readonly
-                        value="045.761.515-09"
+                        value=""
                         aria-label="Chave PIX">
 
                     <button
                         id="copiarPix"
-                        class="btn btn-pix">
+                        class="btn btn-pix"
+                        type="button"
+                        aria-label="Copiar chave PIX">
 
                         📋 Copiar chave PIX
 
@@ -391,15 +445,16 @@
 
         </section>
 
-        <!-- Mensagem -->
+        <!-- Toast -->
 
         <div
             id="toast"
             class="toast"
             role="status"
-            aria-live="polite">
+            aria-live="polite"
+            aria-atomic="true">
 
-            ✅ Chave copiada!
+            ✅ Chave PIX copiada!
 
         </div>
 
@@ -412,9 +467,14 @@
         <div class="glass footer-content">
 
             <img
+
                 src="img/1784636629590.png"
+
                 alt="Logo GilFest"
-                class="footer-logo">
+
+                class="footer-logo"
+
+                loading="lazy">
 
             <p>
 
@@ -431,64 +491,85 @@
         </div>
 
     </footer>
-        <!-- Schema.org -->
+
+    <!-- Schema.org -->
 
     <script type="application/ld+json">
-    {
-        "@context":"https://schema.org",
-        "@type":"Event",
-        "name":"Rifa Solidária",
-        "description":"Rifa beneficente em prol da saúde de Dona Bené.",
-        "eventStatus":"https://schema.org/EventScheduled",
-        "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
-        "startDate":"2026-12-30T20:00:00",
-        "organizer":{
-            "@type":"Organization",
-            "name":"GilFest"
-        },
-        "offers":{
-            "@type":"Offer",
-            "price":"10.00",
-            "priceCurrency":"BRL"
-        }
-    }
-    </script>
 
-    <!-- Configurações -->
+{
+    "@context":"https://schema.org",
+    "@type":"Event",
+
+    "name":"Rifa Solidária",
+
+    "description":"Rifa beneficente em prol da saúde de Dona Bené.",
+
+    "eventStatus":"https://schema.org/EventScheduled",
+
+    "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+
+    "startDate":"2026-12-30T20:00:00",
+
+    "organizer":{
+
+        "@type":"Organization",
+
+        "name":"GilFest"
+
+    },
+
+    "offers":{
+
+        "@type":"Offer",
+
+        "price":"10.00",
+
+        "priceCurrency":"BRL"
+
+    }
+
+}
+
+    </script>
+        <!-- Configurações -->
 
     <script src="config.js"></script>
+
+    <!-- Firebase SDK (Compatível com firebase.js) -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <!-- Firebase -->
 
     <script src="firebase.js"></script>
 
-    <!-- JavaScript -->
+    <!-- JavaScript Principal -->
 
     <script src="script.js"></script>
 
     <!-- Registro do Service Worker -->
 
     <script>
-    if ("serviceWorker" in navigator) {
+        if ("serviceWorker" in navigator) {
 
-        window.addEventListener("load", () => {
+            window.addEventListener("load", async () => {
 
-            navigator.serviceWorker
-                .register("sw.js")
-                .then(() => {
+                try {
 
-                    console.log("Service Worker registrado.");
+                    const registration = await navigator.serviceWorker.register("./sw.js");
 
-                })
-                .catch((erro) => {
+                    console.log("✅ Service Worker registrado:", registration.scope);
 
-                    console.error("Erro ao registrar SW:", erro);
+                } catch (erro) {
 
-                });
+                    console.error("❌ Erro ao registrar Service Worker:", erro);
 
-        });
+                }
 
-    }
+            });
+
+        }
     </script>
 
 </body>
