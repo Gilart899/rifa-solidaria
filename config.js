@@ -5,6 +5,12 @@
 
 const CONFIG = {
 
+ admin: {
+
+    senha: "123456"
+
+},  
+
     /* Dados da campanha */
 
     titulo: "🎟️ RIFA ENTRE AMIGOS",
