@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <title>Painel Administrativo | Rifa Solidária</title>
+
+
+    <meta name="description"
+          content="Painel administrativo da Rifa Solidária GilFest.">
+
+
+    <link rel="icon"
+          href="icons/icon-192.png">
+
+
+    <link rel="stylesheet"
+          href="style.css">
+
+
+    <link rel="stylesheet"
+          href="admin.css">
+
+
+</head>
+
+
+<body>
+
+
+<div class="background-clovers"></div>
+
+
+
+<!-- ==========================================
+     CABEÇALHO
+========================================== -->
+
+
+<header class="top-header">
+
+
+    <div class="logo-box">
+
+
+        <img
+
+            src="img/1784636629590.png"
+
+            alt="Logo GilFest"
+
+            class="logo">
+
+
+    </div>
+
+
+    <div class="title-box">
+
+
+        <h1>
+
+            🔐 Painel Administrativo
+
+        </h1>
+
+
+        <p>
+
+            Gerenciamento da Rifa Solidária
+
+        </p>
+
+
+    </div>
+
+
+</header>
+
+
+
+
+<main class="admin-container">
+
+
+
+<!-- ==========================================
+     LOGIN
+========================================== -->
+
+
+<section
+    id="loginArea"
+    class="glass login-box">
+
+
+    <h2>
+
+        Acesso Administrativo
+
+    </h2>
+
+
+
+    <label for="senhaAdmin">
+
+        Senha
+
+    </label>
+
+
+
+    <input
+
+        type="password"
+
+        id="senhaAdmin"
+
+        placeholder="Digite a senha">
+
+
+    <button
+
+        id="entrarAdmin"
+
+        class="btn btn-primary">
+
+
+        Entrar
+
+
+    </button>
+
+
+
+    <p
+
+        id="erroLogin"
+
+        class="erro">
+
+
+    </p>
+
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+     DASHBOARD
+========================================== -->
+
+
+<section
+
+    id="dashboard"
+
+    class="hidden">
+
+
+
+<div class="cards-dashboard">
+
+
+
+<div class="glass card">
+
+<h3>
+
+🎟️ Total
+
+</h3>
+
+<strong id="totalNumeros">
+
+0
+
+</strong>
+
+</div>
+
+
+
+
+<div class="glass card">
+
+<h3>
+
+🟠 Reservados
+
+</h3>
+
+<strong id="totalReservados">
+
+0
+
+</strong>
+
+</div>
+
+
+
+
+<div class="glass card">
+
+<h3>
+
+🔴 Pagos
+
+</h3>
+
+<strong id="totalPagos">
+
+0
+
+</strong>
+
+</div>
+
+
+
+
+<div class="glass card">
+
+<h3>
+
+🟢 Disponíveis
+
+</h3>
+
+<strong id="totalDisponiveis">
+
+1000
+
+</strong>
+
+</div>
+
+
+
+
+<div class="glass card">
+
+<h3>
+
+💰 Arrecadado
+
+</h3>
+
+<strong id="valorArrecadado">
+
+R$ 0,00
+
+</strong>
+
+</div>
+
+
+</div>
+
+<!-- ==========================================
+     PESQUISA
+========================================== -->
+
+<section class="glass filtros">
+
+
+    <h2>
+
+        🔎 Pesquisar Reservas
+
+    </h2>
+
+
+
+    <div class="filtros-grid">
+
+
+        <input
+
+            type="text"
+
+            id="pesquisarNumero"
+
+            placeholder="Pesquisar número">
+
+
+        <input
+
+            type="text"
+
+            id="pesquisarCliente"
+
+            placeholder="Pesquisar cliente">
+
+
+    </div>
+
+
+</section>
+
+
+
+
+<!-- ==========================================
+     TABELA
+========================================== -->
+
+
+<section class="glass tabela-area">
+
+
+    <h2>
+
+        📋 Reservas
+
+    </h2>
+
+
+
+    <div class="tabela-scroll">
+
+
+        <table>
+
+
+            <thead>
+
+
+                <tr>
+
+
+                    <th>
+
+                        Número
+
+                    </th>
+
+
+                    <th>
+
+                        Nome
+
+                    </th>
+
+
+                    <th>
+
+                        Telefone
+
+                    </th>
+
+
+                    <th>
+
+                        Cidade
+
+                    </th>
+
+
+                    <th>
+
+                        Status
+
+                    </th>
+
+
+                    <th>
+
+                        Data
+
+                    </th>
+
+
+                    <th>
+
+                        Ações
+
+                    </th>
+
+
+                </tr>
+
+
+            </thead>
+
+
+
+            <tbody
+
+                id="listaReservas">
+
+
+            </tbody>
+
+
+
+        </table>
+
+
+    </div>
+
+
+
+</section>
+
+
+
+
+<!-- ==========================================
+     MODAL EDITAR
+========================================== -->
+
+
+<div
+
+    id="modalEditar"
+
+    class="modal hidden">
+
+
+    <div
+
+        class="modal-content glass">
+
+
+
+        <button
+
+            id="fecharEditar"
+
+            class="modal-close">
+
+
+            ✕
+
+
+        </button>
+
+
+
+        <h2>
+
+            Editar Reserva
+
+        </h2>
+
+
+
+
+        <input
+
+            type="hidden"
+
+            id="editarId">
+
+
+
+
+
+        <label>
+
+            Nome
+
+        </label>
+
+
+        <input
+
+            id="editarNome"
+
+            type="text">
+
+
+
+
+
+        <label>
+
+            Telefone
+
+        </label>
+
+
+        <input
+
+            id="editarTelefone"
+
+            type="text">
+
+
+
+
+
+        <label>
+
+            Status
+
+        </label>
+
+
+        <select
+
+            id="editarStatus">
+
+
+            <option value="reservado">
+
+                Reservado
+
+            </option>
+
+
+            <option value="pago">
+
+                Pago
+
+            </option>
+
+
+        </select>
+
+
+
+
+        <button
+
+            id="salvarEdicao"
+
+            class="btn btn-primary">
+
+
+            Salvar Alterações
+
+
+        </button>
+
+
+
+    </div>
+
+
+</div!>
+  
+<!-- ==========================================
+     FERRAMENTAS
+========================================== -->
+
+<section class="glass ferramentas">
+
+
+    <h2>
+
+        ⚙️ Ferramentas
+
+    </h2>
+
+
+
+    <div class="acoes-admin">
+
+
+        <button
+
+            id="exportarPDF"
+
+            class="btn btn-primary">
+
+
+            📄 Exportar PDF
+
+
+        </button>
+
+
+
+        <button
+
+            id="exportarExcel"
+
+            class="btn btn-success">
+
+
+            📊 Exportar Excel
+
+
+        </button>
+
+
+
+        <button
+
+            id="gerarComprovante"
+
+            class="btn btn-pix">
+
+
+            🧾 Gerar Comprovante
+
+
+        </button>
+
+
+    </div>
+
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+     INFORMAÇÕES
+========================================== -->
+
+
+<section class="glass informacoes">
+
+
+    <h2>
+
+        ℹ️ Informações da Rifa
+
+    </h2>
+
+
+
+    <div class="info-grid">
+
+
+        <p>
+
+            Beneficiada:
+
+            <strong id="infoBeneficiada">
+
+                Dona Bené
+
+            </strong>
+
+
+        </p>
+
+
+
+        <p>
+
+            Prêmio:
+
+            <strong id="infoPremio">
+
+                Geladeira Midea Frost Free
+
+            </strong>
+
+
+        </p>
+
+
+
+        <p>
+
+            Valor:
+
+            <strong id="infoValor">
+
+                R$ 10,00
+
+            </strong>
+
+
+        </p>
+
+
+
+        <p>
+
+            Sorteio:
+
+            <strong id="infoData">
+
+                30 de Dezembro
+
+            </strong>
+
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+</section>
+
+
+</main>
+
+
+
+<!-- ==========================================
+     RODAPÉ
+========================================== -->
+
+
+<footer class="footer">
+
+
+<div class="glass footer-content">
+
+
+<img
+
+src="img/1784636629590.png"
+
+alt="Logo GilFest"
+
+class="footer-logo">
+
+
+
+<p>
+
+© 2026 GilFest
+
+</p>
+
+
+
+<small>
+
+Painel Administrativo Rifa Solidária
+
+</small>
+
+
+</div>
+
+
+</footer>
+
+<!-- ==========================================
+     SCRIPTS
+========================================== -->
+
+
+<script src="config.js"></script>
+
+
+
+<!-- Firebase SDK -->
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+
+
+<!-- Configuração Firebase -->
+
+<script src="firebase-config.js"></script>
+
+
+
+<!-- Integração Firebase -->
+
+<script src="firebase.js"></script>
+
+
+
+<!-- Painel Administrativo -->
+
+<script src="admin.js"></script>
+
+
+
+
+
+<!-- PWA -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+
+    window.addEventListener(
+        "load",
+        ()=>{
+
+
+            navigator.serviceWorker
+            .register("sw.js")
+            .then(()=>{
+
+
+                console.log(
+                    "✅ Service Worker ativo."
+                );
+
+
+            })
+            .catch((erro)=>{
+
+
+                console.error(
+                    "Erro Service Worker:",
+                    erro
+                );
+
+
+            });
+
+
+        }
+    );
+
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
