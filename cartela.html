@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Escolher Cartela | Rifa Solidária</title>
+
+    <meta name="description"
+          content="Escolha seu número da Rifa Solidária.">
+
+    <link rel="manifest"
+          href="manifest.json">
+
+    <link rel="icon"
+          href="icons/icon-192.png">
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <link rel="stylesheet"
+          href="cartela.css">
+
+</head>
+
+<body>
+
+<div class="background-clovers"></div>
+
+<header class="top-header">
+
+    <div class="logo-box">
+
+        <img
+            src="img/1784636629590.png"
+            alt="Logo GilFest"
+            class="logo">
+
+    </div>
+
+    <div class="title-box">
+
+        <h1>
+
+            🎟️ Escolha sua Cartela
+
+        </h1>
+
+        <p>
+
+            Selecione um número disponível.
+
+        </p>
+
+    </div>
+
+</header>
+
+<main class="cartela-container">
+
+    <section class="glass pesquisa-box">
+
+        <h2>
+
+            Pesquisar número
+
+        </h2>
+
+        <input
+            type="number"
+            id="pesquisaNumero"
+            placeholder="Digite um número..."
+
+            min="0"
+
+            max="999">
+
+    </section>
+
+    <section class="glass legenda">
+
+        <div>
+
+            <span class="status disponivel"></span>
+
+            Disponível
+
+        </div>
+
+        <div>
+
+            <span class="status reservado"></span>
+
+            Reservado
+
+        </div>
+
+        <div>
+
+            <span class="status pago"></span>
+
+            Pago
+
+        </div>
+
+    </section>
+
+    <section
+        id="gradeCartela"
+        class="grade-cartela"
+        aria-label="Grade de números">
+          </section>
+
+</main>
+
+<!-- ==========================================
+     MODAL DE RESERVA
+========================================== -->
+
+<div
+    id="modalReserva"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tituloModal">
+
+    <div class="modal-content glass">
+
+        <button
+            id="fecharModal"
+            class="modal-close"
+            type="button"
+            aria-label="Fechar">
+
+            ✕
+
+        </button>
+
+        <h2 id="tituloModal">
+
+            Reservar Número
+
+        </h2>
+
+        <p class="numero-selecionado">
+
+            Número:
+
+            <strong id="numeroSelecionado">
+
+                000
+
+            </strong>
+
+        </p>
+
+        <form id="formReserva" autocomplete="on">
+
+            <div class="campo">
+
+                <label for="nome">
+
+                    Nome Completo
+
+                </label>
+
+                <input
+                    id="nome"
+                    name="nome"
+                    type="text"
+                    required
+                    maxlength="120">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="telefone">
+
+                    WhatsApp
+
+                </label>
+
+                <input
+                    id="telefone"
+                    name="telefone"
+                    type="tel"
+                    required
+                    maxlength="20">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cidade">
+
+                    Cidade
+
+                </label>
+
+                <input
+                    id="cidade"
+                    name="cidade"
+                    type="text"
+                    maxlength="80">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="pagamento">
+
+                    Forma de pagamento
+
+                </label>
+
+                <select
+                    id="pagamento"
+                    name="pagamento">
+
+                    <option value="Pix">
+
+                        PIX
+
+                    </option>
+
+                    <option value="Dinheiro">
+
+                        Dinheiro
+
+                    </option>
+
+                    <option value="Cartão">
+
+                        Cartão
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="comprovante">
+
+                    Comprovante (opcional)
+
+                </label>
+
+                <input
+                    id="comprovante"
+                    name="comprovante"
+                    type="file"
+                    accept="image/*,.pdf">
+
+            </div>
+
+            <div class="acoes-modal">
+
+                <button
+                    type="button"
+                    id="cancelarReserva"
+                    class="btn">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Confirmar Reserva
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<!-- ==========================================
+     RODAPÉ
+========================================== -->
+
+<footer class="footer">
+
+    <div class="glass footer-content">
+
+        <img
+            src="img/1784636629590.png"
+            alt="Logo GilFest"
+            class="footer-logo">
+
+        <p>
+
+            © 2026 GilFest • Todos os direitos reservados.
+
+        </p>
+
+        <small>
+
+            Rifa Solidária • Dona Bené
+
+        </small>
+
+    </div>
+
+</footer>
+
+
+<!-- ==========================================
+     SCRIPTS
+========================================== -->
+
+<script src="config.js"></script>
+
+
+<!-- Firebase SDK -->
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+
+<!-- Configuração Firebase -->
+
+<script src="firebase-config.js"></script>
+
+
+<!-- Firebase integração -->
+
+<script src="firebase.js"></script>
+
+
+<!-- Página Cartela -->
+
+<script src="cartela.js"></script>
+
+
+<!-- PWA -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+            .register("sw.js")
+            .then(() => {
+
+                console.log(
+                    "Service Worker ativo."
+                );
+
+            })
+            .catch((erro)=>{
+
+                console.error(
+                    "Erro no Service Worker:",
+                    erro
+                );
+
+            });
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
