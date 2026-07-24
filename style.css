@@ -1736,15 +1736,21 @@ svg{
 
     position:absolute;
 
-    bottom:-40px;
+    bottom:-60px;
 
-    font-size:24px;
+    width:28px;
 
-    opacity:.45;
+    height:auto;
 
-    filter:drop-shadow(0 0 6px rgba(255,255,255,.45));
+    opacity:.85;
+
+    filter:drop-shadow(0 0 8px rgba(255,255,255,.45));
 
     animation:trevoSubindo linear infinite;
+
+    pointer-events:none;
+
+    user-select:none;
 
 }
 
