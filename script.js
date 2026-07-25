@@ -1,454 +1,765 @@
 /* ==========================================================
-   RIFA SOLIDÁRIA
-   script.js
-   Parte 1
-========================================================== */
+   GILFEST - SCRIPT PRINCIPAL
+   ========================================================== */
 
-"use strict";
+import {
+    db,
+    ref,
+    onValue,
+    update
+} from "./firebase.js";
 
 /* ==========================================================
-   INICIALIZAÇÃO
-========================================================== */
+   ELEMENTOS
+   ========================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+const premio = document.getElementById("premio");
+const valor = document.getElementById("valor");
+const dataSorteio = document.getElementById("dataSorteio");
 
-    iniciarCarrossel();
+const pixKey = document.getElementById("pixKey");
 
-    iniciarContagem();
+const btnWhatsapp =
+document.getElementById("btnWhatsapp");
 
-    configurarPix();
+/* ==========================================================
+   REFERÊNCIAS
+   ========================================================== */
+
+const configRef = ref(db,"config");
+
+const numerosRef = ref(db,"numeros");
+
+/* ==========================================================
+   CONFIGURAÇÕES
+   ========================================================== */
+
+onValue(configRef,(snapshot)=>{
+
+const cfg=snapshot.val();
+
+if(!cfg) return;
+
+premio.textContent=cfg.premio;
+
+valor.textContent="R$ "+cfg.valor;
+
+dataSorteio.textContent=cfg.data;
+
+pixKey.value=cfg.pix;
+
+btnWhatsapp.href=
+
+`https://wa.me/557988730207?text=${encodeURIComponent(
+"Olá! Gostaria de participar da rifa."
+)}`;
 
 });
 
 /* ==========================================================
-   CARROSSEL
-========================================================== */
+   CARTELAS
+   ========================================================== */
 
-function iniciarCarrossel() {
+let numerosBanco = {};
+let numeroSelecionado = null;
 
-    const slides = document.querySelectorAll(".slide");
+/* Carregar números em tempo real */
 
-    const btnPrev = document.getElementById("prevSlide");
+onValue(numerosRef, (snapshot) => {
 
-    const btnNext = document.getElementById("nextSlide");
+    numerosBanco = snapshot.val() || {};
 
-    if (!slides.length) return;
+    atualizarCartelas();
 
-    let indice = 0;
-
-    function mostrarSlide(posicao) {
-
-        slides.forEach(slide => {
-
-            slide.classList.remove("active");
-
-        });
-
-        slides[posicao].classList.add("active");
-
-    }
-
-    function proximo() {
-
-        indice++;
-
-        if (indice >= slides.length) {
-
-            indice = 0;
-
-        }
-
-        mostrarSlide(indice);
-
-    }
-
-    function anterior() {
-
-        indice--;
-
-        if (indice < 0) {
-
-            indice = slides.length - 1;
-
-        }
-
-        mostrarSlide(indice);
-
-    }
-
-    btnNext?.addEventListener("click", proximo);
-
-    btnPrev?.addEventListener("click", anterior);
-
-    setInterval(proximo, 5000);
-
-}
+});
 
 /* ==========================================================
-   CONTAGEM REGRESSIVA
-========================================================== */
+   ATUALIZAR CARTELAS
+   ========================================================== */
 
-function iniciarContagem() {
+function atualizarCartelas() {
 
-    if (typeof CONFIG === "undefined") return;
+    document
+        .querySelectorAll(".numero")
+        .forEach((botao) => {
 
-    const destino = new Date(CONFIG.dataSorteio);
+            const numero = botao.dataset.numero;
 
-    atualizar();
+            const dados = numerosBanco[numero];
 
-    setInterval(atualizar, 1000);
+            botao.classList.remove(
+                "disponivel",
+                "reservado",
+                "vendido",
+                "selecionado"
+            );
 
-    function atualizar() {
+            if (!dados || dados.status === "disponivel") {
 
-        const agora = new Date();
+                botao.classList.add("disponivel");
 
-        const diferenca = destino - agora;
+            } else if (dados.status === "reservado") {
 
-        if (diferenca <= 0) {
+                botao.classList.add("reservado");
 
-            document.getElementById("dias").textContent = "00";
+            } else {
 
-            document.getElementById("horas").textContent = "00";
+                botao.classList.add("vendido");
 
-            document.getElementById("minutos").textContent = "00";
+            }
 
-            document.getElementById("segundos").textContent = "00";
+            if (numeroSelecionado === numero) {
 
-            return;
-
-        }
-
-        const dias = Math.floor(diferenca / 86400000);
-
-        const horas = Math.floor((diferenca % 86400000) / 3600000);
-
-        const minutos = Math.floor((diferenca % 3600000) / 60000);
-
-        const segundos = Math.floor((diferenca % 60000) / 1000);
-
-        document.getElementById("dias").textContent =
-            String(dias).padStart(2, "0");
-
-        document.getElementById("horas").textContent =
-            String(horas).padStart(2, "0");
-
-        document.getElementById("minutos").textContent =
-            String(minutos).padStart(2, "0");
-
-        document.getElementById("segundos").textContent =
-            String(segundos).padStart(2, "0");
-
-    }
-
-}
-
-/* ==========================================================
-   PIX
-========================================================== */
-
-function configurarPix() {
-
-    const campo = document.getElementById("pixKey");
-
-    const botao = document.getElementById("copiarPix");
-
-    const toast = document.getElementById("toast");
-
-    if (!campo || !botao) return;
-
-    if (typeof CONFIG !== "undefined") {
-
-        campo.value = CONFIG.pix;
-/* ==========================================
-   BOTÃO ENVIAR COMPROVANTE
-========================================== */
-
-const btnComprovante =
-document.getElementById("btnComprovante");
-
-if(btnComprovante){
-
-    const mensagem = encodeURIComponent(
-
-`Olá!
-
-Acabei de realizar o pagamento da Rifa Solidária.
-
-Segue meu comprovante para confirmação.
-
-Obrigado(a)!`
-
-    );
-
-    btnComprovante.href =
-    `https://wa.me/557988730207?text=${mensagem}`;
-
-}
-    }
-
-    botao.addEventListener("click", async () => {
-
-        try {
-
-            await navigator.clipboard.writeText(campo.value);
-
-            toast.classList.add("show");
-
-            setTimeout(() => {
-
-                toast.classList.remove("show");
-
-            }, 2500);
-
-        } catch {
-
-            campo.select();
-
-            document.execCommand("copy");
-
-        }
-
-    });
-
-}
-/* =====================================
-   RESUMO DA COMPRA
-===================================== */
-
-let numeroEscolhido = null;
-
-function atualizarResumo(numero, status = "Disponível") {
-
-    numeroEscolhido = numero;
-
-    document.getElementById("numeroSelecionado").textContent = numero;
-
-    const statusEl = document.getElementById("statusNumero");
-
-    statusEl.textContent = status;
-
-    statusEl.className = "status";
-
-    if (status.includes("Disponível")) {
-
-        statusEl.classList.add("disponivel");
-
-    } else if (status.includes("Reservado")) {
-
-        statusEl.classList.add("reservado");
-
-    } else {
-
-        statusEl.classList.add("vendido");
-
-    }
-
-}
-/* ==========================================================
-   CONFIGURAÇÃO DA PÁGINA
-========================================================== */
-
-function carregarConfiguracoes() {
-
-    if (typeof CONFIG === "undefined") return;
-
-    const premio = document.getElementById("premio");
-    const valor = document.getElementById("valor");
-    const data = document.getElementById("dataSorteio");
-    const whatsapp = document.getElementById("btnWhatsapp");
-
-    if (premio) {
-        premio.textContent = CONFIG.premio;
-    }
-
-    if (valor) {
-        valor.textContent = CONFIG.valor;
-    }
-
-    if (data) {
-        data.textContent = CONFIG.dataTexto;
-    }
-
-    if (whatsapp) {
-
-        const mensagem = encodeURIComponent(
-            "Olá! Gostaria de participar da Rifa Solidária."
-        );
-
-        whatsapp.href =
-            `https://wa.me/${CONFIG.whatsapp}?text=${mensagem}`;
-    }
-
-}
-
-/* ==========================================================
-   ANIMAÇÃO DOS TREVOS
-========================================================== */
-
-function iniciarTrevos() {
-
-    const trevos = document.querySelectorAll(".trevo");
-
-    trevos.forEach((trevo) => {
-
-        trevo.style.animationPlayState = "running";
-
-    });
-
-}
-
-/* ==========================================================
-   ANIMAÇÕES DE ENTRADA
-========================================================== */
-
-function iniciarAnimacoes() {
-
-    const elementos = document.querySelectorAll(".glass");
-
-    const observer = new IntersectionObserver((entradas) => {
-
-        entradas.forEach((entrada) => {
-
-            if (entrada.isIntersecting) {
-
-                entrada.target.classList.add("visible");
+                botao.classList.add("selecionado");
 
             }
 
         });
 
-    }, {
-        threshold: 0.15
-    });
-
-    elementos.forEach((elemento) => {
-
-        observer.observe(elemento);
-
-    });
-
 }
 
 /* ==========================================================
-   OTIMIZAÇÕES
-========================================================== */
+   CLIQUE NO NÚMERO
+   ========================================================== */
 
-window.addEventListener("load", () => {
+document
+.querySelectorAll(".numero")
+.forEach((botao) => {
 
-    carregarConfiguracoes();
+    botao.addEventListener("click", () => {
 
-    iniciarTrevos();
+        if (botao.classList.contains("vendido")) {
 
-    iniciarAnimacoes();
+            alert("Este número já
+      /* ==========================================================
+   RESERVA DE NÚMEROS
+   ========================================================== */
 
-});
+const modalReserva =
+document.getElementById("modalReserva");
 
-/* ==========================================================
-   REDIMENSIONAMENTO
-========================================================== */
+const nomeReserva =
+document.getElementById("nomeReserva");
 
-window.addEventListener("resize", () => {
+const whatsappReserva =
+document.getElementById("whatsappReserva");
 
-    document.documentElement.style.setProperty(
-        "--vh",
-        `${window.innerHeight * 0.01}px`
-    );
+const btnConfirmarReserva =
+document.getElementById("btnConfirmarReserva");
 
-});
-/* ==========================================================
-   RIFA SOLIDÁRIA
-   script.js
-   Parte 3 (Final)
-========================================================== */
+const btnCancelarReserva =
+document.getElementById("btnCancelarReserva");
 
-/* ==========================================================
-   FIREBASE
-========================================================== */
+let numeroAtual = null;
 
-async function atualizarCartelas() {
+/* Abrir modal */
 
-    try {
+document.querySelectorAll(".numero").forEach((botao)=>{
 
-        if (typeof carregarCartelas !== "function") {
+    botao.addEventListener("dblclick",()=>{
 
-            console.warn("carregarCartelas() não encontrada.");
+        if(botao.classList.contains("vendido")){
+
+            alert("Este número já foi vendido.");
 
             return;
 
         }
 
-        await carregarCartelas();
+        numeroAtual = botao.dataset.numero;
 
-    } catch (erro) {
+        modalReserva.classList.add("ativo");
 
-        console.error(
-            "Erro ao atualizar cartelas:",
-            erro
-        );
+        nomeReserva.focus();
 
-    }
+    });
 
-}
+});
+
+/* Cancelar */
+
+btnCancelarReserva.addEventListener("click",()=>{
+
+    modalReserva.classList.remove("ativo");
+
+    nomeReserva.value="";
+
+    whatsappReserva.value="";
+
+});
+
+/* Confirmar */
+
+btnConfirmarReserva.addEventListener("click",salvarReserva);
+
+async function salvarReserva(){
+
+    const nome = nomeReserva.value.trim();
+
+    const whatsapp = whatsappReserva.value.trim();
+
+    if(nome===""){
+       /* ==========================================================
+   MÚLTIPLA SELEÇÃO DE NÚMEROS
+   ========================================================== */
+
+let numerosSelecionados = [];
+
+const listaSelecionados =
+document.getElementById("listaSelecionados");
+
+const totalSelecionados =
+document.getElementById("totalSelecionados");
+
+const valorTotal =
+document.getElementById("valorTotal");
+
+const btnFinalizar =
+document.getElementById("btnFinalizarReserva");
+
+const VALOR_NUMERO = 10;
 
 /* ==========================================================
-   ATUALIZAÇÃO AUTOMÁTICA
-========================================================== */
+   SELEÇÃO
+   ========================================================== */
 
-function iniciarAtualizacaoAutomatica() {
+document.querySelectorAll(".numero").forEach((botao)=>{
 
-    atualizarCartelas();
+    botao.addEventListener("click",()=>{
 
-    setInterval(() => {
+        if(botao.classList.contains("vendido")) return;
 
-        atualizarCartelas();
+        const numero = botao.dataset.numero;
 
-    }, 30000);
+        if(numerosSelecionados.includes(numero)){
 
-}
+            numerosSelecionados =
+            numerosSelecionados.filter(n=>n!==numero);
 
-/* ==========================================================
-   VISIBILIDADE DA ABA
-========================================================== */
+        }else{
 
-document.addEventListener("visibilitychange", () => {
+            numerosSelecionados.push(numero);
 
-    if (!document.hidden) {
+        }
 
-        atualizarCartelas();
+        atualizarSelecao();
 
-    }
+    });
 
 });
 
 /* ==========================================================
-   CONEXÃO
-========================================================== */
+   ATUALIZA PAINEL
+   ========================================================== */
+
+function atualizarSelecao(){
+
+    listaSelecionados.innerHTML="";
+
+    numerosSelecionados.sort((a,b)=>Number(a)-Number(b));
+
+    numerosSelecionados.forEach(numero=>{
+
+        const tag=document.createElement("span");
+
+        tag.className="numero-escolhido";
+
+        tag.innerHTML=`
+
+${numero}
+
+<button
+class="remover-numero"
+data-numero="${numero}">
+
+✕
+
+</button>
+
+`;
+
+        listaSelecionados.appendChild(tag);
+
+    });
+
+    totalSelecionados.textContent=
+    numerosSelecionados.length;
+
+    valorTotal.textContent=
+
+    (numerosSelecionados.length*VALOR_NUMERO)
+
+    .toLocaleString(
+
+    "pt-BR",
+
+    {
+
+    style:"currency",
+
+    currency:"BRL"
+
+    });
+
+    document.querySelectorAll(".numero").forEach(btn=>{
+
+        btn.classList.remove("selecionado");
+
+    });
+
+    numerosSelecionados.forEach(numero=>{
+
+        const item=document.querySelector(
+
+`.numero[data-numero="${numero}"]`
+
+        );
+
+        if(item){
+
+            item.classList.add("selecionado");
+
+        }
+
+    });
+
+}
+
+/* ==========================================================
+   REMOVER DA LISTA
+   ========================================================== */
+
+listaSelecionados.addEventListener("click",(e)=>{
+
+if(
+
+e.target.classList.contains("remover-numero")
+
+){
+
+const numero=
+
+e.target.dataset.numero;
+
+numerosSelecionados=
+
+numerosSelecionados.filter(
+
+n=>n!==numero
+
+);
+
+atualizarSelecao();
+
+}
+
+});
+
+/* ==========================================================
+   FINALIZAR
+   ========================================================== */
+
+btnFinalizar.addEventListener("click",()=>{
+
+if(
+
+numerosSelecionados.length===0
+
+){
+
+alert(
+
+"Escolha pelo menos um número."
+
+);
+
+return;
+
+}
+
+modalReserva.classList.add("ativo");
+
+});
+       /* ==========================================================
+   CONFIRMAR RESERVA DE VÁRIOS NÚMEROS
+   ========================================================== */
+
+btnConfirmarReserva.addEventListener("click", confirmarReservaMultipla);
+
+async function confirmarReservaMultipla() {
+
+    const nome = nomeReserva.value.trim();
+    const whatsapp = whatsappReserva.value.trim();
+
+    if (nome === "") {
+        alert("Informe seu nome.");
+        return;
+    }
+
+    if (whatsapp === "") {
+        alert("Informe seu WhatsApp.");
+        return;
+    }
+
+    if (numerosSelecionados.length === 0) {
+        alert("Selecione pelo menos um número.");
+        return;
+    }
+
+    btnConfirmarReserva.disabled = true;
+    btnConfirmarReserva.textContent = "Salvando...";
+
+    try {
+
+        for (const numero of numerosSelecionados) {
+
+            await update(
+                ref(db, "numeros/" + numero),
+                {
+                    numero: numero,
+                    nome: nome,
+                    whatsapp: whatsapp,
+                    status: "reservado",
+                    pagamento: "Pendente",
+                    dataReserva: Date.now()
+                }
+            );
+
+        }
+
+        modalReserva.classList.remove("ativo");
+
+        mostrarToast("Reserva realizada com sucesso!");
+
+        copiarPix();
+
+        enviarWhatsapp(nome, whatsapp);
+
+        nomeReserva.value = "";
+        whatsappReserva.value = "";
+
+        numerosSelecionados = [];
+
+        atualizarSelecao();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao reservar números.");
+
+    }
+
+    btnConfirmarReserva.disabled = false;
+    btnConfirmarReserva.textContent = "Confirmar Reserva";
+
+}
+
+/* ==========================================================
+   COPIAR PIX
+   ========================================================== */
+
+function copiarPix() {
+
+    const chave = pixKey.value;
+
+    navigator.clipboard.writeText(chave);
+
+}
+
+/* ==========================================================
+   WHATSAPP
+   ========================================================== */
+
+function enviarWhatsapp(nome, whatsapp) {
+
+    const numeros = numerosSelecionados.join(", ");
+
+    const valor = numerosSelecionados.length * VALOR_NUMERO;
+
+    const mensagem =
+
+`🎟️ *RIFA SOLIDÁRIA*
+
+Olá!
+
+Acabei de reservar os seguintes números:
+
+🎯 ${numeros}
+
+👤 Nome:
+${nome}
+
+📱 WhatsApp:
+${wh
+  /* ==========================================================
+   CONTAGEM REGRESSIVA
+   ========================================================== */
+
+const dias = document.getElementById("dias");
+const horas = document.getElementById("horas");
+const minutos = document.getElementById("minutos");
+const segundos = document.getElementById("segundos");
+
+let dataSorteioObj = null;
+
+onValue(configRef, (snapshot) => {
+
+    const cfg = snapshot.val();
+
+    if (!cfg || !cfg.data) return;
+
+    const hora = cfg.hora || "20:00";
+
+    dataSorteioObj = new Date(`${cfg.data}T${hora}:00`);
+
+});
+
+function atualizarContador() {
+
+    if (!dataSorteioObj) return;
+
+    const agora = new Date();
+
+    const diferenca = dataSorteioObj - agora;
+
+    if (diferenca <= 0) {
+
+        dias.textContent = "00";
+        horas.textContent = "00";
+        minutos.textContent = "00";
+        segundos.textContent = "00";
+
+        return;
+
+    }
+
+    const d = Math.floor(diferenca / 86400000);
+
+    const h = Math.floor((diferenca % 86400000) / 3600000);
+
+    const m = Math.floor((diferenca % 3600000) / 60000
+    /* ==========================================================
+   TREVOS ANIMADOS
+   ========================================================== */
+
+function iniciarTrevos() {
+
+    const container = document.querySelector(".background-clovers");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < 20; i++) {
+
+        const trevo = document.createElement("img");
+
+        trevo.src = "img/trevo.png";
+
+        trevo.alt = "";
+
+        trevo.setAttribute("aria-hidden", "true");
+
+        trevo.className = "trevo";
+
+        trevo.style.left = Math.random() * 100 + "%";
+
+        trevo.style.animationDuration =
+            (12 + Math.random() * 10) + "s";
+
+        trevo.style.animationDelay =
+            (Math.random() * 10) + "s";
+
+        trevo.style.opacity =
+            (0.08 + Math.random() * 0.12);
+
+        trevo.style.width =
+            (22 + Math.random() * 26) + "px";
+
+        container.appendChild(trevo);
+
+    }
+
+}
+
+/* ==========================================================
+   BRILHO DA FOTO
+   ========================================================== */
+
+const foto = document.querySelector(".foto-beneficiada");
+
+if (foto) {
+
+    setInterval(() => {
+
+        foto.classList.add("foto-brilho");
+
+        setTimeout(() => {
+
+            foto.classList.remove("foto-brilho");
+
+        }, 1800);
+
+    }, 7000);
+
+}
+
+/* ==========================================================
+   ANIMAÇÃO DO SUBTÍTULO
+   ========================================================== */
+
+const subtitulo = document.getElementById("subtitulo");
+
+if (subtitulo) {
+
+    const frases = [
+
+        "💙 Sua ajuda faz a diferença.",
+
+        "🍀 Cada número comprado é uma esperança.",
+
+        "🙏 Obrigado por apoiar Dona Bené.",
+
+        "🎟️ Boa sorte no sorteio!"
+
+    ];
+
+    let indice = 0;
+
+    setInterval(() => {
+
+        indice++;
+
+        if (indice >= frases.length) {
+        /* ==========================================================
+   AVISOS EM TEMPO REAL
+   ========================================================== */
+
+const avisoPrincipal = document.getElementById("avisoPrincipal");
+
+const avisoRef = ref(db, "avisos/principal");
+
+onValue(avisoRef, (snapshot) => {
+
+    const aviso = snapshot.val();
+
+    if (!avisoPrincipal || !aviso) return;
+
+    avisoPrincipal.textContent = aviso.texto || "";
+
+});
+
+/* ==========================================================
+   COPIAR PIX
+   ========================================================== */
+
+const btnCopiarPix = document.getElementById("copiarPix");
+
+if (btnCopiarPix) {
+
+    btnCopiarPix.addEventListener("click", async () => {
+
+        try {
+
+            await navigator.clipboard.writeText(pixKey.value);
+
+            mostrarToast("✅ Chave PIX copiada.");
+
+        } catch {
+
+            alert("Não foi possível copiar a chave PIX.");
+
+        }
+
+    });
+
+}
+
+/* ==========================================================
+   TOAST
+   ========================================================== */
+
+function mostrarToast(texto) {
+
+    const toast = document.getElementById("toast");
+
+    if (!toast) return;
+
+    toast.textContent = texto;
+
+    toast.classList.add("mostrar");
+
+    setTimeout(() => {
+
+        toast.classList.remove("mostrar");
+
+    }, 3000);
+
+}
+
+/* ==========================================================
+   STATUS FIREBASE
+   ========================================================== */
 
 window.addEventListener("online", () => {
 
-    console.log("Conexão restaurada.");
-
-    atualizarCartelas();
+    console.log("🟢 Conectado.");
 
 });
 
 window.addEventListener("offline", () => {
 
-    console.warn("Sem conexão com a internet.");
+    mostrarToast("⚠️ Sem conexão com a internet.");
 
 });
 
 /* ==========================================================
-   TRATAMENTO DE ERROS
-========================================================== */
+   SORTEIO ENCERRADO
+   ========================================================== */
 
-window.addEventListener("error", (evento) => {
+function verificarSorteio() {
 
-    console.error(
-        "Erro detectado:",
-        evento.message
-    );
+    if (!dataSorteioObj) return;
+
+    if (new Date() >= dataSorteioObj) {
+
+        document.querySelectorAll(".numero").forEach((botao) => {
+
+            botao.disabled = true;
+
+        });
+
+        mostrarToast("🎉 O sorteio foi encerrado.");
+
+    }
+
+}
+
+setInterval(verificarSorteio, 10000);
+
+/* ==========================================================
+   ATALHOS DE TECLADO
+   ========================================================== */
+
+document.addEventListener("keydown", (e) => {
+
+    if (e.key === "Escape" && modalReserva) {
+
+        modalReserva.classList.remove("ativo");
+
+    }
 
 });
 
-window.addEventListener("unhandledrejection", (
+/* ==========================================================
+   INICIALIZAÇÃO FINAL
+   ========================================================== */
+
+window.addEventListener("load", () => {
+
+    iniciarTrevos();
+
+    atualizarContador();
+
+   
