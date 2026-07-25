@@ -3,188 +3,160 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta http-equiv="X-UA-Compatible"
-          content="IE=edge">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
+<meta name="theme-color"
+content="#2563eb">
 
-    <title>Painel Administrativo | Rifa Solidária</title>
+<meta name="robots"
+content="noindex,nofollow">
 
+<title>
 
-    <meta name="description"
-          content="Painel administrativo da Rifa Solidária GilFest.">
+👨‍💼 Painel Administrativo | GilFest
 
+</title>
 
-    <link rel="icon"
-          href="icons/icon-192.png">
+<link rel="stylesheet"
+href="style.css">
 
-
-    <link rel="stylesheet"
-          href="style.css">
-
-
-    <link rel="stylesheet"
-          href="admin.css">
-
+<link rel="stylesheet"
+href="admin.css">
 
 </head>
 
-
 <body>
 
+<div class="background-clovers"
+aria-hidden="true">
 
-<div class="background-clovers"></div>
+<img src="img/trevo.png" class="trevo t1" alt="">
+<img src="img/trevo.png" class="trevo t2" alt="">
+<img src="img/trevo.png" class="trevo t3" alt="">
+<img src="img/trevo.png" class="trevo t4" alt="">
+<img src="img/trevo.png" class="trevo t5" alt="">
+<img src="img/trevo.png" class="trevo t6" alt="">
+<img src="img/trevo.png" class="trevo t7" alt="">
+<img src="img/trevo.png" class="trevo t8" alt="">
 
-
-
-<!-- ==========================================
-     CABEÇALHO
-========================================== -->
-
+</div>
 
 <header class="top-header">
 
+<a
+href="index.html"
+class="btn-voltar">
 
-    <div class="logo-box">
+⬅ Voltar
 
+</a>
 
-        <img
+<div class="title-box">
 
-            src="img/1784636629590.png"
+<h1>
 
-            alt="Logo GilFest"
+👨‍💼 Painel Administrativo
 
-            class="logo">
+</h1>
 
+<p>
 
-    </div>
+Gerenciamento completo da Rifa Solidária
 
+</p>
 
-    <div class="title-box">
-
-
-        <h1>
-
-            🔐 Painel Administrativo
-
-        </h1>
-
-
-        <p>
-
-            Gerenciamento da Rifa Solidária
-
-        </p>
-
-
-    </div>
-
+</div>
 
 </header>
 
+<main class="admin-main">
 
+<section class="glass login-admin">
 
+<h2>
 
-<main class="admin-container">
+🔒 Acesso Restrito
 
+</h2>
 
+<p>
 
-<!-- ==========================================
-     LOGIN
-========================================== -->
+Digite a senha para acessar o painel.
 
+</p>
 
-<section
-    id="loginArea"
-    class="glass login-box">
+<div class="login-box">
 
+<input
 
-    <h2>
+type="password"
 
-        Acesso Administrativo
+id="senhaAdmin"
 
-    </h2>
+placeholder="Senha">
 
+<button
 
+id="btnEntrar"
 
-    <label for="senhaAdmin">
+class="btn btn-primary">
 
-        Senha
+Entrar
 
-    </label>
+</button>
 
-
-
-    <input
-
-        type="password"
-
-        id="senhaAdmin"
-
-        placeholder="Digite a senha">
-
-
-    <button
-
-        id="entrarAdmin"
-
-        class="btn btn-primary">
-
-
-        Entrar
-
-
-    </button>
-
-
-
-    <p
-
-        id="erroLogin"
-
-        class="erro">
-
-
-    </p>
-
-
+</div>
 
 </section>
 
-
-
-
-
-<!-- ==========================================
-     DASHBOARD
-========================================== -->
-
-
 <section
 
-    id="dashboard"
+id="painelAdmin"
 
-    class="hidden">
+class="admin-content"
 
+style="display:none;">
 
+<div class="glass dashboard">
+
+<h2>
+
+📊 Dashboard
+
+</h2>
 
 <div class="cards-dashboard">
 
+<div class="card-admin">
 
-
-<div class="glass card">
-
-<h3>
+<span>
 
 🎟️ Total
 
-</h3>
+</span>
 
 <strong id="totalNumeros">
+
+1000
+
+</strong>
+
+</div>
+
+<div class="card-admin">
+
+<span>
+
+🟢 Disponíveis
+
+</span>
+
+<strong id="totalDisponiveis">
 
 0
 
@@ -192,16 +164,13 @@
 
 </div>
 
+<div class="card-admin">
 
+<span>
 
+🟡 Reservados
 
-<div class="glass card">
-
-<h3>
-
-🟠 Reservados
-
-</h3>
+</span>
 
 <strong id="totalReservados">
 
@@ -211,18 +180,15 @@
 
 </div>
 
+<div class="card-admin">
 
+<span>
 
+🔴 Vendidos
 
-<div class="glass card">
+</span>
 
-<h3>
-
-🔴 Pagos
-
-</h3>
-
-<strong id="totalPagos">
+<strong id="totalVendidos">
 
 0
 
@@ -230,35 +196,13 @@
 
 </div>
 
+<div class="card-admin destaque">
 
-
-
-<div class="glass card">
-
-<h3>
-
-🟢 Disponíveis
-
-</h3>
-
-<strong id="totalDisponiveis">
-
-1000
-
-</strong>
-
-</div>
-
-
-
-
-<div class="glass card">
-
-<h3>
+<span>
 
 💰 Arrecadado
 
-</h3>
+</span>
 
 <strong id="valorArrecadado">
 
@@ -268,576 +212,578 @@ R$ 0,00
 
 </div>
 
-
 </div>
+            <!-- Barra de progresso -->
 
-<!-- ==========================================
-     PESQUISA
-========================================== -->
+            <div class="progresso-rifa">
 
-<section class="glass filtros">
+                <div class="progresso-topo">
 
+                    <span>Progresso da Rifa</span>
 
-    <h2>
+                    <strong id="percentualRifa">
 
-        🔎 Pesquisar Reservas
+                        0%
 
-    </h2>
+                    </strong>
 
+                </div>
 
+                <div class="progress">
 
-    <div class="filtros-grid">
+                    <div id="barraProgresso"
+                         class="progress-fill">
 
+                    </div>
 
-        <input
+                </div>
 
-            type="text"
+            </div>
 
-            id="pesquisarNumero"
+        </div>
 
-            placeholder="Pesquisar número">
+    </section>
 
+    <!-- Estatísticas -->
 
-        <input
-
-            type="text"
-
-            id="pesquisarCliente"
-
-            placeholder="Pesquisar cliente">
-
-
-    </div>
-
-
-</section>
-
-
-
-
-<!-- ==========================================
-     TABELA
-========================================== -->
-
-
-<section class="glass tabela-area">
-
-
-    <h2>
-
-        📋 Reservas
-
-    </h2>
-
-
-
-    <div class="tabela-scroll">
-
-
-        <table>
-
-
-            <thead>
-
-
-                <tr>
-
-
-                    <th>
-
-                        Número
-
-                    </th>
-
-
-                    <th>
-
-                        Nome
-
-                    </th>
-
-
-                    <th>
-
-                        Telefone
-
-                    </th>
-
-
-                    <th>
-
-                        Cidade
-
-                    </th>
-
-
-                    <th>
-
-                        Status
-
-                    </th>
-
-
-                    <th>
-
-                        Data
-
-                    </th>
-
-
-                    <th>
-
-                        Ações
-
-                    </th>
-
-
-                </tr>
-
-
-            </thead>
-
-
-
-            <tbody
-
-                id="listaReservas">
-
-
-            </tbody>
-
-
-
-        </table>
-
-
-    </div>
-
-
-
-</section>
-
-
-
-
-<!-- ==========================================
-     MODAL EDITAR
-========================================== -->
-
-
-<div
-
-    id="modalEditar"
-
-    class="modal hidden">
-
-
-    <div
-
-        class="modal-content glass">
-
-
-
-        <button
-
-            id="fecharEditar"
-
-            class="modal-close">
-
-
-            ✕
-
-
-        </button>
-
-
+    <section class="glass estatisticas-admin">
 
         <h2>
 
-            Editar Reserva
+            📈 Estatísticas
 
         </h2>
 
+        <div class="cards-estatisticas">
 
+            <div class="card-info">
 
+                <span>
+
+                    📅 Hoje
+
+                </span>
+
+                <strong id="vendasHoje">
+
+                    0
+
+                </strong>
+
+            </div>
+
+            <div class="card-info">
+
+                <span>
+
+                    📆 Semana
+
+                </span>
+
+                <strong id="vendasSemana">
+
+                    0
+
+                </strong>
+
+            </div>
+
+            <div class="card-info">
+
+                <span>
+
+                    📊 Mês
+
+                </span>
+
+                <strong id="vendasMes">
+
+                    0
+
+                </strong>
+
+            </div>
+
+            <div class="card-info">
+
+                <span>
+
+                    👥 Participantes
+
+                </span>
+
+                <strong id="totalParticipantes">
+
+                    0
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Últimas movimentações -->
+
+    <section class="glass movimentacoes">
+
+        <h2>
+
+            🕒 Últimas movimentações
+
+        </h2>
+
+        <div id="listaMovimentacoes"
+             class="lista-movimentacoes">
+
+            <!-- Firebase
+        <!-- Filtros -->
+
+    <section class="glass filtros-admin">
+
+        <h2>
+
+            🎯 Filtrar Participantes
+
+        </h2>
+
+        <div class="filtros-grid">
+
+            <button
+                class="btn btn-primary filtro ativo"
+                data-status="todos">
+
+                Todos
+
+            </button>
+
+            <button
+                class="btn btn-success filtro"
+                data-status="disponivel">
+
+                🟢 Disponíveis
+
+            </button>
+
+            <button
+                class="btn btn-warning filtro"
+                data-status="reservado">
+
+                🟡 Reservados
+
+            </button>
+
+            <button
+                class="btn btn-danger filtro"
+                data-status="vendido">
+
+                🔴 Vendidos
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- Participantes -->
+
+    <section class="glass participantes-admin">
+
+        <div class="titulo-tabela">
+
+            <h2>
+
+                👥 Participantes
+
+            </h2>
+
+            <span id="quantidadeRegistros">
+
+                0 registros
+
+            </span>
+
+        </div>
+
+        <div class="tabela-responsiva">
+
+            <table class="tabela-admin">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Número</th>
+
+                        <th>Cartela</th>
+
+                        <
+                                <!-- Configurações da Rifa -->
+
+    <section class="glass configuracoes-admin">
+
+        <h2>
+
+            ⚙️ Configurações da Rifa
+
+        </h2>
+
+        <div class="config-grid">
+
+            <div class="campo">
+
+                <label for="cfgPremio">
+
+                    🎁 Nome do prêmio
+
+                </label>
+
+                <input
+                    id="cfgPremio"
+                    type="text"
+                    placeholder="Geladeira Midea Frost Free">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgValor">
+
+                    💰 Valor por número
+
+                </label>
+
+                <input
+                    id="cfgValor"
+                    type="text"
+                    placeholder="R$ 10,00">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgData">
+
+                    📅 Data do sorteio
+
+                </label>
+
+                <input
+                    id="cfgData"
+                    type="date">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgHora">
+
+                    ⏰ Horário
+
+                </label>
+
+                <input
+                    id="cfgHora"
+                    type="time">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgWhatsapp">
+
+                    📱 WhatsApp
+
+                </label>
+
+                <input
+                    id="cfgWhatsapp"
+                    type="text"
+                    value="+55 79 8873-0207">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgPix">
+
+                    💙 Chave PIX
+
+                </label>
+
+                <input
+                    id="cfgPix"
+                    type="text">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgTitular">
+
+                    👤 Titular
+
+                </label>
+
+                <input
+                    id="cfgTitular"
+                    type="text"
+                    value="Maria Josivania Claudino França">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="cfgBanco">
+
+                    🏦 Banco
+
+                </label>
+
+                <input
+                    id="cfgBanco"
+                    type="text"
+                    value="Neon">
+
+            </div>
+
+        </div>
+
+        <div class="acoes-config">
+
+            <button
+                id="btnSalvarConfiguracoes"
+                class="btn btn-primary">
+
+                💾 Salvar Configurações
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- Avisos -->
+
+    <section class="glass avisos-admin">
+
+        <h2>
+
+            📢 Aviso da Página Inicial
+
+        </h2>
+
+        <textarea
+            id="textoAviso"
+            rows="6"
+            placeholder="Digite um aviso para aparecer na página inicial..."></textarea>
+
+        <div class="acoes-config">
+
+            <button
+                id="btnSalvarAviso"
+                class="btn btn-success">
+
+                📢 Publicar Aviso
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- Foto do prêmio -->
+
+    <section class="glass premio-admin">
+
+        <h2>
+
+            🖼 Foto do Prêmio
+
+        </h2>
+
+        <img
+            id="previewPremio"
+            src="img/IMG-20260722-WA0037.jpg"
+            alt="Pré-visualização do prêmio"
+            class="preview-premio">
 
         <input
-
-            type="hidden"
-
-            id="editarId">
-
-
-
-
-
-        <label>
-
-            Nome
-
-        </label>
-
-
-        <input
-
-            id="editarNome"
-
-            type="text">
-
-
-
-
-
-        <label>
-
-            Telefone
-
-        </label>
-
-
-        <input
-
-            id="editarTelefone"
-
-            type="text">
-
-
-
-
-
-        <label>
-
-            Status
-
-        </label>
-
-
-        <select
-
-            id="editarStatus">
-
-
-            <option value="reservado">
-
-                Reservado
-
-            </option>
-
-
-            <option value="pago">
-
-                Pago
-
-            </option>
-
-
-        </select>
-
-
-
+            id="fotoPremio"
+            type="file"
+            accept="image/*">
 
         <button
-
-            id="salvarEdicao"
-
+            id="btnAtualizarFoto"
             class="btn btn-primary">
 
-
-            Salvar Alterações
-
+            📸 Atualizar Foto
 
         </button>
 
+    </section>
+        <!-- Backup e Exportação -->
 
+    <section class="glass backup-admin">
 
-    </div>
+        <h2>
 
+            💾 Backup e Exportação
 
-</div!>
-  
-<!-- ==========================================
-     FERRAMENTAS
-========================================== -->
+        </h2>
 
-<section class="glass ferramentas">
+        <div class="backup-grid">
 
+            <button
+                id="btnBackup"
+                class="btn btn-primary">
 
-    <h2>
+                💾 Fazer Backup
 
-        ⚙️ Ferramentas
+            </button>
 
-    </h2>
+            <button
+                id="btnRestaurar"
+                class="btn btn-success">
 
+                📥 Restaurar Backup
 
+            </button>
 
-    <div class="acoes-admin">
+            <button
+                id="btnExportarPDF"
+                class="btn btn-danger">
 
+                📄 Exportar PDF
 
-        <button
+            </button>
 
-            id="exportarPDF"
+            <button
+                id="btnExportarExcel"
+                class="btn btn-warning">
 
-            class="btn btn-primary">
+                📊 Exportar Excel
 
+            </button>
 
-            📄 Exportar PDF
+            <button
+                id="btnLimparReservas"
+                class="btn">
 
+                🧹 Limpar Reservas Expiradas
 
-        </button>
+            </button>
 
+        </div>
 
+    </section>
 
-        <button
+    <!-- Histórico -->
 
-            id="exportarExcel"
+    <section class="glass historico-admin">
 
-            class="btn btn-success">
+        <h2>
 
+            📝 Histórico de Ações
 
-            📊 Exportar Excel
+        </h2>
 
+        <div
+            id="listaHistorico"
+            class="lista-historico">
 
-        </button>
+            <!-- Histórico carregado pelo Firebase -->
 
+        </div>
 
+    </section>
 
-        <button
+    <!-- Administrador -->
 
-            id="gerarComprovante"
+    <section class="glass perfil-admin">
 
-            class="btn btn-pix">
+        <h2>
 
+            👨‍💼 Administrador
 
-            🧾 Gerar Comprovante
+        </h2>
 
+        <div class="perfil-grid">
 
-        </button>
+            <div>
 
+                <strong>
 
-    </div>
+                    Nome
 
+                </strong>
 
-</section>
+                <p id="adminNome">
 
+                    GilFest
 
+                </p>
 
+            </div>
 
+            <div>
 
-<!-- ==========================================
-     INFORMAÇÕES
-========================================== -->
+                <strong>
 
+                    Último acesso
 
-<section class="glass informacoes">
-
-
-    <h2>
-
-        ℹ️ Informações da Rifa
-
-    </h2>
-
-
-
-    <div class="info-grid">
-
-
-        <p>
-
-            Beneficiada:
-
-            <strong id="infoBeneficiada">
-
-                Dona Bené
-
-            </strong>
-
-
-        </p>
-
-
-
-        <p>
-
-            Prêmio:
-
-            <strong id="infoPremio">
-
-                Geladeira Midea Frost Free
-
-            </strong>
-
-
-        </p>
-
-
-
-        <p>
-
-            Valor:
-
-            <strong id="infoValor">
-
-                R$ 10,00
-
-            </strong>
-
-
-        </p>
-
-
-
-        <p>
-
-            Sorteio:
-
-            <strong id="infoData">
-
-                30 de Dezembro
-
-            </strong>
-
-
-        </p>
-
-
-    </div>
-
-
-</section>
-
-
-
-</section>
-
+                </
+                    <!-- Rodapé -->
 
 </main>
 
-
-
-<!-- ==========================================
-     RODAPÉ
-========================================== -->
-
-
 <footer class="footer">
 
+    <div class="glass footer-content">
 
-<div class="glass footer-content">
+        <img
+            src="img/1784636629590.png"
+            class="footer-logo"
+            alt="Logo GilFest"
+            loading="lazy">
 
+        <p>
 
-<img
+            © 2026 GilFest • Painel Administrativo
 
-src="img/1784636629590.png"
+        </p>
 
-alt="Logo GilFest"
+        <small>
 
-class="footer-logo">
+            Desenvolvido com ❤️ por GilFest
 
+        </small>
 
-
-<p>
-
-© 2026 GilFest
-
-</p>
-
-
-
-<small>
-
-Painel Administrativo Rifa Solidária
-
-</small>
-
-
-</div>
-
+    </div>
 
 </footer>
 
-<!-- ==========================================
-     SCRIPTS
-========================================== -->
-
+<!-- Configurações -->
 
 <script src="config.js"></script>
 
-
-
-<!-- Firebase SDK -->
+<!-- Firebase -->
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-
-
-<!-- Configuração Firebase -->
-
-<script src="firebase-config.js"></script>
-
-
-
-<!-- Integração Firebase -->
-
 <script src="firebase.js"></script>
 
+<!-- Bibliotecas -->
 
+<script src="pdf.js"></script>
 
-<!-- Painel Administrativo -->
+<!-- Painel -->
 
 <script src="admin.js"></script>
 
-
-
-
-
-<!-- PWA -->
-
-<script>
-
-if ("serviceWorker" in navigator) {
-
-
-    window.addEventListener(
-        "load",
-        ()=>{
-
-
-            navigator.serviceWorker
-            .register("sw.js")
-            .then(()=>{
-
-
-                console.log(
-                    "✅ Service Worker ativo."
-                );
-
-
-            })
-            .catch((erro)=>{
-
-
-                console.error(
-                    "Erro Service Worker:",
-                    erro
-                );
-
-
-            });
-
-
-        }
-    );
-
-
-}
-
-</script>
-
-
-
 </body>
 
-</html>
+                </html>
