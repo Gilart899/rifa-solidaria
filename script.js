@@ -211,6 +211,39 @@ Obrigado(a)!`
     });
 
 }
+/* =====================================
+   RESUMO DA COMPRA
+===================================== */
+
+let numeroEscolhido = null;
+
+function atualizarResumo(numero, status = "Disponível") {
+
+    numeroEscolhido = numero;
+
+    document.getElementById("numeroSelecionado").textContent = numero;
+
+    const statusEl = document.getElementById("statusNumero");
+
+    statusEl.textContent = status;
+
+    statusEl.className = "status";
+
+    if (status.includes("Disponível")) {
+
+        statusEl.classList.add("disponivel");
+
+    } else if (status.includes("Reservado")) {
+
+        statusEl.classList.add("reservado");
+
+    } else {
+
+        statusEl.classList.add("vendido");
+
+    }
+
+}
 /* ==========================================================
    CONFIGURAÇÃO DA PÁGINA
 ========================================================== */
