@@ -29,7 +29,15 @@ import {
 
 const firebaseConfig = {
 
-    apiKey: "SUA_API_KEY",
+    aconst firebaseConfig = {
+    apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
+    authDomain: "rifa-solidaria-56274.firebaseapp.com",
+    databaseURL: "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
+    projectId: "rifa-solidaria-56274",
+    storageBucket: "rifa-solidaria-56274.firebasestorage.app",
+    messagingSenderId: "279310238107",
+    appId: "1:279310238107:web:fd82a20c11e28a4673a13e"
+};
 
     authDomain: "rifa-solidaria-56274.firebaseapp.com",
 
