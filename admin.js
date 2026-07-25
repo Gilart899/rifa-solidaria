@@ -1,942 +1,798 @@
-/* ==========================================
-   RIFA SOLIDÁRIA
+/* ==========================================================
+   GILFEST - PAINEL ADMINISTRATIVO
    admin.js
-
-   Painel Administrativo
-========================================== */
+   ========================================================== */
 
 "use strict";
 
+/* ========= CONFIGURAÇÕES ========= */
 
-/* ==========================================
-   ELEMENTOS
-========================================== */
+const SENHA_ADMIN = "GilFest2026";
 
+/* ========= ELEMENTOS ========= */
 
-const loginArea =
-    document.getElementById("loginArea");
+const loginBox = document.querySelector(".login-admin");
+const painel = document.getElementById("painelAdmin");
 
+const senhaInput = document.getElementById("senhaAdmin");
+const btnEntrar = document.getElementById("btnEntrar");
 
-const dashboard =
-    document.getElementById("dashboard");
+const toast = document.getElementById("toastAdmin");
 
+const totalDisponiveis = document.getElementById("totalDisponiveis");
+const totalReservados = document.getElementById("totalReservados");
+const totalVendidos = document.getElementById("totalVendidos");
+const totalNumeros = document.getElementById("totalNumeros");
+const valorArrecadado = document.getElementById("valorArrecadado");
 
-const senhaAdmin =
-    document.getElementById("senhaAdmin");
+const barra = document.getElementById("barraProgresso");
+const percentual = document.getElementById("percentualRifa");
 
+const listaParticipantes =
+document.getElementById("listaParticipantes");
 
-const entrarAdmin =
-    document.getElementById("entrarAdmin");
+/* ========= LOGIN ========= */
 
+btnEntrar.addEventListener("click", verificarSenha);
 
-const erroLogin =
-    document.getElementById("erroLogin");
+senhaInput.addEventListener("keydown", function(e){
 
+if(e.key==="Enter"){
 
+verificarSenha();
 
-const listaReservas =
-    document.getElementById("listaReservas");
+}
 
+});
 
+function verificarSenha(){
 
-const totalNumeros =
-    document.getElementById("totalNumeros");
+const senha = senhaInput.value.trim();
 
+if(senha===SENHA_ADMIN){
 
-const totalReservados =
-    document.getElementById("totalReservados");
+loginBox.style.display="none";
 
+painel.style.display="block";
 
-const totalPagos =
-    document.getElementById("totalPagos");
+mostrarToast("Bem-vindo ao painel!");
 
+carregarDashboard();
 
-const totalDisponiveis =
-    document.getElementById("totalDisponiveis");
+carregarParticipantes();
 
+}else{
 
-const valorArrecadado =
-    document.getElementById("valorArrecadado");
+mostrarToast("Senha incorreta.");
 
+senhaInput.focus();
 
+}
 
-const pesquisarNumero =
-    document.getElementById("pesquisarNumero");
+}
 
+/* ========= TOAST ========= */
 
-const pesquisarCliente =
-    document.getElementById("pesquisarCliente");
+function mostrarToast(texto){
 
+toast.textContent=texto;
 
+toast.classList.add("mostrar");
 
-/* ==========================================
-   VARIÁVEIS
-========================================== */
+setTimeout(()=>{
 
+toast.classList.remove("mostrar");
 
-let todasReservas = [];
+},3000);
 
-let autenticado = false;
+}
 
+/* ========= FIREBASE ========= */
 
-/* ==========================================
-   LOGIN
-========================================== */
+const db = firebase.database();
 
+const numerosRef = db.ref("numeros");
 
-function entrarPainel(){
+const configRef = db.ref("config");
 
+/* ========= DASHBOARD ========= */
 
-    const senha =
-        senhaAdmin.value.trim();
+function carregarDashboard(){
 
+numerosRef.on("value",(snapshot)=>{
 
+const dados=snapshot.val()||{};
 
-    if(
-        senha === CONFIG.admin.senha
-    ){
+let disponiveis=0;
+let reservados=0;
+let vendidos=0;
 
+Object.values(dados).forEach(item=>{
 
-        autenticado = true;
+switch(item.status){
 
+case "disponivel":
 
-        loginArea.classList.add(
-            "hidden"
-        );
+disponiveis++;
 
+break;
 
-        dashboard.classList.remove(
-            "hidden"
-        );
+case "reservado":
 
+reservados++;
 
-        carregarPainel();
+break;
 
+case "vendido":
 
+vendidos++;
 
-    }else{
+break;
 
+}
 
-        erroLogin.textContent =
-            "❌ Senha incorreta.";
+});
 
+const total=disponiveis+reservados+vendidos;
+
+const arrecadado=vendidos*10;
+
+totalDisponiveis.textContent=disponiveis;
+
+totalReservados.textContent=reservados;
+
+totalVendidos.textContent=vendidos;
+
+totalNumeros.textContent=total;
+
+valorArrecadado.textContent=
+arrecadado.toLocaleString("pt-BR",{
+
+style:"currency",
+
+currency:"BRL"
+
+});
+
+const porcentagem=
+total===0
+?0
+:(vendidos/total)*100;
+
+barra.style.width=
+porcentagem+"%";
+
+percentual.textContent=
+porcentagem.toFixed(1)+"%";
+
+});
+
+}
+/* ==========================================================
+   PARTICIPANTES
+   ========================================================== */
+
+let participantes = [];
+let participantesFiltrados = [];
+
+function carregarParticipantes() {
+
+    numerosRef.on("value", (snapshot) => {
+
+        const dados = snapshot.val() || {};
+
+        participantes = [];
+
+        Object.keys(dados).forEach((id) => {
+
+            participantes.push({
+                id,
+                ...dados[id]
+            });
+
+        });
+
+        participantes.sort((a, b) => Number(a.numero) - Number(b.numero));
+
+        participantesFiltrados = [...participantes];
+
+        atualizarTabela();
+
+    });
+
+}
+
+/* ==========================================================
+   TABELA
+   ========================================================== */
+
+function atualizarTabela() {
+
+    listaParticipantes.innerHTML = "";
+
+    document.getElementById("quantidadeRegistros").textContent =
+        participantesFiltrados.length + " registros";
+
+    participantesFiltrados.forEach((item) => {
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+
+<td>${item.numero || "-"}</td>
+
+<td>${item.cartela || "-"}</td>
+
+<td>${item.nome || "-"}</td>
+
+<td>${item.whatsapp || "-"}</td>
+
+<td>
+
+<span class="status ${item.status || "disponivel"}">
+
+${textoStatus(item.status)}
+
+</span>
+
+</td>
+
+<td>
+
+${item.pagamento || "Pendente"}
+
+</td>
+
+<td>
+
+<div class="acoes">
+
+<button
+class="btn-editar"
+onclick="abrirEdicao('${item.id}')">
+
+✏️
+
+</button>
+
+<button
+class="btn-confirmar"
+onclick="confirmarPagamento('${item.id}')">
+
+✅
+
+</button>
+
+<button
+class="btn-transferir"
+onclick="transferirNumero('${item.id}')">
+
+🔄
+
+</button>
+
+<button
+class="btn-excluir"
+onclick="excluirParticipante('${item.id}')">
+
+🗑
+
+</button>
+
+</div>
+
+</td>
+
+`;
+
+        listaParticipantes.appendChild(tr);
+
+    });
+
+}
+
+/* ==========================================================
+   STATUS
+   ========================================================== */
+
+function textoStatus(status) {
+
+    switch (status) {
+
+        case "vendido":
+            return "🔴 Vendido";
+
+        case "reservado":
+            return "🟡 Reservado";
+
+        default:
+            return "🟢 Disponível";
 
     }
 
-
 }
 
-
-
-if(entrarAdmin){
-
-
-    entrarAdmin.addEventListener(
-        "click",
-        entrarPainel
-    );
-
-
-}
-
-
-
-if(senhaAdmin){
-
-
-    senhaAdmin.addEventListener(
-        "keydown",
-        (evento)=>{
-
-
-            if(
-                evento.key === "Enter"
-            ){
-
-                entrarPainel();
-
-            }
-
-
-        }
-    );
-
-
-}
-
-
-/* ==========================================
-   CARREGAR DADOS
-========================================== */
-
-
-function carregarPainel(){
-
-
-    if(
-        typeof reservasRef === "undefined"
-    ){
-
-        console.error(
-            "Firebase indisponível."
-        );
-
-        return;
-
-    }
-
-
-
-    reservasRef.on(
-        "value",
-        (snapshot)=>{
-
-
-            todasReservas = [];
-
-
-
-            snapshot.forEach(
-                item=>{
-
-
-                    todasReservas.push({
-
-                        id:item.key,
-
-                        ...item.val()
-
-                    });
-
-
-                }
-            );
-
-
-
-            atualizarDashboard();
-
-
-            mostrarReservas(
-                todasReservas
-            );
-
-
-        }
-    );
-
-  /* ==========================================
-   ATUALIZAR DASHBOARD
-========================================== */
-
-function atualizarDashboard(){
-
-
-    const total =
-        CONFIG.numeros.fim -
-        CONFIG.numeros.inicio +
-        1;
-
-
-
-    const reservados =
-        todasReservas.filter(
-            item =>
-            item.status === "reservado"
-        ).length;
-
-
-
-    const pagos =
-        todasReservas.filter(
-            item =>
-            item.status === "pago"
-        ).length;
-
-
-
-    const disponiveis =
-        total -
-        todasReservas.length;
-
-
-
-    const arrecadado =
-        pagos *
-        CONFIG.valorNumero;
-
-
-
-    totalNumeros.textContent =
-        total;
-
-
-
-    totalReservados.textContent =
-        reservados;
-
-
-
-    totalPagos.textContent =
-        pagos;
-
-
-
-    totalDisponiveis.textContent =
-        disponiveis;
-
-
-
-    valorArrecadado.textContent =
-
-        `R$ ${arrecadado
-        .toFixed(2)
-        .replace(".",",")}`;
-
-
-}
-
-
-/* ==========================================
-   MOSTRAR RESERVAS
-========================================== */
-
-function mostrarReservas(lista){
-
-
-    if(!listaReservas) return;
-
-
-
-    listaReservas.innerHTML = "";
-
-
-
-    lista.forEach(
-        reserva=>{
-
-
-            const linha =
-                document.createElement("tr");
-
-
-
-            const data =
-                new Date(
-                    reserva.data
-                )
-                .toLocaleDateString(
-                    "pt-BR"
-                );
-
-
-
-            linha.innerHTML = `
-
-                <td>
-                    ${reserva.numero}
-                </td>
-
-                <td>
-                    ${reserva.nome || ""}
-                </td>
-
-                <td>
-                    ${reserva.telefone || ""}
-                </td>
-
-                <td>
-                    ${reserva.cidade || ""}
-                </td>
-
-                <td>
-
-                    <span class="status-admin 
-                    status-${reserva.status}">
-
-                    ${reserva.status}
-
-                    </span>
-
-                </td>
-
-
-                <td>
-                    ${data}
-                </td>
-
-
-                <td>
-
-
-                    <button
-
-                    class="acao-btn btn-editar"
-
-                    onclick="editarReserva('${reserva.id}')">
-
-                    ✏️
-
-                    </button>
-
-
-
-                    ${
-                    reserva.status !== "pago"
-
-                    ?
-
-                    `
-
-                    <button
-
-                    class="acao-btn btn-pagar"
-
-                    onclick="pagarReserva('${reserva.id}')">
-
-                    💰
-
-                    </button>
-
-                    `
-
-                    :
-
-                    ""
-
-                    }
-
-
-
-                    <button
-
-                    class="acao-btn btn-excluir"
-
-                    onclick="removerReserva('${reserva.id}')">
-
-                    🗑️
-
-                    </button>
-
-
-                </td>
-
-            `;
-
-
-
-            listaReservas.appendChild(
-                linha
-            );
-
-
-        }
-    );
-
-
-}
-  /* ==========================================
-   PESQUISAS
-========================================== */
-
-
-function aplicarFiltros(){
-
+/* ==========================================================
+   PESQUISA
+   ========================================================== */
+
+document
+.getElementById("btnPesquisar")
+.addEventListener("click", pesquisar);
+
+function pesquisar() {
 
     const numero =
-        pesquisarNumero.value
-        .trim()
-        .toLowerCase();
+        document.getElementById("buscarNumero")
+        .value
+        .trim();
 
+    const nome =
+        document.getElementById("buscarNome")
+        .value
+        .toLowerCase()
+        .trim();
 
+    const telefone =
+        document.getElementById("buscarTelefone")
+        .value
+        .trim();
 
-    const cliente =
-        pesquisarCliente.value
-        .trim()
-        .toLowerCase();
+    participantesFiltrados = participantes.filter((item) => {
 
+        const okNumero =
+            !numero ||
+            String(item.numero).includes(numero);
 
+        const okNome =
+            !nome ||
+            (item.nome || "")
+            .toLowerCase()
+            .includes(nome);
 
-    const filtradas =
-        todasReservas.filter(
-            item=>{
+        const okTelefone =
+            !telefone ||
+            (item.whatsapp || "")
+            .includes(telefone);
 
+        return okNumero && okNome && okTelefone;
 
-                const bateNumero =
+    });
 
-                    String(item.numero)
-                    .includes(numero);
+    atualizarTabela();
 
+}
 
+/* ==========================================================
+   FILTROS
+   ========================================================== */
 
-                const bateCliente =
+document
+.querySelectorAll(".filtro")
+.forEach((botao) => {
 
-                    (item.nome || "")
-                    .toLowerCase()
-                    .includes(cliente);
+    botao.addEventListener("click", () => {
 
+        document
+            .querySelectorAll(".filtro")
+            .forEach((b) => b.classList.remove("ativo"));
 
+        botao.classList.add("ativo");
 
-                return (
-                    bateNumero
-                    &&
-                    bateCliente
+        const status = botao.dataset.status;
+
+        if (status === "todos") {
+
+            participantesFiltrados = [...participantes];
+
+        } else {
+
+            participantesFiltrados =
+                participantes.filter((item) =>
+                    item.status === status
                 );
 
-
-            }
-        );
-
-
-
-    mostrarReservas(
-        filtradas
-    );
-
-
-}
-
-
-
-if(pesquisarNumero){
-
-
-    pesquisarNumero.addEventListener(
-        "input",
-        aplicarFiltros
-    );
-
-
-}
-
-
-
-if(pesquisarCliente){
-
-
-    pesquisarCliente.addEventListener(
-        "input",
-        aplicarFiltros
-    );
-
-
-}
-
-
-
-/* ==========================================
-   PAGAR RESERVA
-========================================== */
-
-
-async function pagarReserva(id){
-
-
-    if(
-        !confirm(
-            "Confirmar pagamento?"
-        )
-    ){
-
-        return;
-
-    }
-
-
-
-    try{
-
-
-        await confirmarPagamento(
-            id
-        );
-
-
-
-        alert(
-            "✅ Pagamento confirmado."
-        );
-
-
-
-    }catch(erro){
-
-
-        console.error(
-            erro
-        );
-
-
-        alert(
-            "Erro ao confirmar pagamento."
-        );
-
-
-    }
-
-
-}
-
-
-
-
-/* ==========================================
-   EXCLUIR RESERVA
-========================================== */
-
-
-async function removerReserva(id){
-
-
-    try{
-
-
-        await excluirReserva(
-            id
-        );
-
-
-
-    }catch(erro){
-
-
-        console.error(
-            erro
-        );
-
-
-    }
-
-
-}
-
-
-
-/* ==========================================
-   EDITAR RESERVA
-========================================== */
-
-
-function editarReserva(id){
-
-
-    const reserva =
-
-        todasReservas.find(
-            item =>
-            item.id === id
-        );
-
-
-
-    if(!reserva)
-        return;
-
-
-
-    document
-    .getElementById("editarId")
-    .value =
-        reserva.id;
-
-
-
-    document
-    .getElementById("editarNome")
-    .value =
-        reserva.nome || "";
-
-
-
-    document
-    .getElementById("editarTelefone")
-    .value =
-        reserva.telefone || "";
-
-
-
-    document
-    .getElementById("editarStatus")
-    .value =
-        reserva.status;
-
-
-
-    document
-    .getElementById("modalEditar")
-    .classList
-    .remove("hidden");
-
-
-}
-  /* ==========================================
-   MODAL EDITAR
-========================================== */
-
-const modalEditar =
-    document.getElementById("modalEditar");
-
-
-const fecharEditar =
-    document.getElementById("fecharEditar");
-
-
-const salvarEdicao =
-    document.getElementById("salvarEdicao");
-
-
-
-if(fecharEditar){
-
-
-    fecharEditar.addEventListener(
-        "click",
-        ()=>{
-
-
-            modalEditar
-            .classList
-            .add("hidden");
-
-
         }
-    );
 
+        atualizarTabela();
 
-}
+    });
+   
 
+});
+/* ==========================================================
+   MODAL DE EDIÇÃO
+   ========================================================== */
 
+const modal = document.getElementById("modalParticipante");
 
-if(salvarEdicao){
+const editNome = document.getElementById("editNome");
+const editWhatsapp = document.getElementById("editWhatsapp");
+const editCartela = document.getElementById("editCartela");
+const editNumero = document.getElementById("editNumero");
+const editObservacao = document.getElementById("editObservacao");
 
+let participanteAtual = null;
 
-    salvarEdicao.addEventListener(
-        "click",
-        async ()=>{
+/* Abrir modal */
 
+function abrirEdicao(id){
 
-            const id =
-                document
-                .getElementById("editarId")
-                .value;
+const participante = participantes.find(p => p.id === id);
 
+if(!participante) return;
 
+participanteAtual = participante;
 
-            const dados = {
+editNome.value = participante.nome || "";
 
+editWhatsapp.value = participante.whatsapp || "";
 
-                nome:
+editCartela.value = participante.cartela || "";
 
-                    document
-                    .getElementById("editarNome")
-                    .value,
+editNumero.value = participante.numero || "";
 
+editObservacao.value = participante.observacao || "";
 
-                telefone:
-
-                    document
-                    .getElementById("editarTelefone")
-                    .value,
-
-
-                status:
-
-                    document
-                    .getElementById("editarStatus")
-                    .value
-
-
-            };
-
-
-
-            try{
-
-
-                await reservasRef
-                .child(id)
-                .update(dados);
-
-
-
-                modalEditar
-                .classList
-                .add("hidden");
-
-
-
-            }catch(erro){
-
-
-                console.error(
-                    erro
-                );
-
-
-            }
-
-
-        }
-    );
-
+modal.classList.add("ativo");
 
 }
 
+/* Fechar modal */
 
+document
+.getElementById("fecharModal")
+.addEventListener("click",()=>{
 
-/* ==========================================
+modal.classList.remove("ativo");
+
+});
+
+/* Clique fora */
+
+window.addEventListener("click",(e)=>{
+
+if(e.target===modal){
+
+modal.classList.remove("ativo");
+
+}
+
+});
+
+/* ==========================================================
+   SALVAR
+   ========================================================== */
+
+document
+.getElementById("formParticipante")
+.addEventListener("submit",salvarParticipante);
+
+function salvarParticipante(e){
+
+e.preventDefault();
+
+if(!participanteAtual) return;
+
+numerosRef.child(participanteAtual.id).update({
+
+nome:editNome.value.trim(),
+
+whatsapp:editWhatsapp.value.trim(),
+
+observacao:editObservacao.value.trim()
+
+}).then(()=>{
+
+registrarHistorico(
+
+"✏️ Dados atualizados do número " +
+
+participanteAtual.numero
+
+);
+
+mostrarToast("Dados atualizados.");
+
+modal.classList.remove("ativo");
+
+});
+
+}
+
+/* ==========================================================
+   CONFIRMAR PAGAMENTO
+   ========================================================== */
+
+function confirmarPagamento(id){
+
+if(!confirm("Confirmar pagamento deste número?"))
+
+return;
+
+numerosRef.child(id).update({
+
+status:"vendido",
+
+pagamento:"Confirmado",
+
+dataPagamento:new Date().toLocaleString("pt-BR")
+
+}).then(()=>{
+
+registrarHistorico(
+
+"✅ Pagamento confirmado."
+
+);
+
+mostrarToast("Pagamento confirmado.");
+
+});
+
+}
+
+/* ==========================================================
+   TRANSFERIR NÚMERO
+   ========================================================== */
+
+function transferirNumero(id){
+
+const novoNome = prompt("Nome do novo participante:");
+
+if(!novoNome) return;
+
+const novoWhatsapp = prompt("WhatsApp do novo participante:");
+
+if(!novoWhatsapp) return;
+
+numerosRef.child(id).update({
+
+nome:novoNome,
+
+whatsapp:novoWhatsapp
+
+}).then(()=>{
+
+registr
+
+        /* ==========================================================
+   CONFIGURAÇÕES DA RIFA
+   ========================================================== */
+
+const btnSalvarConfiguracoes =
+document.getElementById("btnSalvarConfiguracoes");
+
+btnSalvarConfiguracoes.addEventListener("click", salvarConfiguracoes);
+
+function salvarConfiguracoes(){
+
+const config={
+
+premio:
+document.getElementById("cfgPremio").value.trim(),
+
+valor:
+document.getElementById("cfgValor").value.trim(),
+
+data:
+document.getElementById("cfgData").value,
+
+hora:
+document.getElementById("cfgHora").value,
+
+whatsapp:
+document.getElementById("cfgWhatsapp").value.trim(),
+
+pix:
+document.getElementById("cfgPix").value.trim(),
+
+titular:
+document.getElementById("cfgTitular").value.trim(),
+
+banco:
+document.getElementById("cfgBanco").value.trim()
+
+};
+
+configRef.set(config)
+
+.then(()=>{
+
+mostrarToast("Configurações salvas.");
+
+registrarHistorico(
+"⚙️ Configurações alteradas."
+);
+
+});
+
+}
+
+/* ==========================================================
+   AVISOS
+   ========================================================== */
+
+document
+.getElementById("btnSalvarAviso")
+.addEventListener("click",()=>{
+
+const aviso=
+document
+.getElementById("textoAviso")
+.value.trim();
+
+db.ref("avisos/principal")
+
+.set({
+
+texto:aviso,
+
+data:
+new Date().toLocaleString("pt-BR")
+
+})
+
+.then(()=>{
+
+mostrarToast("Aviso publicado.");
+
+registrarHistorico(
+"📢 Aviso publicado."
+);
+
+});
+
+});
+
+/* ==========================================================
+   FOTO DO PRÊMIO
+   ========================================================== */
+
+const fotoInput=
+document.getElementById("fotoPremio");
+
+const preview=
+document.getElementById("previewPremio");
+
+fotoInput.addEventListener("change",(e)=>{
+
+const arquivo=e.target.files[0];
+
+if(!arquivo) return;
+
+const leitor=new FileReader();
+
+leitor.onload=function(event){
+
+preview.src=event.target.result;
+
+};
+
+leitor.readAsDataURL(arquivo);
+
+});
+
+document
+.getElementById("btnAtualizarFoto")
+.addEventListener("click",()=>{
+
+mostrarToast(
+"
+   /* ==========================================================
    EXPORTAR PDF
-========================================== */
+   ========================================================== */
 
+document
+.getElementById("btnExportarPDF")
+.addEventListener("click",exportarPDF);
 
-const exportarPDF =
-    document.getElementById(
-        "exportarPDF"
-    );
+function exportarPDF(){
 
+window.print();
 
-if(exportarPDF){
+registrarHistorico(
 
+"📄 Exportação em PDF."
 
-    exportarPDF.addEventListener(
-        "click",
-        ()=>{
+);
 
+mostrarToast(
 
-            window.print();
+"Use 'Salvar como PDF' na janela de impressão."
 
-
-        }
-    );
-
+);
 
 }
 
+/* ==========================================================
+   EXPORTAR EXCEL (CSV)
+   ========================================================== */
 
+document
+.getElementById("btnExportarExcel")
+.addEventListener("click",exportarCSV);
 
-/* ==========================================
-   EXPORTAR EXCEL
-========================================== */
+function exportarCSV(){
 
+let csv="Numero;Cartela;Nome;WhatsApp;Status;Pagamento\n";
 
-const exportarExcel =
-    document.getElementById(
-        "exportarExcel"
-    );
+participantes.forEach(item=>{
 
+csv+=`${item.numero||""};${item.cartela||""};${item.nome||""};${item.whatsapp||""};${item.status||""};${item.pagamento||""}\n`;
 
+});
 
-if(exportarExcel){
+const blob=new Blob([csv],{
 
+type:"text/csv;charset=utf-8;"
 
-    exportarExcel.addEventListener(
-        "click",
-        ()=>{
+});
 
+const url=URL.createObjectURL(blob);
 
-            let csv =
+const link=document.createElement("a");
 
-                "Numero,Nome,Telefone,Cidade,Status\n";
+link.href=url;
 
+link.download="participantes.csv";
 
+document.body.appendChild(link);
 
-            todasReservas.forEach(
-                item=>{
+link.click();
 
+document.body.removeChild(link);
 
-                    csv +=
+URL.revokeObjectURL(url);
 
-                    `${item.numero},` +
+registrarHistorico("📊 Exportação CSV.");
 
-                    `${item.nome},` +
-
-                    `${item.telefone},` +
-
-                    `${item.cidade},` +
-
-                    `${item.status}\n`;
-
-
-                }
-            );
-
-
-
-            const blob =
-                new Blob(
-                    [csv],
-                    {
-                        type:
-                        "text/csv"
-                    }
-                );
-
-
-
-            const link =
-                document
-                .createElement("a");
-
-
-
-            link.href =
-                URL.createObjectURL(
-                    blob
-                );
-
-
-
-            link.download =
-                "reservas-rifa.csv";
-
-
-
-            link.click();
-
-
-        }
-    );
-
+mostrarToast("Planilha exportada.");
 
 }
 
+/* ==========================================================
+   ÚLTIMO ACESSO
+   ========================================================== */
 
+function registrarUltimoAcesso(){
 
-/* ==========================================
-   COMPROVANTE
-========================================== */
+const agora=new Date().toLocaleString("pt-BR");
 
+localStorage.setItem(
 
-const gerarComprovante =
-    document.getElementById(
-        "gerarComprovante"
-    );
+"ultimoAcessoAdmin",
 
+agora
 
+);
 
-if(gerarComprovante){
+const campo=
 
+document.getElementById("ultimoAcesso");
 
-    gerarComprovante.addEventListener(
-        "click",
-        ()=>{
+if(campo){
 
-
-            alert(
-                "Selecione uma reserva para gerar o comprovante."
-            );
-
-
-        }
-    );
-
+campo.textContent=agora;
 
 }
 
+}
 
+window.addEventListener("load",()=>{
 
-/* ==========================================
-   FIM ADMIN.JS
-========================================== */
+const ultimo=
+
+localStorage.getItem("ultimoAcessoAdmin");
+
+if(ultimo){
+
+document.getElementById("ultimoAcesso").textContent=ultimo;
 
 }
+
+});
+
+/* ==========================================================
+   LOGOUT
+   ==========================================================
