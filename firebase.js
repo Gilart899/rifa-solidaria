@@ -23,14 +23,14 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ===============================
+// Configuração
+// ===============================
+
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
-// ===================================
-// Referência raiz do banco
-// ===================================
+    apiKey: "SUA_API_KEY",
 
-const dbRoot = ref(db);
     authDomain: "rifa-solidaria-56274.firebaseapp.com",
 
     databaseURL: "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
@@ -45,20 +45,35 @@ const dbRoot = ref(db);
 
 };
 
+// ===============================
+// Inicialização
+// ===============================
+
 const app = initializeApp(firebaseConfig);
-const dbRoot = ref(db);
+
 const db = getDatabase(app);
 
 const auth = getAuth(app);
 
+// ===============================
+// Referência raiz
+// ===============================
+
+const dbRoot = ref(db);
+
+// ===============================
+// Exportações
+// ===============================
+
 export {
-    dbRoot,
-    firebaseConfig,
+
     app,
 
     db,
 
     auth,
+
+    dbRoot,
 
     firebaseConfig,
 
