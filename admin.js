@@ -1,798 +1,435 @@
-/* ==========================================================
-   GILFEST - PAINEL ADMINISTRATIVO
-   admin.js
-   ========================================================== */
+// ==========================================================
+// admin.js
+// Painel Administrativo
+// Rifa Solidária
+// ==========================================================
 
-"use strict";
+import {
 
-/* ========= CONFIGURAÇÕES ========= */
+    auth,
 
-const SENHA_ADMIN = "GilFest2026";
+    signInWithEmailAndPassword,
 
-/* ========= ELEMENTOS ========= */
+    signOut,
 
-const loginBox = document.querySelector(".login-admin");
-const painel = document.getElementById("painelAdmin");
+    onAuthStateChanged,
 
-const senhaInput = document.getElementById("senhaAdmin");
+    numerosRef,
+
+    participantesRef,
+
+    estatisticasRef,
+
+    configRef,
+
+    get,
+
+    onValue,
+
+    update
+
+} from "./firebase.js";
+
+import {
+
+    formatarNumero
+
+} from "./utils.js";
+
+// ==========================================================
+// ESTADO
+// ==========================================================
+
+const ADMIN = {
+
+    usuario: null,
+
+    numeros: {},
+
+    participantes: {},
+
+    estatisticas: {},
+
+    configuracao: {}
+
+};
+
+// ==========================================================
+// ELEMENTOS
+// ==========================================================
+
+const loginBox = document.getElementById("login");
+
+const painel = document.getElementById("painel");
+
+const email = document.getElementById("email");
+
+const senha = document.getElementById("senha");
+
 const btnEntrar = document.getElementById("btnEntrar");
 
-const toast = document.getElementById("toastAdmin");
+const btnSair = document.getElementById("btnSair");
 
-const totalDisponiveis = document.getElementById("totalDisponiveis");
-const totalReservados = document.getElementById("totalReservados");
-const totalVendidos = document.getElementById("totalVendidos");
-const totalNumeros = document.getElementById("totalNumeros");
-const valorArrecadado = document.getElementById("valorArrecadado");
+// ==========================================================
+// INICIAR
+// ==========================================================
 
-const barra = document.getElementById("barraProgresso");
-const percentual = document.getElementById("percentualRifa");
+window.addEventListener("load", iniciarAdmin);
 
-const listaParticipantes =
-document.getElementById("listaParticipantes");
+function iniciarAdmin(){
 
-/* ========= LOGIN ========= */
+    verificarLogin();
 
-btnEntrar.addEventListener("click", verificarSenha);
-
-senhaInput.addEventListener("keydown", function(e){
-
-if(e.key==="Enter"){
-
-verificarSenha();
+    registrarEventos();
 
 }
 
-});
+// ==========================================================
+// EVENTOS
+// ==========================================================
 
-function verificarSenha(){
+function registrarEventos(){
 
-const senha = senhaInput.value.trim();
+    if(btnEntrar){
 
-if(senha===SENHA_ADMIN){
+        btnEntrar.addEventListener(
 
-loginBox.style.display="none";
+            "click",
 
-painel.style.display="block";
+            fazerLogin
 
-mostrarToast("Bem-vindo ao painel!");
+        );
 
-carregarDashboard();
+    }
 
-carregarParticipantes();
+    if(btnSair){
 
-}else{
+        btnSair.addEventListener(
 
-mostrarToast("Senha incorreta.");
+            "click",
 
-senhaInput.focus();
+            sair
 
-}
-
-}
-
-/* ========= TOAST ========= */
-
-function mostrarToast(texto){
-
-toast.textContent=texto;
-
-toast.classList.add("mostrar");
-
-setTimeout(()=>{
-
-toast.classList.remove("mostrar");
-
-},3000);
-
-}
-
-/* ========= FIREBASE ========= */
-
-const db = firebase.database();
-
-const numerosRef = db.ref("numeros");
-
-const configRef = db.ref("config");
-
-/* ========= DASHBOARD ========= */
-
-function carregarDashboard(){
-
-numerosRef.on("value",(snapshot)=>{
-
-const dados=snapshot.val()||{};
-
-let disponiveis=0;
-let reservados=0;
-let vendidos=0;
-
-Object.values(dados).forEach(item=>{
-
-switch(item.status){
-
-case "disponivel":
-
-disponiveis++;
-
-break;
-
-case "reservado":
-
-reservados++;
-
-break;
-
-case "vendido":
-
-vendidos++;
-
-break;
-
-}
-
-});
-
-const total=disponiveis+reservados+vendidos;
-
-const arrecadado=vendidos*10;
-
-totalDisponiveis.textContent=disponiveis;
-
-totalReservados.textContent=reservados;
-
-totalVendidos.textContent=vendidos;
-
-totalNumeros.textContent=total;
-
-valorArrecadado.textContent=
-arrecadado.toLocaleString("pt-BR",{
-
-style:"currency",
-
-currency:"BRL"
-
-});
-
-const porcentagem=
-total===0
-?0
-:(vendidos/total)*100;
-
-barra.style.width=
-porcentagem+"%";
-
-percentual.textContent=
-porcentagem.toFixed(1)+"%";
-
-});
-
-}
-/* ==========================================================
-   PARTICIPANTES
-   ========================================================== */
-
-let participantes = [];
-let participantesFiltrados = [];
-
-function carregarParticipantes() {
-
-    numerosRef.on("value", (snapshot) => {
-
-        const dados = snapshot.val() || {};
-
-        participantes = [];
-
-        Object.keys(dados).forEach((id) => {
-
-            participantes.push({
-                id,
-                ...dados[id]
-            });
-
-        });
-
-        participantes.sort((a, b) => Number(a.numero) - Number(b.numero));
-
-        participantesFiltrados = [...participantes];
-
-        atualizarTabela();
-
-    });
-
-}
-
-/* ==========================================================
-   TABELA
-   ========================================================== */
-
-function atualizarTabela() {
-
-    listaParticipantes.innerHTML = "";
-
-    document.getElementById("quantidadeRegistros").textContent =
-        participantesFiltrados.length + " registros";
-
-    participantesFiltrados.forEach((item) => {
-
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-
-<td>${item.numero || "-"}</td>
-
-<td>${item.cartela || "-"}</td>
-
-<td>${item.nome || "-"}</td>
-
-<td>${item.whatsapp || "-"}</td>
-
-<td>
-
-<span class="status ${item.status || "disponivel"}">
-
-${textoStatus(item.status)}
-
-</span>
-
-</td>
-
-<td>
-
-${item.pagamento || "Pendente"}
-
-</td>
-
-<td>
-
-<div class="acoes">
-
-<button
-class="btn-editar"
-onclick="abrirEdicao('${item.id}')">
-
-✏️
-
-</button>
-
-<button
-class="btn-confirmar"
-onclick="confirmarPagamento('${item.id}')">
-
-✅
-
-</button>
-
-<button
-class="btn-transferir"
-onclick="transferirNumero('${item.id}')">
-
-🔄
-
-</button>
-
-<button
-class="btn-excluir"
-onclick="excluirParticipante('${item.id}')">
-
-🗑
-
-</button>
-
-</div>
-
-</td>
-
-`;
-
-        listaParticipantes.appendChild(tr);
-
-    });
-
-}
-
-/* ==========================================================
-   STATUS
-   ========================================================== */
-
-function textoStatus(status) {
-
-    switch (status) {
-
-        case "vendido":
-            return "🔴 Vendido";
-
-        case "reservado":
-            return "🟡 Reservado";
-
-        default:
-            return "🟢 Disponível";
+        );
 
     }
 
 }
 
-/* ==========================================================
-   PESQUISA
-   ========================================================== */
+// ==========================================================
+// LOGIN
+// ==========================================================
 
-document
-.getElementById("btnPesquisar")
-.addEventListener("click", pesquisar);
+async function fazerLogin(){
 
-function pesquisar() {
+    try{
 
-    const numero =
-        document.getElementById("buscarNumero")
-        .value
-        .trim();
+        await signInWithEmailAndPassword(
 
-    const nome =
-        document.getElementById("buscarNome")
-        .value
-        .toLowerCase()
-        .trim();
+            auth,
 
-    const telefone =
-        document.getElementById("buscarTelefone")
-        .value
-        .trim();
+            email.value,
 
-    participantesFiltrados = participantes.filter((item) => {
+            senha.value
 
-        const okNumero =
-            !numero ||
-            String(item.numero).includes(numero);
+        );
 
-        const okNome =
-            !nome ||
-            (item.nome || "")
-            .toLowerCase()
-            .includes(nome);
+    }
 
-        const okTelefone =
-            !telefone ||
-            (item.whatsapp || "")
-            .includes(telefone);
+    catch(e){
 
-        return okNumero && okNome && okTelefone;
+        alert("Usuário ou senha inválidos.");
 
-    });
-
-    atualizarTabela();
+    }
 
 }
 
-/* ==========================================================
-   FILTROS
-   ========================================================== */
+// ==========================================================
+// LOGOUT
+// ==========================================================
 
-document
-.querySelectorAll(".filtro")
-.forEach((botao) => {
+async function sair(){
 
-    botao.addEventListener("click", () => {
+    await signOut(auth);
 
-        document
-            .querySelectorAll(".filtro")
-            .forEach((b) => b.classList.remove("ativo"));
+}
 
-        botao.classList.add("ativo");
+// ==========================================================
+// OBSERVADOR
+// ==========================================================
 
-        const status = botao.dataset.status;
+function verificarLogin(){
 
-        if (status === "todos") {
+    onAuthStateChanged(
 
-            participantesFiltrados = [...participantes];
+        auth,
 
-        } else {
+        async(usuario)=>{
 
-            participantesFiltrados =
-                participantes.filter((item) =>
-                    item.status === status
-                );
+            ADMIN.usuario=usuario;
+
+            if(usuario){
+
+                abrirPainel();
+
+            }
+
+            else{
+
+                abrirLogin();
+
+            }
 
         }
 
-        atualizarTabela();
+    );
+
+}
+
+// ==========================================================
+// TELAS
+// ==========================================================
+
+function abrirPainel(){
+
+    if(loginBox)
+
+        loginBox.style.display="none";
+
+    if(painel)
+
+        painel.style.display="block";
+
+    carregarSistema();
+
+}
+
+function abrirLogin(){
+
+    if(loginBox)
+
+        loginBox.style.display="block";
+
+    if(painel)
+
+        painel.style.display="none";
+
+}// ==========================================================
+// CARREGAMENTO DO SISTEMA
+// ==========================================================
+
+function carregarSistema() {
+
+    carregarNumeros();
+
+    carregarParticipantes();
+
+    carregarEstatisticas();
+
+    carregarConfiguracoes();
+
+    registrarPesquisa();
+
+}
+
+// ==========================================================
+// NÚMEROS
+// ==========================================================
+
+function carregarNumeros() {
+
+    onValue(numerosRef, (snapshot) => {
+
+        if (!snapshot.exists()) return;
+
+        ADMIN.numeros = snapshot.val();
+
+        atualizarTabelaNumeros();
 
     });
-   
-
-});
-/* ==========================================================
-   MODAL DE EDIÇÃO
-   ========================================================== */
-
-const modal = document.getElementById("modalParticipante");
-
-const editNome = document.getElementById("editNome");
-const editWhatsapp = document.getElementById("editWhatsapp");
-const editCartela = document.getElementById("editCartela");
-const editNumero = document.getElementById("editNumero");
-const editObservacao = document.getElementById("editObservacao");
-
-let participanteAtual = null;
-
-/* Abrir modal */
-
-function abrirEdicao(id){
-
-const participante = participantes.find(p => p.id === id);
-
-if(!participante) return;
-
-participanteAtual = participante;
-
-editNome.value = participante.nome || "";
-
-editWhatsapp.value = participante.whatsapp || "";
-
-editCartela.value = participante.cartela || "";
-
-editNumero.value = participante.numero || "";
-
-editObservacao.value = participante.observacao || "";
-
-modal.classList.add("ativo");
 
 }
 
-/* Fechar modal */
+// ==========================================================
+// PARTICIPANTES
+// ==========================================================
 
-document
-.getElementById("fecharModal")
-.addEventListener("click",()=>{
+function carregarParticipantes() {
 
-modal.classList.remove("ativo");
+    onValue(participantesRef, (snapshot) => {
 
-});
+        if (!snapshot.exists()) {
 
-/* Clique fora */
+            ADMIN.participantes = {};
 
-window.addEventListener("click",(e)=>{
+            return;
 
-if(e.target===modal){
+        }
 
-modal.classList.remove("ativo");
+        ADMIN.participantes = snapshot.val();
 
-}
-
-});
-
-/* ==========================================================
-   SALVAR
-   ========================================================== */
-
-document
-.getElementById("formParticipante")
-.addEventListener("submit",salvarParticipante);
-
-function salvarParticipante(e){
-
-e.preventDefault();
-
-if(!participanteAtual) return;
-
-numerosRef.child(participanteAtual.id).update({
-
-nome:editNome.value.trim(),
-
-whatsapp:editWhatsapp.value.trim(),
-
-observacao:editObservacao.value.trim()
-
-}).then(()=>{
-
-registrarHistorico(
-
-"✏️ Dados atualizados do número " +
-
-participanteAtual.numero
-
-);
-
-mostrarToast("Dados atualizados.");
-
-modal.classList.remove("ativo");
-
-});
+    });
 
 }
 
-/* ==========================================================
-   CONFIRMAR PAGAMENTO
-   ========================================================== */
+// ==========================================================
+// ESTATÍSTICAS
+// ==========================================================
 
-function confirmarPagamento(id){
+function carregarEstatisticas() {
 
-if(!confirm("Confirmar pagamento deste número?"))
+    onValue(estatisticasRef, (snapshot) => {
 
-return;
+        if (!snapshot.exists()) return;
 
-numerosRef.child(id).update({
+        ADMIN.estatisticas = snapshot.val();
 
-status:"vendido",
+        atualizarEstatisticas();
 
-pagamento:"Confirmado",
-
-dataPagamento:new Date().toLocaleString("pt-BR")
-
-}).then(()=>{
-
-registrarHistorico(
-
-"✅ Pagamento confirmado."
-
-);
-
-mostrarToast("Pagamento confirmado.");
-
-});
+    });
 
 }
 
-/* ==========================================================
-   TRANSFERIR NÚMERO
-   ========================================================== */
+// ==========================================================
+// CONFIGURAÇÕES
+// ==========================================================
 
-function transferirNumero(id){
+function carregarConfiguracoes() {
 
-const novoNome = prompt("Nome do novo participante:");
+    onValue(configRef, (snapshot) => {
 
-if(!novoNome) return;
+        if (!snapshot.exists()) return;
 
-const novoWhatsapp = prompt("WhatsApp do novo participante:");
+        ADMIN.configuracao = snapshot.val();
 
-if(!novoWhatsapp) return;
+        preencherConfiguracoes();
 
-numerosRef.child(id).update({
-
-nome:novoNome,
-
-whatsapp:novoWhatsapp
-
-}).then(()=>{
-
-registr
-
-        /* ==========================================================
-   CONFIGURAÇÕES DA RIFA
-   ========================================================== */
-
-const btnSalvarConfiguracoes =
-document.getElementById("btnSalvarConfiguracoes");
-
-btnSalvarConfiguracoes.addEventListener("click", salvarConfiguracoes);
-
-function salvarConfiguracoes(){
-
-const config={
-
-premio:
-document.getElementById("cfgPremio").value.trim(),
-
-valor:
-document.getElementById("cfgValor").value.trim(),
-
-data:
-document.getElementById("cfgData").value,
-
-hora:
-document.getElementById("cfgHora").value,
-
-whatsapp:
-document.getElementById("cfgWhatsapp").value.trim(),
-
-pix:
-document.getElementById("cfgPix").value.trim(),
-
-titular:
-document.getElementById("cfgTitular").value.trim(),
-
-banco:
-document.getElementById("cfgBanco").value.trim()
-
-};
-
-configRef.set(config)
-
-.then(()=>{
-
-mostrarToast("Configurações salvas.");
-
-registrarHistorico(
-"⚙️ Configurações alteradas."
-);
-
-});
+    });
 
 }
 
-/* ==========================================================
-   AVISOS
-   ========================================================== */
+// ==========================================================
+// TABELA DOS NÚMEROS
+// ==========================================================
 
-document
-.getElementById("btnSalvarAviso")
-.addEventListener("click",()=>{
+function atualizarTabelaNumeros() {
 
-const aviso=
-document
-.getElementById("textoAviso")
-.value.trim();
+    const tabela = document.getElementById("listaNumeros");
 
-db.ref("avisos/principal")
+    if (!tabela) return;
 
-.set({
+    tabela.innerHTML = "";
 
-texto:aviso,
+    Object.keys(ADMIN.numeros)
 
-data:
-new Date().toLocaleString("pt-BR")
+        .sort()
 
-})
+        .forEach((numero) => {
 
-.then(()=>{
+            const dados = ADMIN.numeros[numero];
 
-mostrarToast("Aviso publicado.");
+            const linha = document.createElement("tr");
 
-registrarHistorico(
-"📢 Aviso publicado."
-);
+            linha.innerHTML = `
 
-});
+                <td>${numero}</td>
 
-});
+                <td>${dados.nome || "-"}</td>
 
-/* ==========================================================
-   FOTO DO PRÊMIO
-   ========================================================== */
+                <td>${dados.telefone || "-"}</td>
 
-const fotoInput=
-document.getElementById("fotoPremio");
+                <td>${dados.status}</td>
 
-const preview=
-document.getElementById("previewPremio");
+                <td>
 
-fotoInput.addEventListener("change",(e)=>{
+                    <button class="btnEditar
+                    // ==========================================================
+// EDITAR NÚMERO
+// ==========================================================
 
-const arquivo=e.target.files[0];
+document.addEventListener("click", (e) => {
 
-if(!arquivo) return;
+    if (!e.target.classList.contains("btnEditar")) return;
 
-const leitor=new FileReader();
+    const numero = e.target.dataset.numero;
 
-leitor.onload=function(event){
-
-preview.src=event.target.result;
-
-};
-
-leitor.readAsDataURL(arquivo);
+    abrirEditor(numero);
 
 });
 
-document
-.getElementById("btnAtualizarFoto")
-.addEventListener("click",()=>{
+function abrirEditor(numero) {
 
-mostrarToast(
-"
-   /* ==========================================================
-   EXPORTAR PDF
-   ========================================================== */
+    const dados = ADMIN.numeros[numero];
 
-document
-.getElementById("btnExportarPDF")
-.addEventListener("click",exportarPDF);
+    if (!dados) return;
 
-function exportarPDF(){
+    document.getElementById("editarNumero").value = numero;
 
-window.print();
+    document.getElementById("editarNome").value =
+        dados.nome || "";
 
-registrarHistorico(
+    document.getElementById("editarTelefone").value =
+        dados.telefone || "";
 
-"📄 Exportação em PDF."
+    document.getElementById("editarStatus").value =
+        dados.status || "disponivel";
 
-);
-
-mostrarToast(
-
-"Use 'Salvar como PDF' na janela de impressão."
-
-);
+    document
+        .getElementById("modalEditar")
+        .classList.add("ativo");
 
 }
 
-/* ==========================================================
-   EXPORTAR EXCEL (CSV)
-   ========================================================== */
+// ==========================================================
+// SALVAR ALTERAÇÕES
+// ==========================================================
 
-document
-.getElementById("btnExportarExcel")
-.addEventListener("click",exportarCSV);
+const btnSalvar = document.getElementById("btnSalvarNumero");
 
-function exportarCSV(){
+if (btnSalvar) {
 
-let csv="Numero;Cartela;Nome;WhatsApp;Status;Pagamento\n";
+    btnSalvar.addEventListener(
 
-participantes.forEach(item=>{
+        "click",
 
-csv+=`${item.numero||""};${item.cartela||""};${item.nome||""};${item.whatsapp||""};${item.status||""};${item.pagamento||""}\n`;
+        salvarNumero
 
-});
-
-const blob=new Blob([csv],{
-
-type:"text/csv;charset=utf-8;"
-
-});
-
-const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-
-link.href=url;
-
-link.download="participantes.csv";
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-URL.revokeObjectURL(url);
-
-registrarHistorico("📊 Exportação CSV.");
-
-mostrarToast("Planilha exportada.");
+    );
 
 }
 
-/* ==========================================================
-   ÚLTIMO ACESSO
-   ========================================================== */
+async function salvarNumero() {
 
-function registrarUltimoAcesso(){
+    const numero =
+        document.getElementById("editarNumero").value;
 
-const agora=new Date().toLocaleString("pt-BR");
+    const nome =
+        document.getElementById("editarNome").value.trim();
 
-localStorage.setItem(
+    const telefone =
+        document.getElementById("editarTelefone").value.trim();
 
-"ultimoAcessoAdmin",
+    const status =
+        document.getElementById("editarStatus").value;
 
-agora
+    try {
 
-);
+        await update(
 
-const campo=
+            ref(db, `numeros/${numero}`),
 
-document.getElementById("ultimoAcesso");
+            {
 
-if(campo){
+                nome,
 
-campo.textContent=agora;
+                telefone,
 
-}
+                status
 
-}
+            }
 
-window.addEventListener("load",()=>{
+        );
 
-const ultimo=
+        fecharEditor();
 
-localStorage.getItem("ultimoAcessoAdmin");
-
-if(ultimo){
-
-document.getElementById("ultimoAcesso").textContent=ultimo;
-
-}
-
-});
-
-/* ==========================================================
-   LOGOUT
-   ==========================================================
+        alert("
