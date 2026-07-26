@@ -1,3 +1,62 @@
+// ======================================
+// script.js
+// Página Inicial - Rifa Solidária
+// ======================================
+
+import { CONFIG } from "./config.js";
+
+import {
+
+    numerosRef,
+    configRef,
+    avisosRef,
+    estatisticasRef,
+    onValue
+
+} from "./firebase.js";
+
+import {
+
+    copiarPix,
+    obterCartela,
+    formatarNumero,
+    calcularContagem
+
+} from "./utils.js";
+
+// ======================================
+// Estado da aplicação
+// ======================================
+
+const estado = {
+
+    numeros: {},
+
+    selecionados: [],
+
+    cartelaAtual: 1
+
+};
+
+// ======================================
+// Inicialização
+// ======================================
+
+document.addEventListener("DOMContentLoaded", iniciar);
+
+function iniciar() {
+
+    iniciarEventos();
+
+    carregarConfiguracoes();
+
+    carregarAvisos();
+
+    carregarEstatisticas();
+
+    iniciarContador();
+
+}
 /* ==========================================================
    GILFEST - SCRIPT PRINCIPAL
    ========================================================== */
