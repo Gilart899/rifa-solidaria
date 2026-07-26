@@ -1,791 +1,688 @@
-/* ==========================================
-   RIFA SOLIDÁRIA
-   cartela.js
+// ==========================================================
+// cartela.js
+// Rifa Solidária
+// Controle das 10 Cartelas (000–999)
+// ==========================================================
 
-   Controle da cartela 000 - 999
-========================================== */
+import { CONFIG } from "./config.js";
 
-"use strict";
+import {
 
+    numerosRef,
+    onValue
 
-/* ==========================================
-   ELEMENTOS
-========================================== */
+} from "./firebase.js";
 
-const gradeCartela =
-    document.getElementById("gradeCartela");
+import {
 
-const pesquisaNumero =
-    document.getElementById("pesquisaNumero");
+    formatarNumero,
+    obterCartela
 
-const modal =
-    document.getElementById("modalReserva");
+} from "./utils.js";
 
-const fecharModal =
-    document.getElementById("fecharModal");
+// ==========================================================
+// ESTADO
+// ==========================================================
 
-const cancelarReserva =
-    document.getElementById("cancelarReserva");
+const CARTELAS = [];
 
-const formReserva =
-    document.getElementById("formReserva");
+const STATUS = {};
 
-const numeroSelecionado =
-    document.getElementById("numeroSelecionado");
+let cartelaAtual = 1;
 
+// ==========================================================
+// INICIAR
+// ==========================================================
 
-/* ==========================================
-   VARIÁVEIS
-========================================== */
+window.addEventListener("load", () => {
 
-let numeroAtual = null;
+    criarCartelas();
 
-let listaNumeros = [];
+    carregarFirebase();
 
-let reservas = [];
+    registrarEventos();
 
+});
 
-/* ==========================================
-   GERAR NÚMEROS
-========================================== */
+// ==========================================================
+// GERAR CARTELAS
+// ==========================================================
 
-function gerarNumeros(){
+function criarCartelas() {
 
-    if(!gradeCartela) return;
+    const container = document.getElementById("containerCartelas");
 
+    if (!container) return;
 
-    gradeCartela.innerHTML = "";
+    container.innerHTML = "";
 
+    for (let c = 1; c <= 10; c++) {
 
-    const inicio =
-        CONFIG.numeros.inicio;
+        const cartela = document.createElement("section");
 
+        cartela.className = "cartela";
 
-    const fim =
-        CONFIG.numeros.fim;
+        cartela.dataset.cartela = c;
 
+        if (c !== 1) {
 
-    for(
-        let numero = inicio;
-        numero <= fim;
-        numero++
-    ){
+            cartela.style.display = "none";
 
-        const numeroFormatado =
-            String(numero)
-            .padStart(3,"0");
+        }
 
+        const titulo = document.createElement("h2");
 
-        const botao =
-            document.createElement("button");
+        titulo.textContent = `Cartela ${c}`;
 
+        cartela.appendChild(titulo);
 
-        botao.className =
-            "numero disponivel";
+        const grade = document.createElement("div");
 
+        grade.className = "gradeCartela";
 
-        botao.textContent =
-            numeroFormatado;
+        const inicio = (c - 1) * 100;
 
+        const fim = inicio + 99;
 
-        botao.dataset.numero =
-            numero;
+        for (let numero = inicio; numero <= fim; numero++) {
 
+            const botao = document.createElement("button");
 
-        botao.setAttribute(
-            "aria-label",
-            `Número ${numeroFormatado}`
-        );
+            const texto = formatarNumero(numero);
 
+            botao.textContent = texto;
 
-        botao.addEventListener(
-            "click",
-            ()=>{
+            botao.dataset.numero = texto;
 
-                selecionarNumero(numero);
+            botao.className = "numero disponivel";
+
+            botao.addEventListener(
+
+                "click",
+
+                clicarNumero
+
+            );
+
+            grade.appendChild(botao);
+
+        }
+
+        cartela.appendChild(grade);
+
+        container.appendChild(cartela);
+
+        CARTELAS.push(cartela);
+
+    }
+
+}// ==========================================================
+// FIREBASE
+// ==========================================================
+
+function carregarFirebase() {
+
+    onValue(numerosRef, (snapshot) => {
+
+        if (!snapshot.exists()) return;
+
+        Object.assign(STATUS, snapshot.val());
+
+        atualizarNumeros();
+
+    });
+
+}
+
+// ==========================================================
+// ATUALIZA CORES DOS NÚMEROS
+// ==========================================================
+
+function atualizarNumeros() {
+
+    document
+        .querySelectorAll(".numero")
+        .forEach((botao) => {
+
+            const numero = botao.dataset.numero;
+
+            const dados = STATUS[numero];
+
+            if (!dados) return;
+
+            botao.classList.remove(
+
+                "disponivel",
+                "reservado",
+                "vendido",
+                "selecionado"
+
+            );
+
+            switch (dados.status) {
+
+                case "vendido":
+
+                    botao.classList.add("vendido");
+
+                    break;
+
+                case "reservado":
+
+                    botao.classList.add("reservado");
+
+                    break;
+
+                default:
+
+                    botao.classList.add("disponivel");
+
+                    break;
 
             }
-        );
 
+        });
 
-        gradeCartela.appendChild(botao);
+}
 
+// ==========================================================
+// EVENTOS
+// ==========================================================
 
-        listaNumeros.push({
+function registrarEventos() {
 
-            numero,
+    document
+        .querySelectorAll("[data-cartela]")
+        .forEach((botao) => {
 
-            elemento:botao
+            botao.addEventListener("click", () => {
+
+                abrirCartela(
+
+                    Number(botao.dataset.cartela)
+
+                );
+
+            });
+
+        });
+
+    const pesquisar = document.getElementById("buscarNumero");
+
+    if (pesquisar) {
+
+        pesquisar.addEventListener("keydown", (e) => {
+
+            if (e.key === "Enter") {
+
+                pesquisarNumero();
+
+            }
 
         });
 
     }
 
-}
+    const btnPesquisar = document.getElementById("btnPesquisar");
 
+    if (btnPesquisar) {
 
-/* ==========================================
-   ATUALIZAR STATUS
-========================================== */
+        btnPesquisar.addEventListener(
 
-function atualizarStatus(){
+            "click",
 
-    listaNumeros.forEach(item=>{
+            pesquisarNumero
 
-
-        const encontrado =
-            reservas.find(
-                reserva =>
-                Number(reserva.numero)
-                === item.numero
-            );
-
-
-        item.elemento.classList.remove(
-            "disponivel",
-            "reservado",
-            "pago"
         );
 
+    }
 
-        if(!encontrado){
+}
 
-            item.elemento.classList.add(
-                "disponivel"
+// ==========================================================
+// ABRIR CARTELA
+// ==========================================================
+
+function abrirCartela(numeroCartela) {
+
+    cartelaAtual = numeroCartela;
+
+    CARTELAS.forEach((cartela, indice) => {
+
+        cartela.style.display =
+
+            indice + 1 === numeroCartela
+
+                ? "block"
+
+                : "none";
+
+    });
+
+}
+
+// ==========================================================
+// PESQUISA
+// ==========================================================
+
+function pesquisarNumero() {
+
+    const campo = document.getElementById("buscarNumero");
+
+    if (!campo) return;
+
+    const numero = Number(campo.value);
+
+    if (isNaN(numero)) return;
+
+    if (numero < 0 || numero > 999) return;
+
+    abrirCartela(
+
+        obterCartela(numero)
+
+    );
+
+    destacarNumero(
+
+        formatarNumero(numero)
+
+    );
+
+}
+
+// ==========================================================
+// DESTAQUE
+// ==========================================================
+
+function destacarNumero(numero) {
+
+    const botao = document.querySelector(
+
+        `[data-numero="${numero}"]`
+
+    );
+
+    if (!botao) return;
+
+    botao.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "center"
+
+    });
+
+    botao.classList.add("destacado");
+
+    setTimeout(() => {
+
+        botao.classList.remove("destacado");
+
+    }, 2500);
+
+               }
+// ==========================================================
+// SELEÇÃO
+// ==========================================================
+
+const selecionados = new Set();
+
+function clicarNumero(evento) {
+
+    const botao = evento.currentTarget;
+
+    const numero = botao.dataset.numero;
+
+    const dados = STATUS[numero];
+
+    if (!dados) return;
+
+    if (dados.status === "vendido") {
+
+        mostrarMensagem(
+
+            "Este número já foi vendido.",
+
+            "erro"
+
+        );
+
+        return;
+
+    }
+
+    if (dados.status === "reservado") {
+
+        mostrarMensagem(
+
+            "Este número está reservado.",
+
+            "aviso"
+
+        );
+
+        return;
+
+    }
+
+    if (selecionados.has(numero)) {
+
+        selecionados.delete(numero);
+
+        botao.classList.remove("selecionado");
+
+    } else {
+
+        selecionados.add(numero);
+
+        botao.classList.add("selecionado");
+
+    }
+
+    atualizarResumo();
+
+}
+
+// ==========================================================
+// RESUMO
+// ==========================================================
+
+function atualizarResumo() {
+
+    const lista = document.getElementById("listaSelecionados");
+
+    const quantidade = document.getElementById("quantidadeSelecionados");
+
+    const total = document.getElementById("valorSelecionado");
+
+    if (lista) {
+
+        lista.innerHTML = "";
+
+        [...selecionados]
+
+            .sort()
+
+            .forEach(numero => {
+
+                const item = document.createElement("div");
+
+                item.className = "itemSelecionado";
+
+                item.textContent = numero;
+
+                lista.appendChild(item);
+
+            });
+
+    }
+
+    if (quantidade) {
+
+        quantidade.textContent = selecionados.size;
+
+    }
+
+    if (total) {
+
+        total.textContent =
+            "R$ " +
+            (selecionados.size * CONFIG.valorNumero)
+            .toFixed(2)
+            .replace(".", ",");
+
+    }
+
+}
+
+// ==========================================================
+// LIMPAR
+// ==========================================================
+
+function limparSelecao() {
+
+    selecionados.clear();
+
+    document
+        .querySelectorAll(".numero.selecionado")
+        .forEach(botao => {
+
+            botao.classList.remove("selecionado");
+
+        });
+
+    atualizarResumo();
+
+}
+
+// ==========================================================
+// BOTÃO RESERVAR
+// ==========================================================
+
+const btnReservar = document.getElementById("btnReservar");
+
+if (btnReservar) {
+
+    btnReservar.addEventListener(
+
+        "click",
+
+        abrirFormularioReserva
+
+    );
+
+}
+
+// ==========================================================
+// FORMULÁRIO
+// ==========================================================
+
+function abrirFormularioReserva() {
+
+    if (selecionados.size === 0) {
+
+        mostrarMensagem(
+
+            "Escolha pelo menos um número.",
+
+            "aviso"
+
+        );
+
+        return;
+
+    }
+
+    const modal = document.getElementById("modalReserva");
+
+    if (modal) {
+
+        modal.classList.add("ativo");
+
+    }
+
+}
+
+// ==========================================================
+// DADOS DA RESERVA
+// ==========================================================
+
+function obterDadosReserva() {
+
+    return {
+
+        numeros: [...selecionados],
+
+        quantidade: selecionados.size,
+
+        valor: selecionados.size * CONFIG.valorNumero,
+
+        data: Date.now()
+
+    };
+
+}// ==========================================================
+// CONFIRMAR RESERVA
+// ==========================================================
+
+const btnConfirmarReserva = document.getElementById("btnConfirmarReserva");
+
+if (btnConfirmarReserva) {
+
+    btnConfirmarReserva.addEventListener(
+
+        "click",
+
+        confirmarReserva
+
+    );
+
+}
+
+async function confirmarReserva() {
+
+    const nome = document
+        .getElementById("nomeParticipante")
+        ?.value
+        .trim();
+
+    const telefone = document
+        .getElementById("telefoneParticipante")
+        ?.value
+        .trim();
+
+    if (!nome) {
+
+        mostrarMensagem(
+
+            "Informe seu nome.",
+
+            "erro"
+
+        );
+
+        return;
+
+    }
+
+    if (!telefone) {
+
+        mostrarMensagem(
+
+            "Informe seu WhatsApp.",
+
+            "erro"
+
+        );
+
+        return;
+
+    }
+
+    if (selecionados.size === 0) {
+
+        mostrarMensagem(
+
+            "Nenhum número selecionado.",
+
+            "erro"
+
+        );
+
+        return;
+
+    }
+
+    try {
+
+        const snapshot = await get(numerosRef);
+
+        if (!snapshot.exists()) {
+
+            mostrarMensagem(
+
+                "Erro ao acessar o banco.",
+
+                "erro"
+
             );
-
-
-            item.elemento.disabled =
-                false;
-
 
             return;
 
         }
 
+        const banco = snapshot.val();
 
-        if(
-            encontrado.status
-            === "pago"
-        ){
+        const atualizacoes = {};
 
-            item.elemento.classList.add(
-                "pago"
-            );
+        for (const numero of selecionados) {
 
+            if (
 
-        }else{
+                banco[numero] &&
 
+                banco[numero].status !== "disponivel"
 
-            item.elemento.classList.add(
-                "reservado"
-            );
+            ) {
 
+                mostrarMensagem(
 
-        }
+                    `O número ${numero} não está mais disponível.`,
 
+                    "erro"
 
-        item.elemento.disabled =
-            true;
-
-
-    });
-
-}
-/* ==========================================
-   FIREBASE - MONITORAMENTO
-========================================== */
-
-function iniciarMonitoramento(){
-
-    if(
-        typeof reservasRef === "undefined"
-    ){
-
-        console.error(
-            "Firebase não inicializado."
-        );
-
-        return;
-
-    }
-
-
-    reservasRef.on(
-        "value",
-        (snapshot)=>{
-
-
-            reservas = [];
-
-
-            snapshot.forEach(
-                item=>{
-
-
-                    const dados =
-                        item.val();
-
-
-                    if(dados){
-
-                        reservas.push({
-
-                            id:item.key,
-
-                            ...dados
-
-                        });
-
-                    }
-
-
-                }
-            );
-
-
-            atualizarStatus();
-
-
-        }
-    );
-
-
-}
-
-
-/* ==========================================
-   SELECIONAR NÚMERO
-========================================== */
-
-function selecionarNumero(numero){
-
-
-    const existe =
-        reservas.find(
-            item =>
-            Number(item.numero)
-            === Number(numero)
-        );
-
-
-    if(existe){
-
-        return;
-
-    }
-
-
-    numeroAtual =
-        numero;
-
-
-    numeroSelecionado.textContent =
-        String(numero)
-        .padStart(3,"0");
-
-
-    abrirModal();
-
-
-}
-
-
-/* ==========================================
-   MODAL
-========================================== */
-
-function abrirModal(){
-
-    if(!modal) return;
-
-
-    modal.classList.remove(
-        "hidden"
-    );
-
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    const campoNome =
-        document.getElementById("nome");
-
-
-    if(campoNome){
-
-        setTimeout(
-            ()=>{
-
-                campoNome.focus();
-
-            },
-            200
-        );
-
-    }
-
-}
-
-
-function fecharModalReserva(){
-
-    if(!modal) return;
-
-
-    modal.classList.add(
-        "hidden"
-    );
-
-
-    document.body.style.overflow =
-        "";
-
-
-    formReserva.reset();
-
-
-    numeroAtual =
-        null;
-
-}
-
-
-/* ==========================================
-   EVENTOS MODAL
-========================================== */
-
-
-if(fecharModal){
-
-    fecharModal.addEventListener(
-        "click",
-        fecharModalReserva
-    );
-
-}
-
-
-if(cancelarReserva){
-
-    cancelarReserva.addEventListener(
-        "click",
-        fecharModalReserva
-    );
-
-}
-
-
-if(modal){
-
-    modal.addEventListener(
-        "click",
-        (evento)=>{
-
-
-            if(
-                evento.target
-                === modal
-            ){
-
-                fecharModalReserva();
-
-            }
-
-
-        }
-    );
-
-}
-/* ==========================================
-   SALVAR RESERVA
-========================================== */
-
-if(formReserva){
-
-    formReserva.addEventListener(
-        "submit",
-        async (evento)=>{
-
-
-            evento.preventDefault();
-
-
-            if(
-                numeroAtual === null
-            ){
-
-                return;
-
-            }
-
-
-            const nome =
-                document
-                .getElementById("nome")
-                .value
-                .trim();
-
-
-            const telefone =
-                document
-                .getElementById("telefone")
-                .value
-                .trim();
-
-
-            const cidade =
-                document
-                .getElementById("cidade")
-                .value
-                .trim();
-
-
-            const pagamento =
-                document
-                .getElementById("pagamento")
-                .value;
-
-
-
-            if(
-                !nome ||
-                !telefone
-            ){
-
-                alert(
-                    "Preencha nome e telefone."
                 );
 
                 return;
 
             }
 
-
-
-            const jaReservado =
-                reservas.some(
-                    item =>
-                    Number(item.numero)
-                    === Number(numeroAtual)
-                );
-
-
-            if(jaReservado){
-
-                alert(
-                    "Este número já foi escolhido."
-                );
-
-
-                fecharModalReserva();
-
-
-                return;
-
-            }
-
-
-
-            const dados = {
-
-
-                numero:
-
-                    String(numeroAtual)
-                    .padStart(3,"0"),
-
-
-                nome,
-
-
-                telefone,
-
-
-                cidade,
-
-
-                pagamento,
-
-
-                status:
-                    "reservado",
-
-
-                data:
-                    Date.now()
-
-
-            };
-
-
-
-            try{
-
-
-                await salvarReserva(dados);
-
-
-
-                alert(
-                    "✅ Número reservado com sucesso!"
-                );
-
-
-
-                fecharModalReserva();
-
-
-
-            }catch(erro){
-
-
-                console.error(
-                    "Erro ao salvar:",
-                    erro
-                );
-
-
-                alert(
-                    "❌ Erro ao reservar número."
-                );
-
-
-            }
-
-
+            atualizacoes[`${numero}/status`] = "reservado";
+            atualizacoes[`${numero}/nome`] = nome;
+            atualizacoes[`${numero}/telefone`] = telefone;
+            atualizacoes[`${numero}/dataReserva`] = Date.now();
 
         }
-    );
 
-}
+        await update(numerosRef, atualizacoes);
 
+        abrirWhatsappReserva(nome, telefone);
 
-/* ==========================================
-   PESQUISA RÁPIDA
-========================================== */
+        fecharModalReserva();
 
-if(pesquisaNumero){
+        limparSelecao();
 
+        mostrarMensagem(
 
-    pesquisaNumero.addEventListener(
-        "input",
-        ()=>{
+            "Reserva realizada com sucesso!",
 
+            "sucesso"
 
-            const valor =
-                pesquisaNumero.value;
-
-
-            listaNumeros.forEach(
-                item=>{
-
-
-                    const numero =
-                        String(item.numero);
-
-
-                    if(
-                        valor === ""
-                        ||
-                        numero
-                        .startsWith(valor)
-                    ){
-
-
-                        item.elemento.style
-                        .display =
-                        "block";
-
-
-                    }else{
-
-
-                        item.elemento.style
-                        .display =
-                        "none";
-
-
-                    }
-
-
-                }
-            );
-
-
-        }
-    );
-
-
-}
-
-
-/* ==========================================
-   FORMATAR TELEFONE
-========================================== */
-
-const telefoneInput =
-    document.getElementById("telefone");
-
-
-if(telefoneInput){
-
-
-    telefoneInput.addEventListener(
-        "input",
-        ()=>{
-
-
-            let valor =
-                telefoneInput.value
-                .replace(/\D/g,"");
-
-
-            if(valor.length > 11){
-
-                valor =
-                valor.substring(0,11);
-
-            }
-
-
-            telefoneInput.value =
-                valor;
-
-
-        }
-    );
-
-
-}
-/* ==========================================
-   INICIALIZAÇÃO DA CARTELA
-========================================== */
-
-function iniciarCartela(){
-
-
-    gerarNumeros();
-
-
-    iniciarMonitoramento();
-
-
-    console.log(
-        "✅ Cartela carregada."
-    );
-
-
-}
-
-
-/* ==========================================
-   TECLADO - ESC FECHA MODAL
-========================================== */
-
-document.addEventListener(
-    "keydown",
-    (evento)=>{
-
-
-        if(
-            evento.key === "Escape"
-            &&
-            modal
-            &&
-            !modal.classList.contains("hidden")
-        ){
-
-            fecharModalReserva();
-
-        }
-
-
-    }
-);
-
-
-/* ==========================================
-   SERVICE WORKER
-========================================== */
-
-if(
-    "serviceWorker"
-    in navigator
-){
-
-    window.addEventListener(
-        "load",
-        ()=>{
-
-
-            navigator.serviceWorker
-            .register(
-                "sw.js"
-            )
-            .then(
-                ()=>{
-
-                    console.log(
-                        "✅ PWA ativa."
-                    );
-
-                }
-            )
-            .catch(
-                erro=>{
-
-                    console.error(
-                        "Erro PWA:",
-                        erro
-                    );
-
-                }
-            );
-
-
-        }
-    );
-
-}
-
-
-/* ==========================================
-   CARREGAMENTO
-========================================== */
-
-window.addEventListener(
-    "load",
-    ()=>{
-
-        iniciarCartela();
-
-    }
-);
-
-
-/* ==========================================
-   ERROS GERAIS
-========================================== */
-
-window.addEventListener(
-    "error",
-    (evento)=>{
-
-
-        console.error(
-            "Erro:",
-            evento.error
-            ||
-            evento.message
         );
 
+    } catch (erro) {
+
+        console.error(erro);
+
+        mostrarMensagem(
+
+            "Erro ao reservar números.",
+
+            "erro"
+
+        );
 
     }
-);
 
+}
 
-/* ==========================================
-   FIM cartela.js
-========================================== */
+// ==========================================================
+// WHATSAPP
+// ==========================================================
+
+function abrirWhatsappReserva(nome, telefone) {
+
+    const numeros =
+
+        [...selecion
