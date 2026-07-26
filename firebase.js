@@ -1,17 +1,18 @@
-// ===============================
-// Firebase v10+
-// ===============================
+// ======================================
+// firebase.js
+// Firebase v10
+// ======================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getDatabase,
     ref,
-    set,
     get,
+    set,
     update,
-    remove,
     push,
+    remove,
     child,
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -23,21 +24,13 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// ===============================
-// Configuração
-// ===============================
+// ======================================
+// Configuração Firebase
+// ======================================
 
 const firebaseConfig = {
 
-    aconst firebaseConfig = {
     apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
-    authDomain: "rifa-solidaria-56274.firebaseapp.com",
-    databaseURL: "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
-    projectId: "rifa-solidaria-56274",
-    storageBucket: "rifa-solidaria-56274.firebasestorage.app",
-    messagingSenderId: "279310238107",
-    appId: "1:279310238107:web:fd82a20c11e28a4673a13e"
-};
 
     authDomain: "rifa-solidaria-56274.firebaseapp.com",
 
@@ -53,9 +46,9 @@ const firebaseConfig = {
 
 };
 
-// ===============================
+// ======================================
 // Inicialização
-// ===============================
+// ======================================
 
 const app = initializeApp(firebaseConfig);
 
@@ -63,15 +56,25 @@ const db = getDatabase(app);
 
 const auth = getAuth(app);
 
-// ===============================
-// Referência raiz
-// ===============================
+// ======================================
+// Referências principais
+// ======================================
 
 const dbRoot = ref(db);
 
-// ===============================
+const numerosRef = ref(db, "numeros");
+
+const participantesRef = ref(db, "participantes");
+
+const configRef = ref(db, "config");
+
+const avisosRef = ref(db, "avisos");
+
+const estatisticasRef = ref(db, "estatisticas");
+
+// ======================================
 // Exportações
-// ===============================
+// ======================================
 
 export {
 
@@ -83,21 +86,29 @@ export {
 
     dbRoot,
 
-    firebaseConfig,
+    numerosRef,
+
+    participantesRef,
+
+    configRef,
+
+    avisosRef,
+
+    estatisticasRef,
 
     ref,
 
-    set,
+    child,
 
     get,
+
+    set,
 
     update,
 
     remove,
 
     push,
-
-    child,
 
     onValue,
 
