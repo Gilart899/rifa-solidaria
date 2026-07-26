@@ -1,47 +1,120 @@
-/* ==========================================================
-   CONFIGURAÇÕES DA RIFA
-   config.js
-========================================================== */
+// ======================================
+// config.js
+// Configurações da Rifa Solidária
+// ======================================
 
-const CONFIG = {
+export const CONFIG = {
 
-    premio: "Geladeira Midea Frost Free",
+    // Informações da campanha
+    campanha: "Rifa Solidária",
 
-    valor: "R$ 10,00",
+    beneficiada: "Maria Josivania Claudino França",
 
-    dataTexto: "30/12/2026 às 20:00",
+    premio: "TV LG 32 Polegadas",
 
-    dataSorteio: "2026-12-30T20:00:00",
+    descricao:
+        "Participe da nossa rifa solidária e concorra a uma TV LG 32 polegadas.",
 
-    beneficiada: "Dona Benedita",
+    // Valores
+    valorNumero: 10.00,
+
+    moeda: "BRL",
+
+    // Quantidade de números
+    totalNumeros: 1000,
+
+    totalCartelas: 10,
+
+    numerosPorCartela: 100,
 
     // PIX
-    pix: "79988730207",
-    pixNome: "Maria Josivania Claudino França",
-    pixBanco: "Banco Neon",
-📲 Envie seu comprovante
+    pix: {
 
-Após realizar o PIX, envie o comprovante pelo WhatsApp.
+        titular: "Maria Josivania Claudino França",
 
-👤 Maria Josivania Claudino França
-🏦 Banco Neon
-📱 +55 (79) 8873-0207
+        chave: "79988730207",
 
-[💬 Enviar comprovante]
+        banco: "Neon"
+
+    },
+
     // WhatsApp
-    whatsapp: "557988730207",
+    whatsapp: {
 
-    mensagemWhatsapp:
-        "Olá! Gostaria de participar da Rifa Solidária.",
+        numero: "5579988730207",
 
-    site: "https://SEU-USUARIO.github.io/rifa-solidaria/"
+        mensagem:
+`Olá!
+Gostaria de reservar os seguintes números da Rifa Solidária:
+
+{NUMEROS}
+
+Nome:
+
+Vou realizar o pagamento via PIX e enviar o comprovante.`
+
+    },
+
+    // Sorteio
+    sorteio: {
+
+        data: "2026-08-21",
+
+        hora: "18:00"
+
+    },
+
+    // Firebase
+    firebase: {
+
+        databaseURL:
+            "https://rifa-solidaria-56274-default-rtdb.firebaseio.com/"
+
+    },
+
+    // Status dos números
+    status: {
+
+        DISPONIVEL: "disponivel",
+
+        RESERVADO: "reservado",
+
+        VENDIDO: "vendido"
+
+    }
 
 };
 
-Object.freeze(CONFIG);
+// ======================================
+// Funções auxiliares
+// ======================================
 
-/* ==========================================================
-   CONGELA O OBJETO
-========================================================== */
+export function formatarNumero(numero) {
 
-Object.freeze(CONFIG);
+    return Number(numero)
+        .toString()
+        .padStart(3, "0");
+
+}
+
+export function descobrirCartela(numero) {
+
+    return Math.floor(Number(numero) / 100) + 1;
+
+}
+
+export function intervaloCartela(cartela) {
+
+    const inicio = (cartela - 1) * 100;
+
+    const fim = inicio + 99;
+
+    return {
+
+        inicio,
+
+        fim
+
+    };
+
+}
