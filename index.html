@@ -1,53 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#2563eb">
+
+<meta name="color-scheme"
+content="light">
+
+<meta name="robots"
+content="index,follow">
+
+<meta name="format-detection"
+content="telephone=no">
+
+<meta name="author"
+content="GilFest">
+
+<meta name="description"
+content="Participe da Rifa Solidária em prol da saúde de Dona Benedita. Escolha seu número e concorra a uma Geladeira Midea Frost Free.">
+
+<meta name="keywords"
+content="rifa solidária, rifa, geladeira, dona bené, gilfest, pix">
+
+<meta property="og:type"
+content="website">
+
+<meta property="og:title"
+content="🎟️ Rifa Solidária">
+
+<meta property="og:description"
+content="Ajude Dona Bené participando da nossa rifa solidária.">
+
+<meta property="og:image"
+content="img/IMG-20260722-WA0037.jpg">
+
+<meta property="og:locale"
+content="pt_BR">
+
+<meta name="twitter:card"
+content="summary_large_image">
+
+<meta name="twitter:title"
+content="Rifa Solidária">
+
+<meta name="twitter:description"
+content="Concorra a uma Geladeira Midea Frost Free.">
+
+<meta name="twitter:image"
+content="img/IMG-20260722-WA0037.jpg">
+
+<link rel="manifest"
+href="manifest.json">
+
+<link rel="icon"
+href="icons/icon-192.png">
+
+<link rel="apple-touch-icon"
+href="icons/icon-192.png">
+
+<link rel="stylesheet"
+href="style.css">
+
+<title>
+
+🎟️ Rifa Solidária | Dona Bené
+
+</title>
+
+</head>
+
 <body>
 
-🍀 Fundo animado (trevos)
+<div class="background-clovers"
+aria-hidden="true"></div>
 
-<header>
-    Logo
-    Nome da campanha
-    Botão WhatsApp
+<header class="top-header">
+
+<div class="logo-box">
+
+<img
+
+src="img/1784636629590.png"
+
+class="logo"
+
+alt="Logo GilFest"
+
+loading="eager"
+
+fetchpriority="high">
+
+</div>
+
+<div class="title-box">
+
+<h1 id="titulo">
+
+🎟️ RIFA ENTRE AMIGOS
+
+</h1>
+
+<p id="subtitulo">
+
+💙 Em prol da realização dos exames de Dona Benedita
+
+</p>
+
+</div>
+
 </header>
 
-<main>
+<main id="conteudoPrincipal">
 
-Hero
-    TV LG 32"
-    Foto da beneficiada
-    Botão Participar
+<section class="beneficiada">
 
-Contador regressivo
+<div class="glass">
 
-Barra de progresso
+<div class="clovers-animation"
+aria-hidden="true">
 
-Estatísticas
-    Vendidos
-    Reservados
-    Disponíveis
-    Valor arrecadado
+<img src="img/trevo.png"
+class="trevo t1"
+alt="">
 
-Pesquisa
-    Digite um número
-    Botão Buscar
+<img src="img/trevo.png"
+class="trevo t2"
+alt="">
 
-Área PIX
-    QR Code (opcional)
-    Chave PIX
-    Copiar PIX
+<img src="img/trevo.png"
+class="trevo t3"
+alt="">
 
-Botão flutuante
-    Ver Cartelas
+<img src="img/trevo.png"
+class="trevo t4"
+alt="">
 
-Selecionados
-    Lista
-    Valor
-    Reservar
+<img src="img/trevo.png"
+class="trevo t5"
+alt="">
 
-Modal Reserva
+<img src="img/trevo.png"
+class="trevo t6"
+alt="">
 
-Toast
+<img src="img/trevo.png"
+class="trevo t7"
+alt="">
 
-Rodapé
+<img src="img/trevo.png"
+class="trevo t8"
+alt="">
 
+</div>
+
+<img
+
+src="img/1783887880857.png"
+
+class="foto-beneficiada"
+
+alt="Dona Bené"
+
+loading="eager">
+
+<h2>
+
+Dona Bené
+
+</h2>
+
+<p>
+
+Sua ajuda faz toda diferença.
+
+Cada número vendido aproxima a realização dos exames.
+
+Muito obrigado por fazer parte dessa corrente de solidariedade.
+
+</p>
+
+</div>
+
+</section>
+<!-- Carrossel -->
+
+<section class="carousel-section" aria-labelledby="tituloPremio">
+
+    <div class="carousel">
+
+        <button
+            type="button"
+            class="carousel-btn prev"
+            id="prevSlide"
+            aria-label="Imagem anterior">
+
+            ❮
+
+        </button>
+
+        <div class="carousel-track">
+
+            <img
+                src="img/IMG-20260722-WA0037.jpg"
+                alt="Geladeira Midea Frost Free"
+                class="slide active"
+                loading="eager"
+                fetchpriority="high">
+
+            <img
+                src="img/IMG-20260722-WA0038.jpg"
+                alt="Geladeira Midea Frost Free aberta"
+                class="slide"
+                loading="lazy">
+
+        </div>
+
+        <button
+            type="button"
+            class="carousel-btn next"
+            id="nextSlide"
+            aria-label="Próxima imagem">
+
+            ❯
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- Pesquisa -->
+
+<section class="pesquisa-numero">
+
+    <div class="glass">
+
+        <h2>
+
+            🔍 Encontrar Número
+
+        </h2>
+
+        <p>
+
+            Digite um número para localizar rapidamente sua cartela.
+
+        </p>
+
+        <div class="search-box">
+
+            <input
+                id="buscarNumero"
+                type="number"
+                min="0"
+                max="999"
+                placeholder="Digite um número">
+
+            <button
+                id="btnBuscarNumero"
+                class="btn btn-primary"
+                type="button">
+
+                Pesquisar
+
+            </button>
+
+        </div>
+
+        <div id="resultadoBusca"></div>
+
+    </div>
+
+</section>
+
+<!-- Prêmio -->
+
+<section class="premio">
+
+    <div class="glass">
+
+        <h2 id="tituloPremio">
+
+            🎁 Prêmio
+
+        </h2>
+
+        <h3 id="premio">
+
+        </h3>
+
+        <div class="valor-box">
+
+            <span>
+
+                Valor por número
+
+            </span>
+
+            <strong id="valor">
+
+            </strong>
+
+        </div>
+
+        <div class="data-box">
+
+            <span>
+
+                Sorteio
+
+            </span>
+
+            <strong id="dataSorteio">
+
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Contagem -->
+
+<section class="contador">
+
+    <div class="glass">
+
+        <div
+            class="countdown-line"
+            role="timer"
+            aria-live="polite">
+
+            <strong>
+
+                ⏳ Sorteio em
+
+            </strong>
+
+            <span id="dias">00</span>
+
+            <small>dias</small>
+
+            <span class="separador">•</span>
+
+            <span id="horas">00</span>
+
+            <small>h</small>
+
+            <span class="separador">•</span>
+
+            <span id="minutos">00</span>
+
+            <small>min</small>
+
+            <span class="separador">•</span>
+
+            <span id="segundos">00</span>
+
+            <small>s</small>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- Resumo da Compra -->
+
+<section class="resumo-compra">
+
+    <div class="glass">
+
+        <h2>
+
+            🛒 Resumo da Compra
+
+        </h2>
+
+        <div class="resumo-item">
+
+            <span>
+
+                Número escolhido
+
+            </span>
+
+            <strong id="numeroSelecionado">
+
+                Nenhum
+
+            </strong>
+
+        </div>
+
+        <div class="resumo-item">
+
+            <span>
+
+                Valor</span>
+
+            <strong id="valorSelecionado">
+
+                R$ 10,00
+
+            </strong>
+
+        </div>
+
+        <div class="resumo-item">
+
+            <span>
+
+                Status
+
+            </span>
+
+            <strong
+                id="statusNumero"
+                class="status disponivel">
+
+                🟢 Disponível
+
+            </strong>
+
+        </div>
+
+        <button
+            id="btnReservar"
+            class="btn btn-primary"
+            type="button">
+
+            ✅ CONFIRMAR RESERVA
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- Botões -->
+
+<section class="acoes">
+
+    <a
+        href="cartela.html"
+        class="btn btn-primary">
+
+        🎟️ ESCOLHER CARTELA
+
+    </a>
+
+    <a
+        id="btnWhatsapp"
+        class="btn btn-success"
+        target="_blank"
+        rel="noopener noreferrer">
+
+        💬 WHATSAPP
+
+    </a>
+
+</section>
+
+<!-- PIX -->
+
+<section class="pix-section">
+
+    <div class="glass">
+
+        <h2>
+
+            💙 Pagamento via PIX
+
+        </h2>
+
+        <p>
+
+            Chave PIX
+
+        </p>
+
+        <div class="pix-box">
+
+            <input
+                id="pixKey"
+                type="text"
+                readonly
+                value="">
+
+            <button
+                id="copiarPix"
+                class="btn btn-pix"
+                type="button">
+
+                📋 Copiar chave PIX
+
+            </button>
+
+        </div>
+
+        <div class="pix-info">
+
+            <p>
+
+                <strong>👤 Titular:</strong>
+
+                Maria Josivania Claudino França
+
+            </p>
+
+            <p>
+
+                <strong>🏦 Banco:</strong>
+
+                Banco Neon
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Comprovante -->
+
+<section class="comprovante-section">
+
+    <div class="glass">
+
+        <h2>
+
+            📲 Envie seu comprovante
+
+        </h2>
+
+        <p>
+
+            Após realizar o pagamento, envie o comprovante pelo WhatsApp para confirmar sua participação.
+
+        </p>
+
+        <a
+            id="btnComprovante"
+            class="btn btn-success"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            📤 ENVIAR COMPROVANTE
+
+        </a>
+
+    </div>
+
+</section>
+
+<!-- Toast -->
+
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite">
+
+    ✅ Chave PIX copiada!
+
+</div>
 </main>
 
-<script type="module">
+<!-- Rodapé -->
+
+<footer class="footer">
+
+    <div class="glass footer-content">
+
+        <img
+            src="img/1784636629590.png"
+            alt="Logo GilFest"
+            class="footer-logo"
+            loading="lazy">
+
+        <p>
+
+            © 2026 GilFest • Todos os direitos reservados.
+
+        </p>
+
+        <small>
+
+            Desenvolvido com ❤️ para ajudar Dona Benedita.
+
+        </small>
+
+    </div>
+
+</footer>
+
+<!-- Schema.org -->
+
+<script type="application/ld+json">
+
+{
+  "@context":"https://schema.org",
+  "@type":"Event",
+  "name":"Rifa Solidária",
+  "description":"Rifa beneficente em prol da realização dos exames de Dona Benedita.",
+  "eventStatus":"https://schema.org/EventScheduled",
+  "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+  "startDate":"2026-12-30T20:00:00",
+  "organizer":{
+      "@type":"Organization",
+      "name":"GilFest"
+  },
+  "offers":{
+      "@type":"Offer",
+      "price":"10.00",
+      "priceCurrency":"BRL"
+  }
+}
+
+</script>
+
+<!-- Configuração -->
+
+<script src="config.js"></script>
+
+<!-- Firebase -->
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<!-- JavaScript -->
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
