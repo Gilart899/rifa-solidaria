@@ -76,6 +76,18 @@ href="icons/icon-192.png">
 <link rel="apple-touch-icon"
 href="icons/icon-192.png">
 
+    <link rel="preconnect"
+href="https://www.gstatic.com"
+crossorigin>
+
+<link rel="preload"
+as="image"
+href="img/1783887880857.png">
+
+<link rel="preload"
+as="image"
+href="img/IMG-20260722-WA0037.jpg">
+
 <link rel="stylesheet"
 href="style.css">
 
@@ -268,12 +280,15 @@ Muito obrigado por fazer parte dessa corrente de solidariedade.
         <div class="search-box">
 
             <input
-                id="buscarNumero"
-                type="number"
-                min="0"
-                max="999"
-                placeholder="Digite um número">
-
+id="buscarNumero"
+type="number"
+min="0"
+max="999"
+step="1"
+inputmode="numeric"
+autocomplete="off"
+placeholder="Digite um número"
+required>
             <button
                 id="btnBuscarNumero"
                 class="btn btn-primary"
