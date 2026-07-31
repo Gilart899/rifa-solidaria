@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerador Firebase JSON | GilFest</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎟️ Gerador de Banco Firebase</h1>
+
+    <p>
+        Gere automaticamente o JSON da sua rifa para importar no Firebase.
+    </p>
+
+    <form id="formGerador">
+
+        <label>Nome da Rifa</label>
+        <input
+            type="text"
+            id="titulo"
+            required>
+
+        <label>Beneficiado(a)</label>
+        <input
+            type="text"
+            id="beneficiada"
+            required>
+
+        <label>Prêmio</label>
+        <input
+            type="text"
+            id="premio"
+            required>
+
+        <label>Valor por Número (R$)</label>
+        <input
+            type="number"
+            id="valor"
+            value="10"
+            required>
+
+        <label>Data do Sorteio</label>
+        <input
+            type="date"
+            id="dataSorteio"
+            required>
+
+        <label>Hora do Sorteio</label>
+        <input
+            type="time"
+            id="horaSorteio"
+            value="20:00"
+            required>
+
+        <label>Chave PIX</label>
+        <input
+            type="text"
+            id="pix">
+
+        <label>Titular do PIX</label>
+        <input
+            type="text"
+            id="titularPix">
+
+        <label>Banco</label>
+        <input
+            type="text"
+            id="banco">
+
+        <label>WhatsApp</label>
+        <input
+            type="text"
+            id="whatsapp">
+
+        <label>Quantidade de números</label>
+
+        <select id="quantidade">
+
+            <option value="100">100</option>
+
+            <option value="500">500</option>
+
+            <option value="1000" selected>1000</option>
+
+            <option value="2000">2000</option>
+
+            <option value="5000">5000</option>
+
+        </select>
+
+        <div class="acoes">
+
+            <button
+                type="button"
+                id="btnGerar">
+
+                📄 Gerar JSON
+
+            </button>
+
+            <button
+                type="reset">
+
+                🗑️ Limpar
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
