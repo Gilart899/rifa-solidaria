@@ -1,143 +1,201 @@
 // ==========================================================
+// RIFA SOLIDÁRIA - GILFEST
 // script.js
-// Rifa Solidária
-// GilFest
-// Versão 2.0
+// PARTE 1/4
+// Inicialização e Estado Global
 // ==========================================================
 
-import { CONFIG } from "./config.js";
+import {
+    CONFIG
+} from "./config.js";
 
 import {
+
     db,
+
     numerosRef,
-    participantesRef,
+
     configRef,
-    avisosRef,
+
     estatisticasRef,
-    onValue,
+
+    participantesRef,
+
+    avisosRef,
+
     get,
-    update,
+
+    onValue,
+
     push,
+
+    update,
+
     ref
+
 } from "./firebase.js";
 
-import {
-    formatarNumero,
-    obterCartela,
-    intervaloCartela,
-    copiarPix,
-    abrirWhatsapp,
-    calcularValor,
-    calcularContagem
-} from "./utils.js";
-
 // ==========================================================
-// ESTADO GLOBAL
+// ESTADO DA APLICAÇÃO
 // ==========================================================
 
 const APP = {
 
-    numeros: {},
+    numeros:{},
 
-    configuracao: {},
+    config:{},
 
-    estatisticas: {},
+    estatisticas:{},
 
-    avisos: {},
+    avisos:{},
 
-    selecionados: [],
+    selecionados:[],
 
-    cartelaAtual: 1,
+    carregando:false,
 
-    carregando: false,
-
-    administrador: false
+    cartelaAtual:1
 
 };
 
 // ==========================================================
-// ELEMENTOS DA PÁGINA
+// ELEMENTOS
 // ==========================================================
 
-const el = {
+const el={
 
-    contador: document.getElementById("contador"),
+    premio:
 
-    dias: document.getElementById("dias"),
+        document.getElementById("premio"),
 
-    horas: document.getElementById("horas"),
+    valor:
 
-    minutos: document.getElementById("minutos"),
+        document.getElementById("valor"),
 
-    segundos: document.getElementById("segundos"),
+    data:
 
-    buscar: document.getElementById("buscarNumero"),
+        document.getElementById("dataSorteio"),
 
-    btnPesquisar: document.getElementById("btnPesquisar"),
+    titulo:
 
-    btnPix: document.getElementById("btnPix"),
+        document.getElementById("titulo"),
 
-    btnWhatsapp: document.getElementById("btnWhatsapp"),
+    subtitulo:
 
-    btnCartelas: document.getElementById("btnCartelas"),
+        document.getElementById("subtitulo"),
 
-    barra: document.getElementById("barraProgresso"),
+    buscar:
 
-    vendidos: document.getElementById("totalVendidos"),
+        document.getElementById("buscarNumero"),
 
-    reservados: document.getElementById("totalReservados"),
+    resultado:
 
-    disponiveis: document.getElementById("totalDisponiveis"),
+        document.getElementById("resultadoBusca"),
 
-    arrecadado: document.getElementById("totalArrecadado"),
+    btnBuscar:
 
-    listaSelecionados: document.getElementById("listaSelecionados"),
+        document.getElementById("btnBuscarNumero"),
 
-    totalSelecionados: document.getElementById("totalSelecionados"),
+    btnReservar:
 
-    valorSelecionado: document.getElementById("valorSelecionado")
+        document.getElementById("btnReservar"),
+
+    btnPix:
+
+        document.getElementById("copiarPix"),
+
+    pix:
+
+        document.getElementById("pixKey"),
+
+    whatsapp:
+
+        document.getElementById("btnWhatsapp"),
+
+    comprovante:
+
+        document.getElementById("btnComprovante"),
+
+    numeroSelecionado:
+
+        document.getElementById("numeroSelecionado"),
+
+    valorSelecionado:
+
+        document.getElementById("valorSelecionado"),
+
+    statusNumero:
+
+        document.getElementById("statusNumero"),
+
+    toast:
+
+        document.getElementById("toast"),
+
+    dias:
+
+        document.getElementById("dias"),
+
+    horas:
+
+        document.getElementById("horas"),
+
+    minutos:
+
+        document.getElementById("minutos"),
+
+    segundos:
+
+        document.getElementById("segundos")
 
 };
 
 // ==========================================================
-// INICIALIZAÇÃO
+// INICIAR
 // ==========================================================
 
-window.addEventListener("load", iniciarSistema);
+window.addEventListener(
 
-async function iniciarSistema() {
+    "DOMContentLoaded",
 
-    try {
+    iniciarSistema
 
-        iniciarEventos();
+);
 
-        iniciarContador();
+async function iniciarSistema(){
 
-        iniciarTrevos();
+    try{
+
+        registrarEventos();
 
         iniciarCarrossel();
 
-        await carregarConfiguracoes();
+        iniciarTrevos();
 
-        await carregarEstatisticas();
+        iniciarContador();
 
-        await carregarAvisos();
+        await carregarConfiguracao();
 
         sincronizarNumeros();
 
-        verificarSorteio();
+        sincronizarEstatisticas();
 
-        console.log("Sistema iniciado.");
+        sincronizarAvisos();
+
+        console.log(
+
+            "Sistema iniciado."
+
+        );
 
     }
 
-    catch (erro) {
+    catch(e){
 
-        console.error(erro);
+        console.error(e);
 
         mostrarToast(
 
-            "Erro ao iniciar o sistema.",
+            "Erro ao iniciar.",
 
             "erro"
 
@@ -151,23 +209,11 @@ async function iniciarSistema() {
 // EVENTOS
 // ==========================================================
 
-function iniciarEventos() {
+function registrarEventos(){
 
-    if (el.btnPix) {
+    if(el.btnBuscar){
 
-        el.btnPix.addEventListener(
-
-            "click",
-
-            copiarPix
-
-        );
-
-    }
-
-    if (el.btnPesquisar) {
-
-        el.btnPesquisar.addEventListener(
+        el.btnBuscar.addEventListener(
 
             "click",
 
@@ -177,15 +223,15 @@ function iniciarEventos() {
 
     }
 
-    if (el.buscar) {
+    if(el.buscar){
 
         el.buscar.addEventListener(
 
             "keydown",
 
-            (e) => {
+            e=>{
 
-                if (e.key === "Enter") {
+                if(e.key==="Enter"){
 
                     pesquisarNumero();
 
@@ -197,174 +243,86 @@ function iniciarEventos() {
 
     }
 
-    if (el.btnCartelas) {
+    if(el.btnPix){
 
-        el.btnCartelas.addEventListener(
+        el.btnPix.addEventListener(
 
             "click",
 
-            abrirCartelas
+            copiarChavePix
+
+        );
+
+    }
+
+    if(el.btnReservar){
+
+        el.btnReservar.addEventListener(
+
+            "click",
+
+            reservarSelecionados
 
         );
 
     }
 
 }
+
 // ==========================================================
-// CONFIGURAÇÕES
+// CONFIGURAÇÃO
 // ==========================================================
 
-async function carregarConfiguracoes() {
+async function carregarConfiguracao(){
 
-    try {
+    const snap=await get(configRef);
 
-        const snapshot = await get(configRef);
+    if(!snap.exists()) return;
 
-        if (snapshot.exists()) {
+    APP.config=snap.val();
 
-            APP.configuracao = snapshot.val();
-
-            aplicarConfiguracoes();
-
-        }
-
-    } catch (erro) {
-
-        console.error("Erro ao carregar configurações:", erro);
-
-    }
+    aplicarConfiguracao();
 
 }
 
-function aplicarConfiguracoes() {
+function aplicarConfiguracao(){
 
-    const cfg = APP.configuracao;
+    const c=APP.config;
 
-    if (cfg.titulo) {
+    document.title=c.titulo;
 
-        document.title = cfg.titulo;
+    if(el.titulo)
 
-    }
+        el.titulo.textContent=c.titulo;
 
-    const premio = document.getElementById("nomePremio");
+    if(el.subtitulo)
 
-    if (premio && cfg.premio) {
+        el.subtitulo.textContent=
 
-        premio.textContent = cfg.premio;
+        c.subtitulo;
 
-    }
+    if(el.premio)
 
-    const beneficiada = document.getElementById("beneficiada");
+        el.premio.textContent=
 
-    if (beneficiada && cfg.beneficiada) {
+        c.premio;
 
-        beneficiada.textContent = cfg.beneficiada;
+    if(el.valor)
 
-    }
+        el.valor.textContent=
 
-}
+        `R$ ${Number(c.valorNumero).toFixed(2)}`;
 
-// ==========================================================
-// AVISOS
-// ==========================================================
+    if(el.data)
 
-async function carregarAvisos() {
-
-    try {
-
-        onValue(avisosRef, (snapshot) => {
-
-            if (!snapshot.exists()) return;
-
-            APP.avisos = snapshot.val();
-
-            atualizarAvisos();
-
-        });
-
-    } catch (erro) {
-
-        console.error(erro);
-
-    }
-
-}
-
-function atualizarAvisos() {
-
-    const aviso = document.getElementById("textoAviso");
-
-    if (!aviso) return;
-
-    aviso.textContent = APP.avisos.texto || "";
-
-}
-
-// ==========================================================
-// ESTATÍSTICAS
+       // ==========================================================
+// PARTE 2/4
+// FIREBASE + PESQUISA + SELEÇÃO
 // ==========================================================
 
-async function carregarEstatisticas() {
-
-    try {
-
-        onValue(estatisticasRef, (snapshot) => {
-
-            if (!snapshot.exists()) return;
-
-            APP.estatisticas = snapshot.val();
-
-            atualizarEstatisticas();
-
-        });
-
-    } catch (erro) {
-
-        console.error(erro);
-
-    }
-
-}
-
-function atualizarEstatisticas() {
-
-    const dados = APP.estatisticas;
-
-    atualizarTexto("totalVendidos", dados.vendidos || 0);
-
-    atualizarTexto("totalReservados", dados.reservados || 0);
-
-    atualizarTexto("totalDisponiveis", dados.disponiveis || 0);
-
-    atualizarTexto(
-
-        "totalArrecadado",
-
-        "R$ " + Number(dados.arrecadado || 0).toFixed(2)
-
-    );
-
-    atualizarBarraProgresso();
-
-}
-
-function atualizarBarraProgresso() {
-
-    if (!el.barra) return;
-
-    const vendidos = APP.estatisticas.vendidos || 0;
-
-    const percentual =
-
-        (vendidos / CONFIG.totalNumeros) * 100;
-
-    el.barra.style.width = percentual + "%";
-
-}
-
-// ==========================================================
-// FIREBASE
-// ==========================================================
+// ---------------------------
+// SINCRONIZAÇÃO DOS NÚMEROS
+// ---------------------------
 
 function sincronizarNumeros() {
 
@@ -374,116 +332,69 @@ function sincronizarNumeros() {
 
         APP.numeros = snapshot.val();
 
-        atualizarInterfaceNumer
-        // ==========================================================
-// PESQUISA
+        atualizarResumo();
+
+    });
+
+}
+
+// ---------------------------
+// ESTATÍSTICAS
+// ---------------------------
+
+function sincronizarEstatisticas() {
+
+    onValue(estatisticasRef, (snapshot) => {
+
+        if (!snapshot.exists()) return;
+
+        APP.estatisticas = snapshot.val();
+
+    });
+
+}
+
+// ---------------------------
+// AVISOS
+// ---------------------------
+
+function sincronizarAvisos() {
+
+    onValue(avisosRef, (snapshot) => {
+
+        if (!snapshot.exists()) return;
+
+        APP.avisos = snapshot.val();
+
+        const aviso = document.getElementById("textoAviso");
+
+        if (aviso) {
+
+            aviso.textContent =
+
+                APP.avisos.texto || "";
+
+        }
+
+    });
+
+}
+
+// ==========================================================
+// PESQUISAR NÚMERO
 // ==========================================================
 
 function pesquisarNumero() {
 
     if (!el.buscar) return;
 
-    const valor = el.buscar.value.trim();
+    const numero = Number(el.buscar.value);
 
-    if (valor === "") {
-
-        mostrarToast("Digite um número.", "aviso");
-
-        return;
-
-    }
-
-    const numero = Number(valor);
-
-    if (isNaN(numero) || numero < 0 || numero > 999) {
-
-        mostrarToast("Número inválido.", "erro");
-
-        return;
-
-    }
-
-    const numeroFormatado = formatarNumero(numero);
-
-    const cartela = obterCartela(numero);
-
-    abrirCartela(cartela);
-
-    destacarNumero(numeroFormatado);
-
-}
-
-// ==========================================================
-// CARTELAS
-// ==========================================================
-
-function abrirCartela(cartela) {
-
-    APP.cartelaAtual = cartela;
-
-    const evento = new CustomEvent("abrir-cartela", {
-
-        detail: {
-
-            cartela
-
-        }
-
-    });
-
-    window.dispatchEvent(evento);
-
-}
-
-function destacarNumero(numero) {
-
-    setTimeout(() => {
-
-        const botao = document.querySelector(
-
-            `[data-numero="${numero}"]`
-
-        );
-
-        if (!botao) return;
-
-        botao.scrollIntoView({
-
-            behavior: "smooth",
-
-            block: "center"
-
-        });
-
-        botao.classList.add("destacado");
-
-        setTimeout(() => {
-
-            botao.classList.remove("destacado");
-
-        }, 2500);
-
-    }, 400);
-
-}
-
-// ==========================================================
-// SELEÇÃO
-// ==========================================================
-
-function selecionarNumero(numero) {
-
-    numero = formatarNumero(numero);
-
-    const dados = APP.numeros[numero];
-
-    if (!dados) return;
-
-    if (dados.status === CONFIG.status.VENDIDO) {
+    if (isNaN(numero)) {
 
         mostrarToast(
 
-            "Número vendido.",
+            "Digite um número válido.",
 
             "erro"
 
@@ -493,190 +404,46 @@ function selecionarNumero(numero) {
 
     }
 
-    const indice = APP.selecionados.indexOf(numero);
-
-    if (indice >= 0) {
-
-        APP.selecionados.splice(indice, 1);
-
-    } else {
-
-        APP.selecionados.push(numero);
-
-    }
-
-   // ==========================================================
-// TOAST
-// ==========================================================
-
-let toastTimeout = null;
-
-function mostrarToast(texto, tipo = "info") {
-
-    const toast = document.getElementById("toast");
-
-    if (!toast) return;
-
-    toast.className = "";
-
-    toast.classList.add("toast");
-
-    toast.classList.add(tipo);
-
-    toast.textContent = texto;
-
-    toast.classList.add("mostrar");
-
-    clearTimeout(toastTimeout);
-
-    toastTimeout = setTimeout(() => {
-
-        toast.classList.remove("mostrar");
-
-    }, 3500);
-
-}
-
-// ==========================================================
-// MODAL DE RESERVA
-// ==========================================================
-
-function abrirModalReserva() {
-
-    const modal = document.getElementById("modalReserva");
-
-    if (!modal) return;
-
-    modal.classList.add("ativo");
-
-}
-
-function fecharModalReserva() {
-
-    const modal = document.getElementById("modalReserva");
-
-    if (!modal) return;
-
-    modal.classList.remove("ativo");
-
-}
-
-// ==========================================================
-// CARROSSEL
-// ==========================================================
-
-let slideAtual = 0;
-
-function iniciarCarrossel() {
-
-    const slides = document.querySelectorAll(".carousel img");
-
-    if (!slides.length) return;
-
-    slides.forEach((img, i) => {
-
-        img.style.display = i === 0 ? "block" : "none";
-
-    });
-
-    setInterval(() => {
-
-        slides[slideAtual].style.display = "none";
-
-        slideAtual++;
-
-        if (slideAtual >= slides.length) {
-
-            slideAtual = 0;
-
-        }
-
-        slides[slideAtual].style.display = "block";
-
-    }, 5000);
-
-}
-
-// ==========================================================
-// TREVOS
-// ==========================================================
-
-function iniciarTrevos() {
-
-    document.querySelectorAll(".trevo").forEach((trevo) => {
-
-        trevo.style.animationDelay =
-            `${Math.random() * 5}s`;
-
-    });
-
-}
-
-// ==========================================================
-// SORTEIO
-// ==========================================================
-
-function verificarSorteio() {
-
-    const tempo = calcularContagem();
-
-    if (!tempo) {
+    if (numero < 0 || numero > 999) {
 
         mostrarToast(
 
-            "A data do sorteio foi alcançada.",
+            "Número deve estar entre 000 e 999.",
 
-            "info"
+            "erro"
 
         );
 
-    }
-
-}
-
-// ==========================================================
-// BOTÃO FLUTUANTE
-// ==========================================================
-
-function abrirCartelas() {
-
-    window.location.href = "cartela.html";
-
-}
-
-// ==========================================================
-// ESC
-// ==========================================================
-
-document.addEventListener("keydown", (e) => {
-
-    if (e.key === "Escape") {
-
-        fecharModalReserva();
+        return;
 
     }
 
-});
-
-// ==========================================================
-// CONTADOR
-// ==========================================================
-
-function atualizarContador() {
-
-    const tempo = calcularContagem();
-
-    if (!tempo) return;
-
-    atualizarTexto("dias", tempo.dias);
-
-    atualizarTexto("horas", tempo.horas);
-
-    atualizarTexto("minutos", tempo.minutos);
-
-    atualizarTexto("segundos", tempo.segundos);
+    selecionarNumero(numero);
 
 }
+
+// ==========================================================
+// SELECIONAR NÚMERO
+// ==========================================================
+
+function selecionarNumero(numero) {
+
+    const chave =
+
+        numero.toString().padStart(3, "0");
+
+    const dados = APP.numeros[chave];
+
+    if (!dados) {
+
+       // ==========================================================
+// PARTE 3/4
+// CONTADOR + PIX + WHATSAPP + CARROSSEL + TOAST
+// ==========================================================
+
+// --------------------------
+// CONTAGEM REGRESSIVA
+// --------------------------
 
 function iniciarContador() {
 
@@ -686,8 +453,201 @@ function iniciarContador() {
 
 }
 
-// ==========================================================
-// FINAL
+function atualizarContador() {
+
+    if (!APP.config.dataSorteio) return;
+
+    const destino = new Date(APP.config.dataSorteio).getTime();
+
+    const agora = Date.now();
+
+    const diferenca = destino - agora;
+
+    if (diferenca <= 0) {
+
+        el.dias.textContent = "00";
+        el.horas.textContent = "00";
+        el.minutos.textContent = "00";
+        el.segundos.textContent = "00";
+
+        return;
+
+    }
+
+    const dias = Math.floor(diferenca / 86400000);
+
+    const horas = Math.floor((diferenca % 86400000) / 3600000);
+
+    const minutos = Math.floor((diferenca % 3600000) / 60000);
+
+    const segundos = Math.floor((diferenca % 60000) / 1000);
+
+    el.dias.textContent = String(dias).padStart(2, "0");
+    el.horas.textContent = String(horas).padStart(2, "0");
+    el.minutos.textContent = String(minutos).padStart(2, "0");
+    el.segundos.textContent = String(segundos).padStart(2, "0");
+
+}
+
+// --------------------------
+// COPIAR PIX
+// --------------------------
+
+    // ==========================================================
+// PARTE 4/4
+// FINALIZAÇÃO
 // ==========================================================
 
-console.log("script.js carregado com sucesso.");
+// --------------------------
+// ESTATÍSTICAS
+// --------------------------
+
+function atualizarEstatisticas() {
+
+    const total = Object.keys(APP.numeros).length;
+
+    let vendidos = 0;
+    let reservados = 0;
+    let disponiveis = 0;
+
+    Object.values(APP.numeros).forEach((numero) => {
+
+        switch (numero.status) {
+
+            case "vendido":
+                vendidos++;
+                break;
+
+            case "reservado":
+                reservados++;
+                break;
+
+            default:
+                disponiveis++;
+                break;
+
+        }
+
+    });
+
+    const vendidosEl =
+        document.getElementById("totalVendidos");
+
+    const reservadosEl =
+        document.getElementById("totalReservados");
+
+    const disponiveisEl =
+        document.getElementById("totalDisponiveis");
+
+    const arrecadadoEl =
+        document.getElementById("totalArrecadado");
+
+    if (vendidosEl)
+        vendidosEl.textContent = vendidos;
+
+    if (reservadosEl)
+        reservadosEl.textContent = reservados;
+
+    if (disponiveisEl)
+        disponiveisEl.textContent = disponiveis;
+
+    if (arrecadadoEl) {
+
+        arrecadadoEl.textContent =
+            "R$ " +
+            (vendidos * Number(APP.config.valorNumero))
+            .toFixed(2);
+
+    }
+
+    atualizarBarraProgresso(
+
+        vendidos,
+
+        total
+
+    );
+
+}
+
+// --------------------------
+// BARRA
+// --------------------------
+
+function atualizarBarraProgresso(
+
+    vendidos,
+
+    total
+
+) {
+
+    const barra =
+
+        document.getElementById(
+
+            "barraProgresso"
+
+        );
+
+    if (!barra) return;
+
+    const porcentagem =
+
+        total === 0
+
+            ? 0
+
+            : (vendidos / total) * 100;
+
+    barra.style.width =
+
+        porcentagem + "%";
+
+}
+
+// --------------------------
+// PARTICIPANTES
+// --------------------------
+
+async function salvarParticipante(dados) {
+
+    try {
+
+        await push(
+
+            participantesRef,
+
+            dados
+
+        );
+
+        return true;
+
+    }
+
+    catch (erro) {
+
+        console.error(erro);
+
+        return false;
+
+    }
+
+}
+
+// --------------------------
+// FORMATAR
+// --------------------------
+
+function formatarNumero(numero) {
+
+    return String(numero)
+
+        .padStart(3, "0");
+
+}
+
+// --------------------------
+// LIMPAR
+// --------------------------
