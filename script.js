@@ -1,243 +1,194 @@
 // ==========================================================
-// firebase.js
+// config.js
 // Rifa Solidária - GilFest
-// Firebase v12+
-// Parte 1/3
+// Configurações Globais
 // ==========================================================
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+export const CONFIG = {
 
-import {
-    getDatabase,
-    ref,
-    child,
-    get,
-    set,
-    update,
-    push,
-    remove,
-    onValue,
-    off,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+    // Dados da Rifa
+    titulo: "🎟️ Rifa Solidária",
 
-// ==========================================================
-// CONFIGURAÇÃO
-// ==========================================================
+    subtitulo: "Em prol da saúde de Dona Benedita",
 
-const firebaseConfig = {
+    premio: "Geladeira Midea Frost Free",
 
-    apiKey: "SUA_API_KEY",
+    valorNumero: 10,
 
-    authDomain: "rifa-solidaria-56274.firebaseapp.com",
+    totalNumeros: 1000,
 
-    databaseURL:
-    "https://rifa-solidaria-56274-default-rtdb.firebaseio.com",
+    primeiraCartela: 1,
 
-    projectId: "rifa-solidaria-56274",
+    ultimaCartela: 10,
 
-    storageBucket:
-    "rifa-solidaria-56274.firebasestorage.app",
+    numerosPorCartela: 100,
 
-    messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+    // Sorteio
+    dataSorteio: "2026-12-30T20:00:00",
 
-    appId: "SEU_APP_ID"
+    // PIX
+    chavePix: "",
 
-};
+    titularPix: "Maria Josivania Claudino França",
 
-// ==========================================================
-// APP
-// ==========================================================
+    bancoPix: "Banco Neon",
 
-const app = initializeApp(firebaseConfig);
+    // WhatsApp
+    whatsapp: "55799988730207",
 
-const db = getDatabase(app);
+    mensagemWhatsapp:
+        "Olá! Gostaria de participar da Rifa Solidária.",
 
-// ==========================================================
-// REFERÊNCIAS PRINCIPAIS
-// ==========================================================
+    mensagemComprovante:
+        "Olá! Estou enviando meu comprovante de pagamento.",
 
-const numerosRef =
-    ref(db, "numeros");
+    // Status dos números
+    status: {
 
-const participantesRef =
-    ref(db, "participantes");
+        DISPONIVEL: "disponivel",
 
-const configRef =
-    ref(db, "config");
+        RESERVADO: "reservado",
 
-const estatisticasRef =
-    ref(db, "estatisticas");
+        VENDIDO: "vendido"
 
-const avisosRef =
-    ref
+    },
 
-// ==========================================================
-// firebase.js
-// Parte 2/3
-// Funções auxiliares
-// ==========================================================
+    // Tema
+    tema: {
 
-// ------------------------------
-// CRIAR REFERÊNCIA PERSONALIZADA
-// ------------------------------
+        azul: "#2563eb",
 
-function criarRef(caminho) {
+        rosa: "#ec4899",
 
-    return ref(db, caminho);
+        branco: "#ffffff"
 
-}
+    },
 
-// ------------------------------
-// OBTER DADOS
-// ------------------------------
+    // Animações
+    animacao: {
 
-async function obterDados(referencia) {
+        carrossel: 5000,
 
-    const snapshot = await get(referencia);
-
-    if (snapshot.exists()) {
-
-        return snapshot.val();
+        toast: 3000
 
     }
 
-    return null;
-
-}
-
-// ------------------------------
-// SALVAR DADOS
-// ------------------------------
-
-async function salvarDados(referencia, dados) {
-
-    return await set(referencia, dados);
-
-}
-
-// ------------------------------
-// ATUALIZAR DADOS
-// ------------------------------
-
-async function atualizarDados(referencia, dados) {
-
-    return await update(referencia, dados);
-
-}
-
-// ------------------------------
-// ADICIONAR REGISTRO
-// ------------------------------
-
-async function adicionarDados(referencia, dados) {
-
-    return await push(referencia, dados);
-
-}
-
-// ------------------------------
-// REMOVER REGISTRO
-// ------------------------------
-
-async function removerDados(referencia) {
-
-    return await remove(referencia);
-
-}
-
-// ------------------------------
-// OUVIR ALTERAÇÕES
-// ------------------------------
-
-function ouvirDados(referencia, callback) {
-
-    return onValue(referencia, callback);
-
-}
-
-// ------------------------------
-// PARAR DE OUVIR
-// ------------------------------
-
-function pararListener(referencia) {
-
-    off(referencia);
-
-}
-
-// ------------------------------
-// REFERÊNCIA POR NÚMERO
-// ------------------------------
-
-function numeroRef(numero) {
-
-    return ref(db, `numeros/${numero}`);
-
-}
-
-// ------------------------------
-// REFERÊNCIA POR PARTICIPANTE
-// ------------------------------
-
-function participanteRef(id) {
-
-    return ref(db, `participantes/${id}`);
-
-}
-
-// ------------------------------
-// REFERÊNCIA POR RESERVA
-// ------------------------------
-
-function reserva
-
-// ==========================================================
-// firebase.js
-// Parte 3/3
-// Exports finais
+};// ==========================================================
+// config.js
+// Parte 2/2
+// Funções auxiliares
 // ==========================================================
 
-export {
+// ----------------------------------------------------------
+// FORMATAÇÃO
+// ----------------------------------------------------------
 
-    // Firebase
-    db,
+export function formatarNumero(numero) {
 
-    // Métodos
-    ref,
-    child,
-    get,
-    set,
-    update,
-    push,
-    remove,
-    onValue,
-    off,
-    serverTimestamp,
+    return String(numero).padStart(3, "0");
 
-    // Referências principais
-    numerosRef,
-    participantesRef,
-    configRef,
-    estatisticasRef,
-    avisosRef,
-    sorteioRef,
-    reservasRef,
-    administradoresRef,
+}
 
-    // Funções auxiliares
-    criarRef,
-    obterDados,
-    salvarDados,
-    atualizarDados,
-    adicionarDados,
-    removerDados,
-    ouvirDados,
-    pararListener,
+export function formatarMoeda(valor) {
 
-    // Referências específicas
-    numeroRef,
-    participanteRef,
-    reservaRef
+    return Number(valor).toLocaleString("pt-BR", {
 
-};
+        style: "currency",
+
+        currency: "BRL"
+
+    });
+
+}
+
+// ----------------------------------------------------------
+// CARTELAS
+// ----------------------------------------------------------
+
+export function obterCartela(numero) {
+
+    return Math.floor(Number(numero) / 100) + 1;
+
+}
+
+export function intervaloCartela(cartela) {
+
+    const inicio = (cartela - 1) * 100;
+
+    const fim = inicio + 99;
+
+    return {
+
+        inicio,
+
+        fim
+
+    };
+
+}
+
+// ----------------------------------------------------------
+// WHATSAPP
+// ----------------------------------------------------------
+
+export function criarLinkWhatsapp(texto = "") {
+
+    const mensagem = encodeURIComponent(
+
+        texto || CONFIG.mensagemWhatsapp
+
+    );
+
+    return `https://wa.me/${CONFIG.whatsapp}?text=${mensagem}`;
+
+}
+
+// ----------------------------------------------------------
+// VALIDAÇÕES
+// ----------------------------------------------------------
+
+export function numeroValido(numero) {
+
+    return (
+
+        Number.isInteger(Number(numero)) &&
+
+        Number(numero) >= 0 &&
+
+        Number(numero) < CONFIG.totalNumeros
+
+    );
+
+}
+
+// ----------------------------------------------------------
+// CONTAGEM
+// ----------------------------------------------------------
+
+export function calcularTempoRestante() {
+
+    const destino = new Date(CONFIG.dataSorteio).getTime();
+
+    const agora = Date.now();
+
+    const diferenca = Math.max(0, destino - agora);
+
+    return {
+
+        dias: Math.floor(diferenca / 86400000),
+
+        horas: Math.floor((diferenca % 86400000) / 3600000),
+
+        minutos: Math.floor((diferenca % 3600000) / 60000),
+
+        segundos: Math.floor((diferenca % 60000) / 1000)
+
+    };
+
+}
+
+// ----------------------------------------------------------
+// CONGELAR CONFIGURAÇÃO
+// ----------------------------------------------------------
+
+Object.freeze(CONFIG);
