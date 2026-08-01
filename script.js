@@ -199,4 +199,5 @@ export function calcularTempoRestante() {
 Object.freeze(CONFIG.status);
 Object.freeze(CONFIG.tema);
 Object.freeze(CONFIG.animacao);
+Object.freeze(CONFIG.reserva);
 Object.freeze(CONFIG);
