@@ -16,7 +16,7 @@ export const CONFIG = {
     valorNumero: 10,
 
     totalNumeros: 1000,
-
+primeiroNumero: 0,
     primeiraCartela: 1,
 
     ultimaCartela: 10,
@@ -72,7 +72,11 @@ export const CONFIG = {
         toast: 3000
 
     }
+reserva: {
 
+    tempoMinutos: 30
+
+}
 };// ==========================================================
 // config.js
 // Parte 2/2
@@ -191,4 +195,7 @@ export function calcularTempoRestante() {
 // CONGELAR CONFIGURAÇÃO
 // ----------------------------------------------------------
 
+Object.freeze(CONFIG.status);
+Object.freeze(CONFIG.tema);
+Object.freeze(CONFIG.animacao);
 Object.freeze(CONFIG);
