@@ -16,8 +16,10 @@ export const CONFIG = {
     valorNumero: 10,
 
     totalNumeros: 1000,
+
 primeiroNumero: 0,
-    primeiraCartela: 1,
+
+primeiraCartela: 1,
 
     ultimaCartela: 10,
 
@@ -67,16 +69,13 @@ primeiroNumero: 0,
     // Animações
     animacao: {
 
+animacao: {
     carrossel: 5000,
-
     toast: 3000
-
 },
 
 reserva: {
-
     tempoMinutos: 30
-
 }
 };// ==========================================================
 // config.js
