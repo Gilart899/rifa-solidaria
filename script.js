@@ -1,207 +1,115 @@
 // ==========================================================
-// RIFA SOLIDÁRIA - GILFEST
 // script.js
+// Rifa Solidária - GilFest
+// Versão 3.0
 // PARTE 1/4
-// Inicialização e Estado Global
 // ==========================================================
 
-import {
-    CONFIG
-} from "./config.js";
+import { CONFIG } from "./config.js";
 
 import {
-
-    db,
-
-    numerosRef,
-
-    configRef,
-
-    estatisticasRef,
-
-    participantesRef,
-
-    avisosRef,
-
-    get,
-
-    onValue,
-
-    push,
-
-    update,
-
-    ref
-
+  db,
+  numerosRef,
+  participantesRef,
+  configRef,
+  estatisticasRef,
+  avisosRef,
+  ref,
+  get,
+  push,
+  set,
+  update,
+  onValue
 } from "./firebase.js";
 
 // ==========================================================
-// ESTADO DA APLICAÇÃO
+// ESTADO GLOBAL
 // ==========================================================
 
 const APP = {
-
-    numeros:{},
-
-    config:{},
-
-    estatisticas:{},
-
-    avisos:{},
-
-    selecionados:[],
-
-    carregando:false,
-
-    cartelaAtual:1
-
+  numeros: {},
+  config: {},
+  estatisticas: {},
+  avisos: {},
+  selecionados: [],
+  carregando: false,
+  cartelaAtual: 1
 };
 
 // ==========================================================
 // ELEMENTOS
 // ==========================================================
 
-const el={
+const $ = (id) => document.getElementById(id);
 
-    premio:
+const UI = {
+  titulo: $("titulo"),
+  subtitulo: $("subtitulo"),
+  premio: $("premio"),
+  valor: $("valor"),
+  dataSorteio: $("dataSorteio"),
 
-        document.getElementById("premio"),
+  buscarNumero: $("buscarNumero"),
+  btnBuscarNumero: $("btnBuscarNumero"),
+  resultadoBusca: $("resultadoBusca"),
 
-    valor:
+  numeroSelecionado: $("numeroSelecionado"),
+  valorSelecionado: $("valorSelecionado"),
+  statusNumero: $("statusNumero"),
+  btnReservar: $("btnReservar"),
 
-        document.getElementById("valor"),
+  pixKey: $("pixKey"),
+  copiarPix: $("copiarPix"),
 
-    data:
+  btnWhatsapp: $("btnWhatsapp"),
+  btnComprovante: $("btnComprovante"),
 
-        document.getElementById("dataSorteio"),
+  dias: $("dias"),
+  horas: $("horas"),
+  minutos: $("minutos"),
+  segundos: $("segundos"),
 
-    titulo:
-
-        document.getElementById("titulo"),
-
-    subtitulo:
-
-        document.getElementById("subtitulo"),
-
-    buscar:
-
-        document.getElementById("buscarNumero"),
-
-    resultado:
-
-        document.getElementById("resultadoBusca"),
-
-    btnBuscar:
-
-        document.getElementById("btnBuscarNumero"),
-
-    btnReservar:
-
-        document.getElementById("btnReservar"),
-
-    btnPix:
-
-        document.getElementById("copiarPix"),
-
-    pix:
-
-        document.getElementById("pixKey"),
-
-    whatsapp:
-
-        document.getElementById("btnWhatsapp"),
-
-    comprovante:
-
-        document.getElementById("btnComprovante"),
-
-    numeroSelecionado:
-
-        document.getElementById("numeroSelecionado"),
-
-    valorSelecionado:
-
-        document.getElementById("valorSelecionado"),
-
-    statusNumero:
-
-        document.getElementById("statusNumero"),
-
-    toast:
-
-        document.getElementById("toast"),
-
-    dias:
-
-        document.getElementById("dias"),
-
-    horas:
-
-        document.getElementById("horas"),
-
-    minutos:
-
-        document.getElementById("minutos"),
-
-    segundos:
-
-        document.getElementById("segundos")
-
+  toast: $("toast")
 };
 
 // ==========================================================
-// INICIAR
+// INICIALIZAÇÃO
 // ==========================================================
 
-window.addEventListener(
+document.addEventListener("DOMContentLoaded", iniciar);
 
-    "DOMContentLoaded",
+async function iniciar() {
 
-    iniciarSistema
+  try {
 
-);
+    registrarEventos();
 
-async function iniciarSistema(){
+    iniciarTrevos();
 
-    try{
+    iniciarCarrossel();
 
-        registrarEventos();
+    iniciarContador();
 
-        iniciarCarrossel();
+    await carregarConfiguracao();
 
-        iniciarTrevos();
+    ouvirNumeros();
 
-        iniciarContador();
+    ouvirEstatisticas();
 
-        await carregarConfiguracao();
+    ouvirAvisos();
 
-        sincronizarNumeros();
+    console.log("Sistema iniciado.");
 
-        sincronizarEstatisticas();
+  } catch (e) {
 
-        sincronizarAvisos();
+    console.error(e);
 
-        console.log(
+    mostrarToast(
+      "Erro ao iniciar o sistema.",
+      "erro"
+    );
 
-            "Sistema iniciado."
-
-        );
-
-    }
-
-    catch(e){
-
-        console.error(e);
-
-        mostrarToast(
-
-            "Erro ao iniciar.",
-
-            "erro"
-
-        );
-
-    }
+  }
 
 }
 
@@ -209,63 +117,51 @@ async function iniciarSistema(){
 // EVENTOS
 // ==========================================================
 
-function registrarEventos(){
+function registrarEventos() {
 
-    if(el.btnBuscar){
+  if (UI.btnBuscarNumero) {
 
-        el.btnBuscar.addEventListener(
+    UI.btnBuscarNumero.addEventListener(
+      "click",
+      pesquisarNumero
+    );
 
-            "click",
+  }
 
-            pesquisarNumero
+  if (UI.buscarNumero) {
 
-        );
+    UI.buscarNumero.addEventListener(
+      "keydown",
+      (e) => {
 
-    }
+        if (e.key === "Enter") {
 
-    if(el.buscar){
+          pesquisarNumero();
 
-        el.buscar.addEventListener(
+        }
 
-            "keydown",
+      }
+    );
 
-            e=>{
+  }
 
-                if(e.key==="Enter"){
+  if (UI.copiarPix) {
 
-                    pesquisarNumero();
+    UI.copiarPix.addEventListener(
+      "click",
+      copiarChavePix
+    );
 
-                }
+  }
 
-            }
+  if (UI.btnReservar) {
 
-        );
+    UI.btnReservar.addEventListener(
+      "click",
+      reservarNumero
+    );
 
-    }
-
-    if(el.btnPix){
-
-        el.btnPix.addEventListener(
-
-            "click",
-
-            copiarChavePix
-
-        );
-
-    }
-
-    if(el.btnReservar){
-
-        el.btnReservar.addEventListener(
-
-            "click",
-
-            reservarSelecionados
-
-        );
-
-    }
+  }
 
 }
 
@@ -273,58 +169,59 @@ function registrarEventos(){
 // CONFIGURAÇÃO
 // ==========================================================
 
-async function carregarConfiguracao(){
+async function carregarConfiguracao() {
 
-    const snap=await get(configRef);
+  const snap = await get(configRef);
 
-    if(!snap.exists()) return;
+  if (!snap.exists()) return;
 
-    APP.config=snap.val();
+  APP.config = snap.val();
 
-    aplicarConfiguracao();
+  aplicarConfiguracao();
 
 }
 
-function aplicarConfiguracao(){
+function aplicarConfiguracao() {
 
-    const c=APP.config;
+  const c = APP.config;
 
-    document.title=c.titulo;
+  document.title = c.titulo || "Rifa Solidária";
 
-    if(el.titulo)
+  if (UI.titulo)
+    UI.titulo.textContent = c.titulo || "";
 
-        el.titulo.textContent=c.titulo;
+  if (UI.subtitulo)
+    UI.subtitulo.textContent = c.subtitulo || "";
 
-    if(el.subtitulo)
+  if (UI.premio)
+    UI.premio.textContent = c.premio || "";
 
-        el.subtitulo.textContent=
+  if (UI.valor)
+    UI.valor.textContent =
+      "R$ " +
+      Number(c.valorNumero || 0).toFixed(2);
 
-        c.subtitulo;
+  if (UI.dataSorteio)
+    UI.dataSorteio.textContent =
+      c.dataSorteio || "";
 
-    if(el.premio)
+  if (UI.pixKey)
+    UI.pixKey.value = c.pix || "";
 
-        el.premio.textContent=
+  configurarWhatsapp();
 
-        c.premio;
+}
 
-    if(el.valor)
-
-        el.valor.textContent=
-
-        `R$ ${Number(c.valorNumero).toFixed(2)}`;
-
-    if(el.data)
-
-       // ==========================================================
+// ==========================================================
 // PARTE 2/4
-// FIREBASE + PESQUISA + SELEÇÃO
+// FIREBASE + NÚMEROS + PESQUISA + RESERVA
 // ==========================================================
 
-// ---------------------------
-// SINCRONIZAÇÃO DOS NÚMEROS
-// ---------------------------
+// ----------------------------------------------------------
+// OUVIR NÚMEROS
+// ----------------------------------------------------------
 
-function sincronizarNumeros() {
+function ouvirNumeros() {
 
     onValue(numerosRef, (snapshot) => {
 
@@ -334,15 +231,17 @@ function sincronizarNumeros() {
 
         atualizarResumo();
 
+        atualizarEstatisticas();
+
     });
 
 }
 
-// ---------------------------
-// ESTATÍSTICAS
-// ---------------------------
+// ----------------------------------------------------------
+// OUVIR ESTATÍSTICAS
+// ----------------------------------------------------------
 
-function sincronizarEstatisticas() {
+function ouvirEstatisticas() {
 
     onValue(estatisticasRef, (snapshot) => {
 
@@ -354,11 +253,11 @@ function sincronizarEstatisticas() {
 
 }
 
-// ---------------------------
-// AVISOS
-// ---------------------------
+// ----------------------------------------------------------
+// OUVIR AVISOS
+// ----------------------------------------------------------
 
-function sincronizarAvisos() {
+function ouvirAvisos() {
 
     onValue(avisosRef, (snapshot) => {
 
@@ -380,76 +279,37 @@ function sincronizarAvisos() {
 
 }
 
-// ==========================================================
-// PESQUISAR NÚMERO
-// ==========================================================
+// ----------------------------------------------------------
+// PESQUISA
+// ----------------------------------------------------------
 
 function pesquisarNumero() {
 
-    if (!el.buscar) return;
-
-    const numero = Number(el.buscar.value);
-
-    if (isNaN(numero)) {
-
-        mostrarToast(
-
-            "Digite um número válido.",
-
-            "erro"
-
-        );
-
-        return;
-
-    }
-
-    if (numero < 0 || numero > 999) {
-
-        mostrarToast(
-
-            "Número deve estar entre 000 e 999.",
-
-            "erro"
-
-        );
-
-        return;
-
-    }
-
-    selecionarNumero(numero);
-
-}
+    const valor = UI.buscarNumero.value
 
 // ==========================================================
-// SELECIONAR NÚMERO
-// ==========================================================
-
-function selecionarNumero(numero) {
-
-    const chave =
-
-        numero.toString().padStart(3, "0");
-
-    const dados = APP.numeros[chave];
-
-    if (!dados) {
-
-       // ==========================================================
 // PARTE 3/4
-// CONTADOR + PIX + WHATSAPP + CARROSSEL + TOAST
+// CONTADOR + PIX + WHATSAPP + CARROSSEL + TREVOS + TOAST
 // ==========================================================
 
-// --------------------------
-// CONTAGEM REGRESSIVA
-// --------------------------
+// ----------------------------------------------------------
+// CONTADOR
+// ----------------------------------------------------------
+
+let contadorInterval = null;
 
 function iniciarContador() {
 
     atualizarContador();
 
-    setInterval(atualizarContador, 1000);
+    if (contadorInterval) {
+        clearInterval(contadorInterval);
+    }
+
+    contadorInterval = setInterval(
+        atualizarContador,
+        1000
+    );
 
 }
 
@@ -457,197 +317,179 @@ function atualizarContador() {
 
     if (!APP.config.dataSorteio) return;
 
-    const destino = new Date(APP.config.dataSorteio).getTime();
+    const destino = new Date(
+        APP.config.dataSorteio
+    ).getTime();
 
     const agora = Date.now();
 
-    const diferenca = destino - agora;
+    let restante = destino - agora;
 
-    if (diferenca <= 0) {
+    if (restante < 0) restante = 0;
 
-        el.dias.textContent = "00";
-        el.horas.textContent = "00";
-        el.minutos.textContent = "00";
-        el.segundos.textContent = "00";
+    const dias = Math.floor(
+        restante / 86400000
+    );
+
+    restante %= 86400000;
+
+    const horas = Math.floor(
+        restante / 3600000
+    );
+
+    restante %= 3600000;
+
+    const minutos = Math.floor(
+        restante / 60000
+    );
+
+    restante %= 60000;
+
+    const segundos = Math.floor(
+        restante / 1000
+    );
+
+    if (UI.dias)
+        UI.dias.textContent =
+            String(dias).padStart(2, "0");
+
+    if (UI.horas)
+        UI.horas.textContent =
+            String(horas).padStart(2, "0");
+
+    if (UI.minutos)
+        UI.minutos.textContent =
+            String(minutos).padStart(2, "0");
+
+    if (UI.segundos)
+        UI.segundos.textContent =
+            String(segundos).padStart(
+
+            // ==========================================================
+// LIMPAR SELEÇÃO
+// ==========================================================
+
+function limparSelecao() {
+
+    APP.selecionados = [];
+
+    if (el.numeroSelecionado) {
+        el.numeroSelecionado.textContent = "Nenhum";
+    }
+
+    if (el.valorSelecionado) {
+        el.valorSelecionado.textContent =
+            "R$ " + Number(APP.config.valorNumero || 0).toFixed(2);
+    }
+
+    if (el.statusNumero) {
+        el.statusNumero.textContent = "🟢 Disponível";
+        el.statusNumero.className = "status disponivel";
+    }
+
+}
+
+// ==========================================================
+// RESUMO
+// ==========================================================
+
+function atualizarResumo() {
+
+    if (!APP.selecionados.length) {
+
+        limparSelecao();
 
         return;
 
     }
 
-    const dias = Math.floor(diferenca / 86400000);
+    const numero = APP.selecionados[0];
 
-    const horas = Math.floor((diferenca % 86400000) / 3600000);
+    if (el.numeroSelecionado) {
+        el.numeroSelecionado.textContent = numero;
+    }
 
-    const minutos = Math.floor((diferenca % 3600000) / 60000);
+    if (el.valorSelecionado) {
 
-    const segundos = Math.floor((diferenca % 60000) / 1000);
+        const total =
+            APP.selecionados.length *
+            Number(APP.config.valorNumero || 0);
 
-    el.dias.textContent = String(dias).padStart(2, "0");
-    el.horas.textContent = String(horas).padStart(2, "0");
-    el.minutos.textContent = String(minutos).padStart(2, "0");
-    el.segundos.textContent = String(segundos).padStart(2, "0");
-
-}
-
-// --------------------------
-// COPIAR PIX
-// --------------------------
-
-    // ==========================================================
-// PARTE 4/4
-// FINALIZAÇÃO
-// ==========================================================
-
-// --------------------------
-// ESTATÍSTICAS
-// --------------------------
-
-function atualizarEstatisticas() {
-
-    const total = Object.keys(APP.numeros).length;
-
-    let vendidos = 0;
-    let reservados = 0;
-    let disponiveis = 0;
-
-    Object.values(APP.numeros).forEach((numero) => {
-
-        switch (numero.status) {
-
-            case "vendido":
-                vendidos++;
-                break;
-
-            case "reservado":
-                reservados++;
-                break;
-
-            default:
-                disponiveis++;
-                break;
-
-        }
-
-    });
-
-    const vendidosEl =
-        document.getElementById("totalVendidos");
-
-    const reservadosEl =
-        document.getElementById("totalReservados");
-
-    const disponiveisEl =
-        document.getElementById("totalDisponiveis");
-
-    const arrecadadoEl =
-        document.getElementById("totalArrecadado");
-
-    if (vendidosEl)
-        vendidosEl.textContent = vendidos;
-
-    if (reservadosEl)
-        reservadosEl.textContent = reservados;
-
-    if (disponiveisEl)
-        disponiveisEl.textContent = disponiveis;
-
-    if (arrecadadoEl) {
-
-        arrecadadoEl.textContent =
-            "R$ " +
-            (vendidos * Number(APP.config.valorNumero))
-            .toFixed(2);
+        el.valorSelecionado.textContent =
+            "R$ " + total.toFixed(2);
 
     }
 
-    atualizarBarraProgresso(
-
-        vendidos,
-
-        total
-
-    );
-
 }
 
-// --------------------------
-// BARRA
-// --------------------------
+// ==========================================================
+// COPIAR CHAVE PIX
+// ==========================================================
 
-function atualizarBarraProgresso(
+async function copiarChavePix() {
 
-    vendidos,
+    if (!APP.config.chavePix) {
 
-    total
-
-) {
-
-    const barra =
-
-        document.getElementById(
-
-            "barraProgresso"
-
+        mostrarToast(
+            "Chave PIX não configurada.",
+            "erro"
         );
 
-    if (!barra) return;
+        return;
 
-    const porcentagem =
-
-        total === 0
-
-            ? 0
-
-            : (vendidos / total) * 100;
-
-    barra.style.width =
-
-        porcentagem + "%";
-
-}
-
-// --------------------------
-// PARTICIPANTES
-// --------------------------
-
-async function salvarParticipante(dados) {
+    }
 
     try {
 
-        await push(
-
-            participantesRef,
-
-            dados
-
+        await navigator.clipboard.writeText(
+            APP.config.chavePix
         );
 
-        return true;
+        mostrarToast(
+            "Chave PIX copiada.",
+            "sucesso"
+        );
 
     }
 
-    catch (erro) {
+    catch {
 
-        console.error(erro);
-
-        return false;
+        mostrarToast(
+            "Não foi possível copiar.",
+            "erro"
+        );
 
     }
 
 }
 
-// --------------------------
-// FORMATAR
-// --------------------------
+// ==========================================================
+// RESERVAR NÚMEROS
+// ==========================================================
 
-function formatarNumero(numero) {
+async function reservarSelecionados() {
 
-    return String(numero)
+    if (!APP.selecionados.length) {
 
-        .padStart(3, "0");
+        mostrarToast(
+            "Selecione um número.",
+            "erro"
+        );
 
-}
+        return;
 
-// --------------------------
-// LIMPAR
-// --------------------------
+    }
+
+    try {
+
+        const atualizacao = {};
+
+        APP.selecionados.forEach(numero => {
+
+            atualizacao[numero] = {
+
+                ...APP.numeros[numero],
+
+                status: "reservado",
+
+               
