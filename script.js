@@ -67,11 +67,12 @@ primeiroNumero: 0,
     // Animações
     animacao: {
 
-        carrossel: 5000,
+    carrossel: 5000,
 
-        toast: 3000
+    toast: 3000
 
-    }
+},
+
 reserva: {
 
     tempoMinutos: 30
