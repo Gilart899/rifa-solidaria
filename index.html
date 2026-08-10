@@ -46,7 +46,17 @@
 
 <section class="numbers page glass">
   <div class="section-head"><div><span class="eyebrow">ESCOLHA SUA SORTE</span><h2>🎟️ Escolha seus números</h2><p>Selecione de 1 a 10 números.</p></div><div class="legend"><span><i class="available"></i> Disponível</span><span><i class="selected"></i> Selecionado</span><span><i class="reserved"></i> Reservado</span></div></div>
-  <div class="number-grid" id="numberGrid"></div>
+  <div class="cartela-nav" aria-label="Navegação entre cartelas">
+    <button type="button" class="cartela-arrow" id="prevCartela" aria-label="Cartela anterior">‹</button>
+    <div class="cartela-center">
+      <strong id="cartelaTitulo">CARTELA 01</strong>
+      <span id="cartelaFaixa">Números 000–099</span>
+    </div>
+    <button type="button" class="cartela-arrow" id="nextCartela" aria-label="Próxima cartela">›</button>
+  </div>
+  <div class="swipe-hint">← deslize para navegar entre as cartelas →</div>
+  <div class="number-grid" id="numberGrid" tabindex="0" aria-label="Números da cartela"></div>
+  <div class="cartela-dots" id="cartelaDots" aria-label="Indicador de cartela"></div>
   <div class="selection-bar"><div>Selecionados: <b id="selectedNumbers">nenhum</b></div><div>Total: <strong id="total">R$ 0,00</strong></div></div>
   <button class="main-btn" id="continueBtn">CONTINUAR <span>→</span></button>
 </section>
