@@ -297,5 +297,3 @@ if (
 else {
 
     iniciar();
-
-}
