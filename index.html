@@ -2,97 +2,123 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#031006">
-<title>Rifa Entre Amigos | GilFest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerador Firebase JSON | GilFest</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="ambient ambient-a"></div><div class="ambient ambient-b"></div><div class="particles"></div>
-<header class="topbar">
-  <div class="brand"><img src="img/1784636629590.png" alt="GilFest"><span>RIFA SOLIDÁRIA</span></div>
-  <div class="online"><i></i> ONLINE</div>
-</header>
-<main>
-<section class="hero page">
-  <div class="hero-copy">
-    <div class="clover-glow"><img src="img/trevo.png" alt="Trevo"></div>
-    <div class="eyebrow">GILFEST • RIFA SOLIDÁRIA</div>
-    <h1>RIFA <span>ENTRE AMIGOS</span></h1>
-    <div class="people-line">
-      <span>💚 Em benefício de</span>
-      <strong>Dona Bené</strong>
-      <div class="person-avatar"><img src="img/1783887880857.png" alt="Foto da Dona Bené"></div>
-      <div class="person-avatar mother-placeholder" title="Foto da mãe — adicionar depois">👩</div>
-    </div>
-    <p class="hero-text">Sua ajuda faz toda diferença. Cada número vendido aproxima a realização dos exames.</p>
-  </div>
 
-  <div class="prize-card glass">
-    <div class="prize-tag">🏆 PRÊMIO PRINCIPAL</div>
-    <div class="prize-content">
-      <div class="fridge"><img src="img/IMG-20260722-WA0037.jpg" alt="Geladeira Midea Frost Free"></div>
-      <div><small>VOCÊ PODE LEVAR</small><h2>GELADEIRA<br><b>MIDEA</b></h2><p>FROST FREE</p></div>
-    </div>
-  </div>
+<div class="container">
 
-  <div class="info-grid">
-    <div class="info glass"><span>💰 Valor</span><strong>R$ 10,00</strong></div>
-    <div class="info glass"><span>📅 Sorteio</span><strong>30/12/2026</strong></div>
-    <div class="info glass"><span>🎟️ Números</span><strong>1.000</strong></div>
-    <div class="info glass"><span>🍀 Resultado</span><strong>Loteria Federal</strong></div>
-  </div>
-</section>
+    <h1>🎟️ Gerador de Banco Firebase</h1>
 
-<section class="numbers page glass">
-  <div class="section-head"><div><span class="eyebrow">ESCOLHA SUA SORTE</span><h2>🎟️ Escolha seus números</h2><p>Selecione de 1 a 10 números.</p></div><div class="legend"><span><i class="available"></i> Disponível</span><span><i class="selected"></i> Selecionado</span><span><i class="reserved"></i> Reservado</span></div></div>
-  <div class="cartela-nav" aria-label="Navegação entre cartelas">
-    <button type="button" class="cartela-arrow" id="prevCartela" aria-label="Cartela anterior">‹</button>
-    <div class="cartela-center">
-      <strong id="cartelaTitulo">CARTELA 01</strong>
-      <span id="cartelaFaixa">Números 000–099</span>
-    </div>
-    <button type="button" class="cartela-arrow" id="nextCartela" aria-label="Próxima cartela">›</button>
-  </div>
-  <div class="swipe-hint">← deslize para navegar entre as cartelas →</div>
-  <div class="number-grid" id="numberGrid" tabindex="0" aria-label="Números da cartela"></div>
-  <div class="cartela-dots" id="cartelaDots" aria-label="Indicador de cartela"></div>
-  <div class="selection-bar"><div>Selecionados: <b id="selectedNumbers">nenhum</b></div><div>Total: <strong id="total">R$ 0,00</strong></div></div>
+    <p>
+        Gere automaticamente o JSON da sua rifa para importar no Firebase.
+    </p>
 
-  <div class="number-search" aria-label="Localizar número">
-    <div class="number-search-title">🔎 <strong>Já sabe o número?</strong> <span>Digite e vamos direto para a cartela.</span></div>
-    <div class="number-search-row">
-      <input id="buscarNumero" type="number" min="0" max="999" inputmode="numeric" autocomplete="off" placeholder="Ex.: 750" aria-label="Digite um número de 000 a 999">
-      <button type="button" class="search-btn" id="btnBuscarNumero">IR PARA O NÚMERO</button>
-    </div>
-    <small id="mensagemBuscaNumero" aria-live="polite"></small>
-  </div>
+    <form id="formGerador">
 
-  <div class="cartela-acoes">
-    <button type="button" class="main-btn suggestion-btn" id="btnSugerir">🍀 SUGERIR UM NÚMERO</button>
-    <button type="button" class="main-btn continue-btn" id="continueBtn">CONTINUAR <span>→</span></button>
-  </div>
-</section>
+        <label>Nome da Rifa</label>
+        <input
+            type="text"
+            id="titulo"
+            required>
 
-<section class="scratch-show page">
-  <div class="section-title"><span></span><h2>🍀 PRÊMIOS DA RASPADINHA</h2><span></span></div>
-  <p class="section-sub">Após a participação ser confirmada, você poderá raspar e descobrir seu resultado.</p>
-  <div class="scratch-grid">
-    <article class="scratch-card glass"><div class="scratch-image"><img src="img/1784572338315.png" alt="Prêmio da raspadinha"></div><b>LIQUIDIFICADOR</b></article>
-    <div class="or">OU</div>
-    <article class="scratch-card glass"><div class="scratch-image"><img src="img/IMG-20260722-WA0040.jpg" alt="Prêmio da raspadinha"></div><b>FERRO ELÉTRICO</b></article>
-  </div>
-</section>
+        <label>Beneficiado(a)</label>
+        <input
+            type="text"
+            id="beneficiada"
+            required>
 
-<section class="trust page">
-  <div class="trust-item glass"><span>🍀</span><b>Fácil</b><small>Escolha seus números.</small></div>
-  <div class="trust-item glass"><span>🎁</span><b>Prêmios especiais</b><small>Uma surpresa pode estar esperando.</small></div>
-  <div class="trust-item glass"><span>🔒</span><b>Sistema seguro</b><small>Seus dados protegidos.</small></div>
-</section>
+        <label>Prêmio</label>
+        <input
+            type="text"
+            id="premio"
+            required>
 
-<section class="cta page glass"><div><small>GARANTA SUA PARTICIPAÇÃO</small><h2>Escolha seus números e participe.</h2></div><button class="main-btn" onclick="document.querySelector('.numbers').scrollIntoView({behavior:'smooth'})">ESCOLHER NÚMEROS</button></section>
-</main>
-<footer><span>🔒 Rifa Entre Amigos</span><b>• GilFest</b><small>Feito com ❤️ para uma corrente de solidariedade.</small></footer>
+        <label>Valor por Número (R$)</label>
+        <input
+            type="number"
+            id="valor"
+            value="10"
+            required>
+
+        <label>Data do Sorteio</label>
+        <input
+            type="date"
+            id="dataSorteio"
+            required>
+
+        <label>Hora do Sorteio</label>
+        <input
+            type="time"
+            id="horaSorteio"
+            value="20:00"
+            required>
+
+        <label>Chave PIX</label>
+        <input
+            type="text"
+            id="pix">
+
+        <label>Titular do PIX</label>
+        <input
+            type="text"
+            id="titularPix">
+
+        <label>Banco</label>
+        <input
+            type="text"
+            id="banco">
+
+        <label>WhatsApp</label>
+        <input
+            type="text"
+            id="whatsapp">
+
+        <label>Quantidade de números</label>
+
+        <select id="quantidade">
+
+            <option value="100">100</option>
+
+            <option value="500">500</option>
+
+            <option value="1000" selected>1000</option>
+
+            <option value="2000">2000</option>
+
+            <option value="5000">5000</option>
+
+        </select>
+
+        <div class="acoes">
+
+            <button
+                type="button"
+                id="btnGerar">
+
+                📄 Gerar JSON
+
+            </button>
+
+            <button
+                type="reset">
+
+                🗑️ Limpar
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
 <script src="script.js"></script>
+
 </body>
 </html>
