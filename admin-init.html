@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="theme-color"
+        content="#021a04">
+
+    <title>
+        🔥 Inicializar Rifa
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #123d08,
+                    #031003 45%,
+                    #010501 100%
+                );
+
+        }
+
+        .painel {
+
+            width: min(500px, 100%);
+
+            padding: 35px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                rgba(124,255,0,.55);
+
+            border-radius: 25px;
+
+            background:
+                rgba(3,20,3,.92);
+
+            box-shadow:
+                0 0 25px
+                rgba(124,255,0,.25),
+
+                0 0 70px
+                rgba(124,255,0,.12);
+
+        }
+
+        .icone {
+
+            font-size: 65px;
+
+            margin-bottom: 15px;
+
+        }
+
+        h1 {
+
+            color: #7cff00;
+
+            font-size: 26px;
+
+            margin-bottom: 12px;
+
+        }
+
+        p {
+
+            color: #c9d4c9;
+
+            line-height: 1.5;
+
+            margin-bottom: 25px;
+
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 16px;
+
+            border:
+                1px solid
+                #7cff00;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #4d8d00,
+                    #173500
+                );
+
+            color: #ffffff;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        button:hover {
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #70c400,
+                    #285500
+                );
+
+        }
+
+        button:disabled {
+
+            opacity: .5;
+
+            cursor: not-allowed;
+
+        }
+
+        #status {
+
+            min-height: 50px;
+
+            margin-top: 20px;
+
+            padding: 12px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(0,0,0,.35);
+
+            color: #dce8dc;
+
+            line-height: 1.5;
+
+        }
+
+        .sucesso {
+
+            color: #7cff00 !important;
+
+        }
+
+        .erro {
+
+            color: #ff7777 !important;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <main class="painel">
+
+        <div class="icone">
+            🔥
+        </div>
+
+        <h1>
+            Inicializar Rifa Solidária
+        </h1>
+
+        <p>
+
+            Este procedimento irá criar a estrutura
+            inicial da rifa no Firebase, incluindo
+            os 1.000 números.
+
+            <br><br>
+
+            Execute somente uma vez.
+
+        </p>
+
+
+        <button id="btnInicializar">
+
+            🚀 CRIAR BANCO DA RIFA
+
+        </button>
+
+
+        <div id="status">
+
+            Aguardando comando...
+
+        </div>
+
+    </main>
+
+
+    <script
+        type="module">
+
+        import {
+            inicializarBanco
+        } from "./firebase-init.js";
+
+
+        const botao =
+            document.getElementById(
+                "btnInicializar"
+            );
+
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+
+        botao.addEventListener(
+            "click",
+            async () => {
+
+                botao.disabled = true;
+
+
+                status.className = "";
+
+                status.textContent =
+                    "⏳ Criando estrutura da rifa...";
+
+
+                try {
+
+                    await inicializarBanco();
+
+
+                    status.className =
+                        "sucesso";
+
+
+                    status.innerHTML =
+
+                        "✅ Banco criado com sucesso!<br><br>" +
+
+                        "1.000 números foram preparados.<br>" +
+
+                        "A estrutura da rifa está pronta.";
+
+
+                }
+
+                catch (erro) {
+
+                    console.error(
+                        erro
+                    );
+
+
+                    status.className =
+                        "erro";
+
+
+                    status.innerHTML =
+
+                        "❌ Não foi possível criar o banco.<br><br>" +
+
+                        erro.message;
+
+
+                    botao.disabled =
+                        false;
+
+                }
+
+            }
+
+        );
+
+    </script>
+
+
+</body>
+
+</html>
