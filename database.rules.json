@@ -1,0 +1,57 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "rifa": {
+
+      "configuracao": {
+        ".read": true,
+        ".write": false
+      },
+
+      "cartelas": {
+        ".read": true,
+        ".write": false
+      },
+
+      "numeros": {
+        ".read": true,
+        ".write": false,
+
+        "$numero": {
+          ".read": true,
+          ".write": false
+        }
+      },
+
+      "raspadinha": {
+
+        "configuracao": {
+          ".read": true,
+          ".write": false
+        },
+
+        "premios": {
+          ".read": false,
+          ".write": false
+        },
+
+        "novasChances": {
+          ".read": false,
+          ".write": false
+        },
+
+        "jogadas": {
+          ".read": false,
+          ".write": false,
+
+          "$jogada": {
+            ".read": false,
+            ".write": false
+          }
+        }
+      }
+    }
+  }
+}
