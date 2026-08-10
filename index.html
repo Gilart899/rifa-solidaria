@@ -58,7 +58,20 @@
   <div class="number-grid" id="numberGrid" tabindex="0" aria-label="Números da cartela"></div>
   <div class="cartela-dots" id="cartelaDots" aria-label="Indicador de cartela"></div>
   <div class="selection-bar"><div>Selecionados: <b id="selectedNumbers">nenhum</b></div><div>Total: <strong id="total">R$ 0,00</strong></div></div>
-  <button class="main-btn" id="continueBtn">CONTINUAR <span>→</span></button>
+
+  <div class="number-search" aria-label="Localizar número">
+    <div class="number-search-title">🔎 <strong>Já sabe o número?</strong> <span>Digite e vamos direto para a cartela.</span></div>
+    <div class="number-search-row">
+      <input id="buscarNumero" type="number" min="0" max="999" inputmode="numeric" autocomplete="off" placeholder="Ex.: 750" aria-label="Digite um número de 000 a 999">
+      <button type="button" class="search-btn" id="btnBuscarNumero">IR PARA O NÚMERO</button>
+    </div>
+    <small id="mensagemBuscaNumero" aria-live="polite"></small>
+  </div>
+
+  <div class="cartela-acoes">
+    <button type="button" class="main-btn suggestion-btn" id="btnSugerir">🍀 SUGERIR UM NÚMERO</button>
+    <button type="button" class="main-btn continue-btn" id="continueBtn">CONTINUAR <span>→</span></button>
+  </div>
 </section>
 
 <section class="scratch-show page">
