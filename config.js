@@ -1,120 +1,296 @@
-// ======================================
-// config.js
-// Configurações da Rifa Solidária
-// ======================================
+// ============================================================
+// 🎟️ RIFA ENTRE AMIGOS — CONFIGURAÇÕES
+// Projeto: Rifa Solidária | Dona Bené
+// ============================================================
 
 export const CONFIG = {
 
-    // Informações da campanha
-    campanha: "Rifa Solidária",
+    // --------------------------------------------------------
+    // 🎟️ IDENTIFICAÇÃO DA RIFA
+    // --------------------------------------------------------
 
-    beneficiada: "Maria Josivania Claudino França",
+    nomeRifa: "RIFA ENTRE AMIGOS",
 
-    premio: "TV LG 32 Polegadas",
+    titulo: "Rifa Solidária",
+
+    beneficiada: "Dona Bené",
 
     descricao:
-        "Participe da nossa rifa solidária e concorra a uma TV LG 32 polegadas.",
+        "Em prol da realização dos exames de Dona Benedita",
 
-    // Valores
+    // --------------------------------------------------------
+    // 🎁 PREMIAÇÃO
+    // --------------------------------------------------------
+
+    premio:
+        "Geladeira Midea Frost Free",
+
+    // --------------------------------------------------------
+    // 💰 VALORES
+    // --------------------------------------------------------
+
     valorNumero: 10.00,
 
     moeda: "BRL",
 
-    // Quantidade de números
-    totalNumeros: 1000,
+    // --------------------------------------------------------
+    // 🎟️ NÚMEROS
+    // --------------------------------------------------------
 
-    totalCartelas: 10,
+    quantidadeNumeros: 1000,
+
+    primeiroNumero: 0,
+
+    ultimoNumero: 999,
 
     numerosPorCartela: 100,
 
-    // PIX
+    quantidadeCartelas: 10,
+
+    // --------------------------------------------------------
+    // 🛒 COMPRA
+    // --------------------------------------------------------
+
+    minimoNumerosPorCompra: 1,
+
+    maximoNumerosPorCompra: 10,
+
+    // --------------------------------------------------------
+    // 📅 SORTEIO
+    // --------------------------------------------------------
+
+    dataSorteio: "2026-12-30T19:00:00-03:00",
+
+    textoSorteio:
+        "30 de dezembro de 2026",
+
+    // --------------------------------------------------------
+    // 🎟️ CARTELAS
+    // --------------------------------------------------------
+
+    cartelas: [
+        {
+            numero: 1,
+            inicio: 0,
+            fim: 99
+        },
+
+        {
+            numero: 2,
+            inicio: 100,
+            fim: 199
+        },
+
+        {
+            numero: 3,
+            inicio: 200,
+            fim: 299
+        },
+
+        {
+            numero: 4,
+            inicio: 300,
+            fim: 399
+        },
+
+        {
+            numero: 5,
+            inicio: 400,
+            fim: 499
+        },
+
+        {
+            numero: 6,
+            inicio: 500,
+            fim: 599
+        },
+
+        {
+            numero: 7,
+            inicio: 600,
+            fim: 699
+        },
+
+        {
+            numero: 8,
+            inicio: 700,
+            fim: 799
+        },
+
+        {
+            numero: 9,
+            inicio: 800,
+            fim: 899
+        },
+
+        {
+            numero: 10,
+            inicio: 900,
+            fim: 999
+        }
+    ],
+
+    // --------------------------------------------------------
+    // 💳 PIX
+    // --------------------------------------------------------
+
     pix: {
 
-        titular: "Maria Josivania Claudino França",
+        chave: "",
 
-        chave: "79988730207",
+        titular:
+            "Maria Josivania Claudino França",
 
-        banco: "Neon"
+        banco:
+            "Banco Neon"
 
     },
 
-    // WhatsApp
+    // --------------------------------------------------------
+    // 📱 WHATSAPP
+    // --------------------------------------------------------
+
     whatsapp: {
 
-        numero: "5579988730207",
+        numero: "",
 
-        mensagem:
-`Olá!
-Gostaria de reservar os seguintes números da Rifa Solidária:
-
-{NUMEROS}
-
-Nome:
-
-Vou realizar o pagamento via PIX e enviar o comprovante.`
+        mensagemInicial:
+            "Olá! Tenho interesse em participar da Rifa Solidária."
 
     },
 
-    // Sorteio
-    sorteio: {
+    // --------------------------------------------------------
+    // 🎁 RASPADINHA
+    // --------------------------------------------------------
 
-        data: "2026-08-21",
+    raspadinha: {
 
-        hora: "18:00"
+        ativa: true,
+
+        nome:
+            "Raspadinha da Amizade",
+
+        premios: [
+            "Liquidificador",
+            "Ferro elétrico"
+        ]
 
     },
 
-    // Firebase
-    firebase: {
+    // --------------------------------------------------------
+    // 🎨 APARÊNCIA
+    // --------------------------------------------------------
 
-        databaseURL:
-            "https://rifa-solidaria-56274-default-rtdb.firebaseio.com/"
+    tema: {
 
-    },
+        principal: "#071b08",
 
-    // Status dos números
-    status: {
+        verde:
+            "#7cff00",
 
-        DISPONIVEL: "disponivel",
+        verdeEscuro:
+            "#0b3d0d",
 
-        RESERVADO: "reservado",
+        azul:
+            "#1597ff",
 
-        VENDIDO: "vendido"
+        texto:
+            "#ffffff"
 
     }
 
 };
 
-// ======================================
-// Funções auxiliares
-// ======================================
 
+// ============================================================
+// 🔧 FUNÇÕES AUXILIARES
+// ============================================================
+
+/**
+ * Formata um número da rifa com três dígitos.
+ *
+ * Exemplos:
+ * 0   → 000
+ * 7   → 007
+ * 63  → 063
+ * 750 → 750
+ */
 export function formatarNumero(numero) {
 
-    return Number(numero)
-        .toString()
+    return String(numero)
         .padStart(3, "0");
 
 }
 
+
+/**
+ * Descobre automaticamente em qual cartela
+ * determinado número está.
+ *
+ * Exemplo:
+ * 063 → cartela 1
+ * 250 → cartela 3
+ * 750 → cartela 8
+ */
 export function descobrirCartela(numero) {
 
-    return Math.floor(Number(numero) / 100) + 1;
+    numero = Number(numero);
+
+    if (
+        Number.isNaN(numero) ||
+        numero < CONFIG.primeiroNumero ||
+        numero > CONFIG.ultimoNumero
+    ) {
+
+        return null;
+
+    }
+
+    return Math.floor(
+        numero / CONFIG.numerosPorCartela
+    ) + 1;
 
 }
 
-export function intervaloCartela(cartela) {
 
-    const inicio = (cartela - 1) * 100;
+/**
+ * Retorna os limites da cartela.
+ *
+ * Exemplo:
+ * descobrirLimitesCartela(8)
+ *
+ * retorna:
+ * {
+ *   inicio: 700,
+ *   fim: 799
+ * }
+ */
+export function descobrirLimitesCartela(cartela) {
 
-    const fim = inicio + 99;
+    const dados =
+        CONFIG.cartelas.find(
+            item => item.numero === Number(cartela)
+        );
 
-    return {
+    return dados || null;
 
-        inicio,
+}
 
-        fim
 
-    };
+/**
+ * Formata valores em reais.
+ *
+ * Exemplo:
+ * 10 → R$ 10,00
+ */
+export function formatarMoeda(valor) {
+
+    return Number(valor).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL"
+        }
+    );
 
 }
