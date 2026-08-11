@@ -1,6 +1,6 @@
 // ==========================================================
 // RIFA SOLIDÁRIA — GILFEST
-// FIREBASE CONFIGURAÇÃO CENTRAL
+// CONEXÃO PRINCIPAL COM FIREBASE
 // ==========================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -11,12 +11,14 @@ import {
     get,
     set,
     update,
+    push,
     remove,
-    onValue,
-    onChildAdded,
-    onChildChanged,
-    onChildRemoved
+    onValue
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+import {
+    getAuth
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 
 // ==========================================================
@@ -25,7 +27,8 @@ import {
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
+    apiKey:
+        "AIzaSyDr4PL2ljt93p9Yyn1vd1bNWQmFHh3DGxI",
 
     authDomain:
         "rifa-solidaria-56274.firebaseapp.com",
@@ -44,6 +47,7 @@ const firebaseConfig = {
 
     appId:
         "1:279310238107:web:fd82a20c11e28a4673a13e"
+
 };
 
 
@@ -53,6 +57,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+
+// ==========================================================
+// FIREBASE AUTHENTICATION
+// ==========================================================
+
+const auth = getAuth(app);
+
+
+// ==========================================================
+// REALTIME DATABASE
+// ==========================================================
+
 const db = getDatabase(app);
 
 
@@ -61,44 +77,25 @@ const db = getDatabase(app);
 // ==========================================================
 
 export {
+
     app,
+
+    auth,
+
     db,
 
     ref,
+
     get,
+
     set,
+
     update,
+
+    push,
+
     remove,
 
-    onValue,
-    onChildAdded,
-    onChildChanged,
-    onChildRemoved
+    onValue
+
 };
-
-
-// ==========================================================
-// TESTE DE CONEXÃO
-// ==========================================================
-
-const conexaoRef = ref(db, ".info/connected");
-
-onValue(conexaoRef, (snapshot) => {
-
-    const conectado = snapshot.val();
-
-    if (conectado === true) {
-
-        console.log(
-            "🔥 Firebase conectado com sucesso!"
-        );
-
-    } else {
-
-        console.log(
-            "⚠️ Firebase desconectado."
-        );
-
-    }
-
-});
