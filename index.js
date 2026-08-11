@@ -1,301 +1,365 @@
-// ============================================================
-// 🎟️ RIFA SOLIDÁRIA — CONTROLE DA PÁGINA PRINCIPAL
-// ============================================================
+// ==========================================================
+// RIFA SOLIDÁRIA — GILFEST
+// CLOUD FUNCTIONS
+// ==========================================================
 
-import {
-    database,
-    ref,
-    get,
-    onValue
-} from "./firebase.js";
+const {
+    onCall,
+    HttpsError
+} = require("firebase-functions/v2/https");
 
-import {
-    CONFIG
-} from "./config.js";
+const {
+    initializeApp
+} = require("firebase-admin/app");
 
+const {
+    getDatabase
+} = require("firebase-admin/database");
 
-// ============================================================
-// ELEMENTOS DA INTERFACE
-// ============================================================
-
-const elementos = {
-
-    premio:
-        document.getElementById("premio"),
-
-    valor:
-        document.getElementById("valor"),
-
-    dataSorteio:
-        document.getElementById("dataSorteio"),
-
-    pixKey:
-        document.getElementById("pixKey"),
-
-    btnWhatsapp:
-        document.getElementById("btnWhatsapp"),
-
-    btnComprovante:
-        document.getElementById("btnComprovante")
-
-};
+const crypto = require("crypto");
 
 
-// ============================================================
-// 💰 FORMATAÇÃO DE VALORES
-// ============================================================
+// ==========================================================
+// FIREBASE ADMIN
+// ==========================================================
 
-function formatarMoeda(valor) {
+initializeApp();
 
-    return Number(valor || 0).toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL"
-        }
-    );
+const db = getDatabase();
+
+
+// ==========================================================
+// CONFIGURAÇÕES
+// ==========================================================
+
+const REGIAO = "southamerica-east1";
+
+
+// ==========================================================
+// GERADOR DE ID
+// ==========================================================
+
+function gerarId() {
+
+    return crypto.randomUUID();
 
 }
 
 
-// ============================================================
-// 📅 ATUALIZAR INFORMAÇÕES DA RIFA
-// ============================================================
+// ==========================================================
+// NORMALIZAR NÚMERO DA RIFA
+// ==========================================================
 
-function atualizarInterface() {
+function normalizarNumero(numero) {
 
-    if (elementos.premio) {
+    const valor = String(numero ?? "").trim();
 
-        elementos.premio.textContent =
-            CONFIG.premio;
-
+    if (!/^\d{1,3}$/.test(valor)) {
+        return null;
     }
 
+    const numeroNormalizado =
+        valor.padStart(3, "0");
 
-    if (elementos.valor) {
+    const numeroInteiro =
+        Number(numeroNormalizado);
 
-        elementos.valor.textContent =
-            formatarMoeda(
-                CONFIG.valorNumero
-            );
-
+    if (
+        numeroInteiro < 0 ||
+        numeroInteiro > 999
+    ) {
+        return null;
     }
 
-
-    if (elementos.dataSorteio) {
-
-        elementos.dataSorteio.textContent =
-            CONFIG.textoDataSorteio;
-
-    }
-
-
-    if (elementos.pixKey) {
-
-        elementos.pixKey.value =
-            CONFIG.pix.chave;
-
-    }
+    return numeroNormalizado;
 
 }
 
 
-// ============================================================
-// 📲 WHATSAPP
-// ============================================================
+// ==========================================================
+// CRIAR JOGADA DA RASPADINHA
+// ==========================================================
 
-function configurarWhatsApp() {
+exports.criarJogadaRaspadinha = onCall(
+    {
+        region: REGIAO
+    },
 
-    if (!CONFIG.whatsapp) {
+    async (request) => {
 
-        return;
+        // --------------------------------------------------
+        // 1. VERIFICAR AUTENTICAÇÃO
+        // --------------------------------------------------
 
-    }
+        if (!request.auth) {
 
-
-    const numero =
-        CONFIG.whatsapp.replace(
-            /\D/g,
-            ""
-        );
-
-
-    const mensagem =
-        encodeURIComponent(
-            "Olá! Quero participar da Rifa Entre Amigos."
-        );
-
-
-    const url =
-        `https://wa.me/${numero}?text=${mensagem}`;
-
-
-    if (elementos.btnWhatsapp) {
-
-        elementos.btnWhatsapp.href =
-            url;
-
-    }
-
-
-    if (elementos.btnComprovante) {
-
-        const mensagemComprovante =
-            encodeURIComponent(
-                "Olá! Estou enviando o comprovante do pagamento da Rifa Entre Amigos."
-            );
-
-
-        elementos.btnComprovante.href =
-            `https://wa.me/${numero}?text=${mensagemComprovante}`;
-
-    }
-
-}
-
-
-// ============================================================
-// 🔥 VERIFICAR CONEXÃO COM FIREBASE
-// ============================================================
-
-async function verificarFirebase() {
-
-    try {
-
-        const referencia =
-            ref(
-                database,
-                "rifa/configuracao"
-            );
-
-
-        const snapshot =
-            await get(
-                referencia
-            );
-
-
-        if (snapshot.exists()) {
-
-            console.log(
-                "🔥 Firebase conectado."
-            );
-
-            console.log(
-                "⚙️ Configuração encontrada:",
-                snapshot.val()
-            );
-
-        }
-        else {
-
-            console.warn(
-                "⚠️ A estrutura da rifa ainda não foi criada."
+            throw new HttpsError(
+                "unauthenticated",
+                "É necessário estar autenticado."
             );
 
         }
 
-    }
 
-    catch (erro) {
-
-        console.error(
-            "❌ Erro ao conectar ao Firebase:",
-            erro
-        );
-
-    }
-
-}
+        const participanteId =
+            request.auth.uid;
 
 
-// ============================================================
-// 👂 OBSERVAR ALTERAÇÕES NO FIREBASE
-// ============================================================
+        // --------------------------------------------------
+        // 2. RECEBER NÚMERO
+        // --------------------------------------------------
 
-function observarConfiguracao() {
-
-    const referencia =
-        ref(
-            database,
-            "rifa/configuracao"
-        );
+        const numeroRifa =
+            normalizarNumero(
+                request.data?.numeroRifa
+            );
 
 
-    onValue(
-        referencia,
-        snapshot => {
+        if (!numeroRifa) {
 
-            if (!snapshot.exists()) {
+            throw new HttpsError(
+                "invalid-argument",
+                "Número da rifa inválido."
+            );
 
-                return;
+        }
+
+
+        // --------------------------------------------------
+        // 3. LOCALIZAR PARTICIPAÇÃO
+        // --------------------------------------------------
+
+        const numeroRef =
+            db.ref(
+                `rifa/numeros/${numeroRifa}`
+            );
+
+
+        const numeroSnapshot =
+            await numeroRef.once("value");
+
+
+        if (!numeroSnapshot.exists()) {
+
+            throw new HttpsError(
+                "not-found",
+                "Número da rifa não encontrado."
+            );
+
+        }
+
+
+        const numero =
+            numeroSnapshot.val();
+
+
+        // --------------------------------------------------
+        // 4. VERIFICAR STATUS
+        // --------------------------------------------------
+
+        if (
+            numero.status !== "vendido"
+        ) {
+
+            throw new HttpsError(
+                "failed-precondition",
+                "Este número ainda não está confirmado como vendido."
+            );
+
+        }
+
+
+        // --------------------------------------------------
+        // 5. VERIFICAR PAGAMENTO
+        // --------------------------------------------------
+
+        if (
+            numero.pagamento !== true
+        ) {
+
+            throw new HttpsError(
+                "failed-precondition",
+                "O pagamento deste número ainda não foi confirmado."
+            );
+
+        }
+
+
+        // --------------------------------------------------
+        // 6. VERIFICAR PARTICIPANTE
+        // --------------------------------------------------
+
+        if (
+            numero.participanteId &&
+            numero.participanteId !== participanteId
+        ) {
+
+            throw new HttpsError(
+                "permission-denied",
+                "Este número pertence a outro participante."
+            );
+
+        }
+
+
+        // --------------------------------------------------
+        // 7. LOCALIZAR JOGADAS DO PARTICIPANTE
+        // --------------------------------------------------
+
+        const jogadasRef =
+            db.ref(
+                "rifa/raspadinha/jogadas"
+            );
+
+
+        const jogadasSnapshot =
+            await jogadasRef
+                .orderByChild("participanteId")
+                .equalTo(participanteId)
+                .once("value");
+
+
+        const jogadas =
+            jogadasSnapshot.val() || {};
+
+
+        // --------------------------------------------------
+        // 8. PROCURAR JOGADA JÁ LIBERADA
+        // --------------------------------------------------
+
+        for (
+            const [jogadaId, jogada]
+            of Object.entries(jogadas)
+        ) {
+
+            if (
+                jogada.numeroRifa === numeroRifa &&
+                jogada.liberada === true &&
+                jogada.utilizada === false
+            ) {
+
+                return {
+
+                    sucesso: true,
+
+                    jogadaId,
+
+                    mensagem:
+                        "Você já possui uma raspadinha liberada."
+
+                };
 
             }
 
-
-            const dados =
-                snapshot.val();
+        }
 
 
-            console.log(
-                "🔄 Configuração atualizada:",
-                dados
-            );
+        // --------------------------------------------------
+        // 9. CONTAR JOGADAS UTILIZADAS
+        // --------------------------------------------------
 
-        },
+        let jogadasUtilizadas = 0;
 
-        erro => {
 
-            console.error(
-                "❌ Erro ao observar Firebase:",
-                erro
+        for (
+            const jogada
+            of Object.values(jogadas)
+        ) {
+
+            if (
+                jogada.numeroRifa === numeroRifa &&
+                jogada.utilizada === true
+            ) {
+
+                jogadasUtilizadas++;
+
+            }
+
+        }
+
+
+        // --------------------------------------------------
+        // 10. LIMITE DE SEGURANÇA
+        // --------------------------------------------------
+
+        if (
+            jogadasUtilizadas >= 2
+        ) {
+
+            throw new HttpsError(
+                "failed-precondition",
+                "Esta participação já utilizou todas as raspadinhas disponíveis."
             );
 
         }
 
-    );
 
-}
+        // --------------------------------------------------
+        // 11. CRIAR ID DA JOGADA
+        // --------------------------------------------------
 
-
-// ============================================================
-// 🚀 INICIALIZAÇÃO
-// ============================================================
-
-function iniciar() {
-
-    console.log(
-        "🎟️ Rifa Solidária iniciada."
-    );
+        const jogadaId =
+            gerarId();
 
 
-    atualizarInterface();
-
-    configurarWhatsApp();
-
-    verificarFirebase();
-
-    observarConfiguracao();
-
-}
+        const agora =
+            Date.now();
 
 
-// ============================================================
-// ▶️ EXECUTAR
-// ============================================================
+        // --------------------------------------------------
+        // 12. CRIAR REGISTRO
+        // --------------------------------------------------
 
-if (
-    document.readyState === "loading"
-) {
+        const novaJogada = {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        iniciar
-    );
+            numeroRifa,
 
-}
-else {
+            participanteId,
 
-    iniciar();
+            liberada: true,
 
-}
+            utilizada: false,
+
+            resultado: null,
+
+            premio: null,
+
+            novaChance: false,
+
+            dataCriacao: agora,
+
+            dataUtilizacao: null
+
+        };
+
+
+        // --------------------------------------------------
+        // 13. GRAVAR NO FIREBASE
+        // --------------------------------------------------
+
+        await db
+            .ref(
+                `rifa/raspadinha/jogadas/${jogadaId}`
+            )
+            .set(novaJogada);
+
+
+        // --------------------------------------------------
+        // 14. RETORNO
+        // --------------------------------------------------
+
+        return {
+
+            sucesso: true,
+
+            jogadaId,
+
+            numeroRifa,
+
+            mensagem:
+                "Raspadinha liberada com sucesso."
+
+        };
+
+    }
+);
