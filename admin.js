@@ -1,435 +1,881 @@
 // ==========================================================
-// admin.js
-// Painel Administrativo
-// Rifa Solidária
+// RIFA SOLIDÁRIA — GILFEST
+// PAINEL ADMINISTRATIVO
 // ==========================================================
 
 import {
+    entrarAdmin,
+    sairAdmin,
+    observarAutenticacao
+} from "./auth.js";
 
-    auth,
-
-    signInWithEmailAndPassword,
-
-    signOut,
-
-    onAuthStateChanged,
-
-    numerosRef,
-
-    participantesRef,
-
-    estatisticasRef,
-
-    configRef,
-
-    get,
-
-    onValue,
-
-    update
-
+import {
+    db,
+    ref,
+    get
 } from "./firebase.js";
 
-import {
-
-    formatarNumero
-
-} from "./utils.js";
 
 // ==========================================================
-// ESTADO
+// ELEMENTOS DA PÁGINA
 // ==========================================================
 
-const ADMIN = {
-
-    usuario: null,
-
-    numeros: {},
-
-    participantes: {},
-
-    estatisticas: {},
-
-    configuracao: {}
-
-};
-
-// ==========================================================
-// ELEMENTOS
-// ==========================================================
-
-const loginBox = document.getElementById("login");
-
+const loginArea = document.getElementById("login");
 const painel = document.getElementById("painel");
 
-const email = document.getElementById("email");
-
-const senha = document.getElementById("senha");
+const emailInput = document.getElementById("email");
+const senhaInput = document.getElementById("senha");
 
 const btnEntrar = document.getElementById("btnEntrar");
-
 const btnSair = document.getElementById("btnSair");
 
+const loginErro = document.getElementById("loginErro");
+
+const totalDisponiveis =
+    document.getElementById("totalDisponiveis");
+
+const totalReservados =
+    document.getElementById("totalReservados");
+
+const totalVendidos =
+    document.getElementById("totalVendidos");
+
+const valorArrecadado =
+    document.getElementById("valorArrecadado");
+
+const listaNumeros =
+    document.getElementById("listaNumeros");
+
+const contadorTabela =
+    document.getElementById("contadorTabela");
+
+const buscarAdmin =
+    document.getElementById("buscarAdmin");
+
+const btnExportar =
+    document.getElementById("btnExportar");
+
+
 // ==========================================================
-// INICIAR
+// FORMATAÇÃO
 // ==========================================================
 
-window.addEventListener("load", iniciarAdmin);
+function formatarNumero(numero) {
 
-function iniciarAdmin(){
-
-    verificarLogin();
-
-    registrarEventos();
+    return String(numero).padStart(3, "0");
 
 }
 
+
+function formatarMoeda(valor) {
+
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL"
+        }
+    );
+
+}
+
+
 // ==========================================================
-// EVENTOS
+// MOSTRAR / ESCONDER PAINEL
 // ==========================================================
 
-function registrarEventos(){
+function mostrarLogin() {
 
-    if(btnEntrar){
+    if (loginArea) {
 
-        btnEntrar.addEventListener(
-
-            "click",
-
-            fazerLogin
-
-        );
+        loginArea.hidden = false;
 
     }
 
-    if(btnSair){
+    if (painel) {
 
-        btnSair.addEventListener(
-
-            "click",
-
-            sair
-
-        );
+        painel.hidden = true;
 
     }
 
 }
+
+
+function mostrarPainel() {
+
+    if (loginArea) {
+
+        loginArea.hidden = true;
+
+    }
+
+    if (painel) {
+
+        painel.hidden = false;
+
+    }
+
+}
+
 
 // ==========================================================
 // LOGIN
 // ==========================================================
 
-async function fazerLogin(){
+async function fazerLogin() {
 
-    try{
+    const email =
+        emailInput?.value.trim();
 
-        await signInWithEmailAndPassword(
+    const senha =
+        senhaInput?.value;
 
-            auth,
+    if (loginErro) {
 
-            email.value,
-
-            senha.value
-
-        );
+        loginErro.textContent = "";
 
     }
 
-    catch(e){
+    if (!email || !senha) {
 
-        alert("Usuário ou senha inválidos.");
+        if (loginErro) {
+
+            loginErro.textContent =
+                "Digite seu e-mail e sua senha.";
+
+        }
+
+        return;
+
+    }
+
+
+    if (btnEntrar) {
+
+        btnEntrar.disabled = true;
+
+        btnEntrar.textContent =
+            "ENTRANDO...";
+
+    }
+
+
+    try {
+
+        await entrarAdmin(
+            email,
+            senha
+        );
+
+        if (senhaInput) {
+
+            senhaInput.value = "";
+
+        }
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        if (loginErro) {
+
+            loginErro.textContent =
+                erro.message ||
+                "Não foi possível entrar.";
+        }
+
+    } finally {
+
+        if (btnEntrar) {
+
+            btnEntrar.disabled = false;
+
+            btnEntrar.textContent =
+                "ENTRAR";
+
+        }
 
     }
 
 }
+
 
 // ==========================================================
 // LOGOUT
 // ==========================================================
 
-async function sair(){
+async function fazerLogout() {
 
-    await signOut(auth);
+    try {
 
-}
+        await sairAdmin();
 
-// ==========================================================
-// OBSERVADOR
-// ==========================================================
+    } catch (erro) {
 
-function verificarLogin(){
+        console.error(
+            "Erro ao sair:",
+            erro
+        );
 
-    onAuthStateChanged(
-
-        auth,
-
-        async(usuario)=>{
-
-            ADMIN.usuario=usuario;
-
-            if(usuario){
-
-                abrirPainel();
-
-            }
-
-            else{
-
-                abrirLogin();
-
-            }
-
-        }
-
-    );
+    }
 
 }
 
-// ==========================================================
-// TELAS
-// ==========================================================
-
-function abrirPainel(){
-
-    if(loginBox)
-
-        loginBox.style.display="none";
-
-    if(painel)
-
-        painel.style.display="block";
-
-    carregarSistema();
-
-}
-
-function abrirLogin(){
-
-    if(loginBox)
-
-        loginBox.style.display="block";
-
-    if(painel)
-
-        painel.style.display="none";
-
-}// ==========================================================
-// CARREGAMENTO DO SISTEMA
-// ==========================================================
-
-function carregarSistema() {
-
-    carregarNumeros();
-
-    carregarParticipantes();
-
-    carregarEstatisticas();
-
-    carregarConfiguracoes();
-
-    registrarPesquisa();
-
-}
 
 // ==========================================================
-// NÚMEROS
+// CARREGAR NÚMEROS
 // ==========================================================
 
-function carregarNumeros() {
+async function carregarNumeros() {
 
-    onValue(numerosRef, (snapshot) => {
+    try {
 
-        if (!snapshot.exists()) return;
+        const numerosRef =
+            ref(db, "rifa/numeros");
 
-        ADMIN.numeros = snapshot.val();
+        const snapshot =
+            await get(numerosRef);
 
-        atualizarTabelaNumeros();
-
-    });
-
-}
-
-// ==========================================================
-// PARTICIPANTES
-// ==========================================================
-
-function carregarParticipantes() {
-
-    onValue(participantesRef, (snapshot) => {
 
         if (!snapshot.exists()) {
 
-            ADMIN.participantes = {};
+            console.warn(
+                "Nenhum número encontrado no Firebase."
+            );
+
+            limparEstatisticas();
 
             return;
 
         }
 
-        ADMIN.participantes = snapshot.val();
 
-    });
+        const dados =
+            snapshot.val();
+
+        const numeros =
+            Object.values(dados);
+
+
+        atualizarEstatisticas(
+            numeros
+        );
+
+        renderizarTabela(
+            numeros
+        );
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar números:",
+            erro
+        );
+
+    }
 
 }
+
 
 // ==========================================================
 // ESTATÍSTICAS
 // ==========================================================
 
-function carregarEstatisticas() {
+function atualizarEstatisticas(numeros) {
 
-    onValue(estatisticasRef, (snapshot) => {
+    let disponiveis = 0;
 
-        if (!snapshot.exists()) return;
+    let reservados = 0;
 
-        ADMIN.estatisticas = snapshot.val();
+    let vendidos = 0;
 
-        atualizarEstatisticas();
+    let arrecadado = 0;
+
+
+    numeros.forEach(numero => {
+
+        const status =
+            numero.status ||
+            "disponivel";
+
+
+        if (status === "disponivel") {
+
+            disponiveis++;
+
+        }
+
+
+        if (status === "reservado") {
+
+            reservados++;
+
+        }
+
+
+        if (status === "vendido") {
+
+            vendidos++;
+
+        }
+
+
+        if (
+            status === "vendido" &&
+            numero.pagamento === true
+        ) {
+
+            arrecadado += 10;
+
+        }
 
     });
 
+
+    if (totalDisponiveis) {
+
+        totalDisponiveis.textContent =
+            disponiveis;
+
+    }
+
+
+    if (totalReservados) {
+
+        totalReservados.textContent =
+            reservados;
+
+    }
+
+
+    if (totalVendidos) {
+
+        totalVendidos.textContent =
+            vendidos;
+
+    }
+
+
+    if (valorArrecadado) {
+
+        valorArrecadado.textContent =
+            formatarMoeda(arrecadado);
+
+    }
+
 }
 
+
 // ==========================================================
-// CONFIGURAÇÕES
+// LIMPAR ESTATÍSTICAS
 // ==========================================================
 
-function carregarConfiguracoes() {
+function limparEstatisticas() {
 
-    onValue(configRef, (snapshot) => {
+    if (totalDisponiveis) {
 
-        if (!snapshot.exists()) return;
+        totalDisponiveis.textContent =
+            "0";
 
-        ADMIN.configuracao = snapshot.val();
+    }
 
-        preencherConfiguracoes();
+    if (totalReservados) {
+
+        totalReservados.textContent =
+            "0";
+
+    }
+
+    if (totalVendidos) {
+
+        totalVendidos.textContent =
+            "0";
+
+    }
+
+    if (valorArrecadado) {
+
+        valorArrecadado.textContent =
+            "R$ 0,00";
+
+    }
+
+}
+
+
+// ==========================================================
+// TABELA
+// ==========================================================
+
+function renderizarTabela(numeros) {
+
+    if (!listaNumeros) {
+
+        return;
+
+    }
+
+
+    const lista =
+        [...numeros].sort(
+            (a, b) =>
+                Number(a.numero) -
+                Number(b.numero)
+        );
+
+
+    listaNumeros.innerHTML = "";
+
+
+    lista.forEach(numero => {
+
+        const tr =
+            document.createElement("tr");
+
+
+        const status =
+            numero.status ||
+            "disponivel";
+
+
+        const nome =
+            numero.nome ||
+            "—";
+
+
+        const whatsapp =
+            numero.whatsapp ||
+            "—";
+
+
+        const pagamento =
+            numero.pagamento === true;
+
+
+        const raspadinha =
+            numero.raspadinhaLiberada === true;
+
+
+        tr.innerHTML = `
+
+            <td>
+                <strong>
+                    ${formatarNumero(numero.numero)}
+                </strong>
+            </td>
+
+            <td>
+                ${escaparHTML(nome)}
+            </td>
+
+            <td>
+                ${escaparHTML(whatsapp)}
+            </td>
+
+            <td>
+                <span class="badge ${status}">
+                    ${textoStatus(status)}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${pagamento ? "sim" : "nao"}">
+                    ${pagamento ? "Confirmado" : "Pendente"}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${raspadinha ? "sim" : "nao"}">
+                    ${raspadinha ? "Liberada" : "Não"}
+                </span>
+            </td>
+
+            <td>
+                <div class="acoes-numero">
+
+                    <button
+                        type="button"
+                        data-numero="${numero.numero}"
+                        class="btn-ver-numero">
+
+                        Ver
+
+                    </button>
+
+                </div>
+            </td>
+
+        `;
+
+
+        listaNumeros.appendChild(tr);
 
     });
 
+
+    if (contadorTabela) {
+
+        contadorTabela.textContent =
+            `${lista.length} registros`;
+
+    }
+
+
+    configurarBotoesTabela();
+
 }
 
+
 // ==========================================================
-// TABELA DOS NÚMEROS
-// ==========================================================
-
-function atualizarTabelaNumeros() {
-
-    const tabela = document.getElementById("listaNumeros");
-
-    if (!tabela) return;
-
-    tabela.innerHTML = "";
-
-    Object.keys(ADMIN.numeros)
-
-        .sort()
-
-        .forEach((numero) => {
-
-            const dados = ADMIN.numeros[numero];
-
-            const linha = document.createElement("tr");
-
-            linha.innerHTML = `
-
-                <td>${numero}</td>
-
-                <td>${dados.nome || "-"}</td>
-
-                <td>${dados.telefone || "-"}</td>
-
-                <td>${dados.status}</td>
-
-                <td>
-
-                    <button class="btnEditar
-                    // ==========================================================
-// EDITAR NÚMERO
+// TEXTO DO STATUS
 // ==========================================================
 
-document.addEventListener("click", (e) => {
+function textoStatus(status) {
 
-    if (!e.target.classList.contains("btnEditar")) return;
+    switch (status) {
 
-    const numero = e.target.dataset.numero;
+        case "reservado":
 
-    abrirEditor(numero);
+            return "Reservado";
 
-});
+        case "vendido":
 
-function abrirEditor(numero) {
+            return "Vendido";
 
-    const dados = ADMIN.numeros[numero];
+        default:
 
-    if (!dados) return;
+            return "Disponível";
 
-    document.getElementById("editarNumero").value = numero;
+    }
 
-    document.getElementById("editarNome").value =
-        dados.nome || "";
+}
 
-    document.getElementById("editarTelefone").value =
-        dados.telefone || "";
 
-    document.getElementById("editarStatus").value =
-        dados.status || "disponivel";
+// ==========================================================
+// SEGURANÇA CONTRA HTML INJETADO
+// ==========================================================
+
+function escaparHTML(valor) {
+
+    return String(valor)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+// ==========================================================
+// BOTÕES DA TABELA
+// ==========================================================
+
+function configurarBotoesTabela() {
 
     document
-        .getElementById("modalEditar")
-        .classList.add("ativo");
+        .querySelectorAll(".btn-ver-numero")
+        .forEach(botao => {
+
+            botao.addEventListener(
+                "click",
+                () => {
+
+                    const numero =
+                        botao.dataset.numero;
+
+                    mostrarNumero(
+                        numero
+                    );
+
+                }
+            );
+
+        });
 
 }
 
+
 // ==========================================================
-// SALVAR ALTERAÇÕES
+// VISUALIZAR NÚMERO
 // ==========================================================
 
-const btnSalvar = document.getElementById("btnSalvarNumero");
+function mostrarNumero(numero) {
 
-if (btnSalvar) {
+    const mensagem =
+        `Número ${formatarNumero(numero)}`;
 
-    btnSalvar.addEventListener(
+    console.log(
+        mensagem
+    );
 
+    alert(mensagem);
+
+}
+
+
+// ==========================================================
+// BUSCA ADMINISTRATIVA
+// ==========================================================
+
+async function pesquisarNumero() {
+
+    if (!buscarAdmin) {
+
+        return;
+
+    }
+
+
+    const valor =
+        buscarAdmin.value.trim();
+
+
+    if (valor === "") {
+
+        await carregarNumeros();
+
+        return;
+
+    }
+
+
+    const numero =
+        formatarNumero(
+            Number(valor)
+        );
+
+
+    try {
+
+        const numeroRef =
+            ref(
+                db,
+                `rifa/numeros/${numero}`
+            );
+
+        const snapshot =
+            await get(numeroRef);
+
+
+        if (!snapshot.exists()) {
+
+            listaNumeros.innerHTML = `
+
+                <tr>
+
+                    <td colspan="7">
+
+                        Número
+                        <strong>${numero}</strong>
+                        não encontrado.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        renderizarTabela([
+            snapshot.val()
+        ]);
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro na pesquisa:",
+            erro
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// EXPORTAR BACKUP
+// ==========================================================
+
+async function exportarBackup() {
+
+    try {
+
+        const rifaRef =
+            ref(db, "rifa");
+
+        const snapshot =
+            await get(rifaRef);
+
+
+        if (!snapshot.exists()) {
+
+            alert(
+                "Não existem dados para exportar."
+            );
+
+            return;
+
+        }
+
+
+        const dados =
+            snapshot.val();
+
+
+        const arquivo =
+            JSON.stringify(
+                dados,
+                null,
+                2
+            );
+
+
+        const blob =
+            new Blob(
+                [arquivo],
+                {
+                    type:
+                        "application/json"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href = url;
+
+        link.download =
+            `backup-rifa-${new Date()
+                .toISOString()
+                .slice(0, 10)}.json`;
+
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+
+        URL.revokeObjectURL(url);
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao exportar backup:",
+            erro
+        );
+
+        alert(
+            "Não foi possível gerar o backup."
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// EVENTOS
+// ==========================================================
+
+if (btnEntrar) {
+
+    btnEntrar.addEventListener(
         "click",
-
-        salvarNumero
-
+        fazerLogin
     );
 
 }
 
-async function salvarNumero() {
 
-    const numero =
-        document.getElementById("editarNumero").value;
+if (senhaInput) {
 
-    const nome =
-        document.getElementById("editarNome").value.trim();
+    senhaInput.addEventListener(
+        "keydown",
+        evento => {
 
-    const telefone =
-        document.getElementById("editarTelefone").value.trim();
+            if (
+                evento.key === "Enter"
+            ) {
 
-    const status =
-        document.getElementById("editarStatus").value;
-
-    try {
-
-        await update(
-
-            ref(db, `numeros/${numero}`),
-
-            {
-
-                nome,
-
-                telefone,
-
-                status
+                fazerLogin();
 
             }
 
-        );
+        }
+    );
 
-        fecharEditor();
+}
 
-        alert("
+
+if (btnSair) {
+
+    btnSair.addEventListener(
+        "click",
+        fazerLogout
+    );
+
+}
+
+
+if (buscarAdmin) {
+
+    buscarAdmin.addEventListener(
+        "input",
+        pesquisarNumero
+    );
+
+}
+
+
+if (btnExportar) {
+
+    btnExportar.addEventListener(
+        "click",
+        exportarBackup
+    );
+
+}
+
+
+// ==========================================================
+// OBSERVAR AUTENTICAÇÃO
+// ==========================================================
+
+observarAutenticacao(
+    async usuario => {
+
+        if (usuario) {
+
+            mostrarPainel();
+
+            await carregarNumeros();
+
+        } else {
+
+            mostrarLogin();
+
+        }
+
+    }
+);
