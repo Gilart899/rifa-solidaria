@@ -7,21 +7,17 @@
 
       "configuracao": {
         ".read": true,
-        ".write": false
-      },
-
-      "cartelas": {
-        ".read": true,
-        ".write": false
+        ".write": "auth != null && auth.token.admin === true"
       },
 
       "numeros": {
+
         ".read": true,
-        ".write": false,
 
         "$numero": {
           ".read": true,
-          ".write": false
+
+          ".write": "auth != null && auth.token.admin === true"
         }
       },
 
@@ -29,25 +25,29 @@
 
         "configuracao": {
           ".read": true,
-          ".write": false
+          ".write": "auth != null && auth.token.admin === true"
         },
 
         "premios": {
-          ".read": false,
-          ".write": false
+          ".read": "auth != null && auth.token.admin === true",
+          ".write": "auth != null && auth.token.admin === true"
         },
 
         "novasChances": {
-          ".read": false,
-          ".write": false
+          ".read": "auth != null && auth.token.admin === true",
+          ".write": "auth != null && auth.token.admin === true"
         },
 
         "jogadas": {
-          ".read": false,
+
+          ".read": "auth != null && auth.token.admin === true",
+
           ".write": false,
 
           "$jogada": {
-            ".read": false,
+
+            ".read": "auth != null && (auth.token.admin === true || data.child('participanteId').val() === auth.uid)",
+
             ".write": false
           }
         }
